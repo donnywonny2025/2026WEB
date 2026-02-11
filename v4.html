@@ -1079,7 +1079,7 @@
            PROJECT DETAIL OVERLAY
            ═══════════════════════════════════════════ */
 
-        /* Panel wipe transition */
+        /* Panel wipe transition — driven by JS via inline transform */
         .page-transition {
             position: fixed;
             top: 0;
@@ -1090,68 +1090,12 @@
             z-index: 10000;
             transform: translateY(100%);
             pointer-events: none;
-            will-change: transform;
+            transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
         }
 
         /* Lock body scroll during transitions */
-        body.transitioning {
+        body.no-scroll {
             overflow: hidden !important;
-        }
-
-        .page-transition.wipe-up {
-            animation: wipeUp 0.45s cubic-bezier(0.65, 0, 0.35, 1) forwards;
-        }
-
-        .page-transition.wipe-down {
-            animation: wipeDown 0.45s cubic-bezier(0.65, 0, 0.35, 1) forwards;
-        }
-
-        @keyframes wipeUp {
-            from {
-                transform: translateY(100%);
-            }
-
-            to {
-                transform: translateY(0%);
-            }
-        }
-
-        @keyframes wipeDown {
-            from {
-                transform: translateY(0%);
-            }
-
-            to {
-                transform: translateY(-100%);
-            }
-        }
-
-        @keyframes wipeUpReverse {
-            from {
-                transform: translateY(-100%);
-            }
-
-            to {
-                transform: translateY(0%);
-            }
-        }
-
-        @keyframes wipeDownReverse {
-            from {
-                transform: translateY(0%);
-            }
-
-            to {
-                transform: translateY(100%);
-            }
-        }
-
-        .page-transition.wipe-up-reverse {
-            animation: wipeUpReverse 0.45s cubic-bezier(0.65, 0, 0.35, 1) forwards;
-        }
-
-        .page-transition.wipe-down-reverse {
-            animation: wipeDownReverse 0.45s cubic-bezier(0.65, 0, 0.35, 1) forwards;
         }
 
         /* Detail overlay — hidden by default */
@@ -1880,86 +1824,75 @@
             });
         }
 
+        const WIPE_MS = 500; // matches CSS transition duration
+
         function openProject(index) {
             if (isTransitioning) return;
             isTransitioning = true;
             savedScrollY = window.scrollY;
-            document.body.classList.add('transitioning');
+            document.body.classList.add('no-scroll');
 
-            // Phase 1: Panel wipes up, covering the screen
-            transitionPanel.className = 'page-transition wipe-up';
+            // Phase 1: Slide panel up to cover screen
+            transitionPanel.style.transform = 'translateY(0%)';
 
-            transitionPanel.addEventListener('animationend', function onWipeUp() {
-                transitionPanel.removeEventListener('animationend', onWipeUp);
-
-                // Pin panel in place — prevent any frame where it snaps to default
-                transitionPanel.style.transform = 'translateY(0%)';
-                transitionPanel.className = 'page-transition';
-
-                // Swap content while panel is fully covering screen
+            setTimeout(() => {
+                // Panel is fully covering — swap content behind it
                 mainContent.forEach(el => el.style.display = 'none');
                 populateDetail(index);
                 detailOverlay.classList.add('visible');
                 detailOverlay.scrollTop = 0;
                 nav.style.display = 'none';
 
-                // Wait one frame so the swap paints, then start phase 2
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        transitionPanel.style.transform = '';
-                        transitionPanel.className = 'page-transition wipe-down';
+                // Force layout so content is ready before reveal
+                void detailOverlay.offsetHeight;
 
-                        transitionPanel.addEventListener('animationend', function onWipeDown() {
-                            transitionPanel.removeEventListener('animationend', onWipeDown);
-                            transitionPanel.className = 'page-transition';
-                            isTransitioning = false;
-                            document.body.classList.remove('transitioning');
-                            animateDetailContent();
-                        });
-                    });
-                });
-            });
+                // Phase 2: Slide panel up and away, revealing detail
+                transitionPanel.style.transform = 'translateY(-100%)';
+
+                setTimeout(() => {
+                    // Transition done — park panel off-screen below
+                    transitionPanel.style.transition = 'none';
+                    transitionPanel.style.transform = 'translateY(100%)';
+                    // Force the style, then restore transitions
+                    void transitionPanel.offsetHeight;
+                    transitionPanel.style.transition = '';
+
+                    isTransitioning = false;
+                    document.body.classList.remove('no-scroll');
+                    animateDetailContent();
+                }, WIPE_MS);
+            }, WIPE_MS);
         }
 
         function closeProject() {
             if (isTransitioning) return;
             isTransitioning = true;
-            document.body.classList.add('transitioning');
+            document.body.classList.add('no-scroll');
 
             // Kill the iframe to stop playback
             detailIframe.src = '';
 
-            // Phase 1: Panel wipes up from bottom
-            transitionPanel.className = 'page-transition wipe-up-reverse';
+            // Phase 1: Slide panel up from below to cover screen
+            transitionPanel.style.transform = 'translateY(0%)';
 
-            transitionPanel.addEventListener('animationend', function onWipeUp() {
-                transitionPanel.removeEventListener('animationend', onWipeUp);
-
-                // Pin panel in place
-                transitionPanel.style.transform = 'translateY(0%)';
-                transitionPanel.className = 'page-transition';
-
-                // Swap content while panel is fully covering
+            setTimeout(() => {
+                // Panel is fully covering — swap content behind it
                 detailOverlay.classList.remove('visible');
                 mainContent.forEach(el => el.style.display = '');
                 nav.style.display = '';
                 window.scrollTo(0, savedScrollY);
 
-                // Wait one frame for layout, then reveal
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        transitionPanel.style.transform = '';
-                        transitionPanel.className = 'page-transition wipe-down-reverse';
+                // Force layout
+                void document.body.offsetHeight;
 
-                        transitionPanel.addEventListener('animationend', function onWipeDown() {
-                            transitionPanel.removeEventListener('animationend', onWipeDown);
-                            transitionPanel.className = 'page-transition';
-                            isTransitioning = false;
-                            document.body.classList.remove('transitioning');
-                        });
-                    });
-                });
-            });
+                // Phase 2: Slide panel down and away, revealing main
+                transitionPanel.style.transform = 'translateY(100%)';
+
+                setTimeout(() => {
+                    isTransitioning = false;
+                    document.body.classList.remove('no-scroll');
+                }, WIPE_MS);
+            }, WIPE_MS);
         }
 
         // Wire up card clicks
