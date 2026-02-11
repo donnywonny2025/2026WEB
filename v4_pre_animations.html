@@ -106,33 +106,6 @@
             font-size: 14px;
             letter-spacing: 3px;
             text-transform: uppercase;
-            /* Shimmer — faint light catches embossed logo */
-            background: linear-gradient(90deg,
-                    currentColor 0%,
-                    currentColor 35%,
-                    rgba(255, 255, 255, 0.9) 50%,
-                    currentColor 65%,
-                    currentColor 100%);
-            background-size: 300% 100%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: logoShimmer 8s ease-in-out infinite;
-            animation-delay: 2s;
-        }
-
-        @keyframes logoShimmer {
-            0% {
-                background-position: 100% 0;
-            }
-
-            30% {
-                background-position: 0% 0;
-            }
-
-            100% {
-                background-position: 0% 0;
-            }
         }
 
         .nav-links {
@@ -149,58 +122,10 @@
             text-transform: uppercase;
             opacity: 0.7;
             transition: opacity 0.3s var(--ease);
-            position: relative;
         }
 
         .nav-links a:hover {
             opacity: 1;
-        }
-
-        /* Staggered underline glow — runway lights */
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 10%;
-            width: 80%;
-            height: 1px;
-            background: linear-gradient(90deg,
-                    transparent 0%,
-                    currentColor 50%,
-                    transparent 100%);
-            opacity: 0;
-            animation: navGlow 8s ease-in-out infinite;
-        }
-
-        .nav-links li:nth-child(1) a::after {
-            animation-delay: 0s;
-        }
-
-        .nav-links li:nth-child(2) a::after {
-            animation-delay: 2.5s;
-        }
-
-        .nav-links li:nth-child(3) a::after {
-            animation-delay: 5s;
-        }
-
-        @keyframes navGlow {
-
-            0%,
-            100% {
-                opacity: 0;
-                transform: scaleX(0.3);
-            }
-
-            15% {
-                opacity: 0.5;
-                transform: scaleX(1);
-            }
-
-            25% {
-                opacity: 0;
-                transform: scaleX(0.3);
-            }
         }
 
         .nav-cta {
@@ -214,40 +139,6 @@
             padding: 10px 24px;
             border-radius: 4px;
             transition: all 0.3s var(--ease);
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Diagonal light sweep across button */
-        .nav-cta::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(110deg,
-                    transparent 30%,
-                    rgba(255, 255, 255, 0.15) 45%,
-                    rgba(255, 255, 255, 0.3) 50%,
-                    rgba(255, 255, 255, 0.15) 55%,
-                    transparent 70%);
-            animation: ctaSweep 6s ease-in-out infinite;
-            animation-delay: 3s;
-        }
-
-        @keyframes ctaSweep {
-            0% {
-                left: -100%;
-            }
-
-            30% {
-                left: 150%;
-            }
-
-            100% {
-                left: 150%;
-            }
         }
 
         .nav-cta:hover {
