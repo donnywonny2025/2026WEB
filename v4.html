@@ -1074,6 +1074,249 @@
                 text-align: center;
             }
         }
+
+        /* ═══════════════════════════════════════════
+           PROJECT DETAIL OVERLAY
+           ═══════════════════════════════════════════ */
+
+        /* Panel wipe transition */
+        .page-transition {
+            position: fixed;
+            inset: 0;
+            background: #0a0a0a;
+            z-index: 10000;
+            transform: translateY(100%);
+            pointer-events: none;
+            will-change: transform;
+        }
+
+        .page-transition.wipe-up {
+            animation: wipeUp 0.45s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+        }
+
+        .page-transition.wipe-down {
+            animation: wipeDown 0.45s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+        }
+
+        @keyframes wipeUp {
+            from {
+                transform: translateY(100%);
+            }
+
+            to {
+                transform: translateY(0%);
+            }
+        }
+
+        @keyframes wipeDown {
+            from {
+                transform: translateY(0%);
+            }
+
+            to {
+                transform: translateY(-100%);
+            }
+        }
+
+        @keyframes wipeUpReverse {
+            from {
+                transform: translateY(-100%);
+            }
+
+            to {
+                transform: translateY(0%);
+            }
+        }
+
+        @keyframes wipeDownReverse {
+            from {
+                transform: translateY(0%);
+            }
+
+            to {
+                transform: translateY(100%);
+            }
+        }
+
+        .page-transition.wipe-up-reverse {
+            animation: wipeUpReverse 0.45s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+        }
+
+        .page-transition.wipe-down-reverse {
+            animation: wipeDownReverse 0.45s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+        }
+
+        /* Detail overlay — hidden by default */
+        .project-detail-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9000;
+            background: #0a0a0a;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: none;
+            opacity: 0;
+        }
+
+        .project-detail-overlay.visible {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Detail page inner content */
+        .detail-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 32px 80px;
+        }
+
+        .detail-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 140px 0 40px;
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.3s var(--ease);
+        }
+
+        .detail-back:hover {
+            color: var(--accent);
+        }
+
+        .detail-back svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .detail-video {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+            margin-bottom: 56px;
+        }
+
+        .detail-video iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .detail-title {
+            font-family: var(--font-display);
+            font-size: clamp(28px, 4vw, 48px);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 20px;
+        }
+
+        .detail-description {
+            font-family: var(--font-body);
+            font-size: 15px;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 56px;
+            max-width: 680px;
+        }
+
+        .detail-section-label {
+            font-family: var(--font-body);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .detail-credits {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .detail-credit-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            font-family: var(--font-body);
+            font-size: 14px;
+        }
+
+        .detail-credit-row:first-child {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .detail-credit-label {
+            color: rgba(255, 255, 255, 0.4);
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 11px;
+        }
+
+        .detail-credit-value {
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 400;
+            text-align: right;
+        }
+
+        /* Make cards clickable */
+        .project {
+            cursor: pointer;
+        }
+
+        /* Detail page content entrance animations */
+        .detail-fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .detail-fade-in.animate {
+            animation: detailFadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes detailFadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .detail-container {
+                padding: 0 20px 60px;
+            }
+
+            .detail-back {
+                padding-top: 100px;
+            }
+
+            .detail-credit-row {
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .detail-credit-value {
+                text-align: left;
+            }
+        }
     </style>
 </head>
 
@@ -1367,6 +1610,33 @@
     </footer>
 
     <!-- ═══════════════════════════════════════════
+         PAGE TRANSITION PANEL
+         ═══════════════════════════════════════════ -->
+    <div class="page-transition" id="pageTransition"></div>
+
+    <!-- ═══════════════════════════════════════════
+         PROJECT DETAIL OVERLAY
+         ═══════════════════════════════════════════ -->
+    <div class="project-detail-overlay" id="projectDetailOverlay">
+        <div class="detail-container">
+            <a class="detail-back detail-fade-in" id="detailBack">
+                <svg viewBox="0 0 24 24">
+                    <polyline points="15 18 9 12 15 6" />
+                </svg>
+                Back
+            </a>
+            <div class="detail-video detail-fade-in" id="detailVideo">
+                <iframe id="detailIframe" src="" allow="autoplay; fullscreen; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
+            <h1 class="detail-title detail-fade-in" id="detailTitle"></h1>
+            <p class="detail-description detail-fade-in" id="detailDescription"></p>
+            <div class="detail-section-label detail-fade-in">Details</div>
+            <div class="detail-credits detail-fade-in" id="detailCredits"></div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
          JAVASCRIPT
          ═══════════════════════════════════════════ -->
     <script>
@@ -1462,6 +1732,222 @@
         }, { threshold: 0.5 });
 
         document.querySelectorAll('.stat-number').forEach(el => statObserver.observe(el));
+
+        // ═══════════════════════════════════════════
+        // PROJECT DETAIL PAGES + PANEL WIPE TRANSITION
+        // ═══════════════════════════════════════════
+
+        const projectData = [
+            {
+                title: '2026 Showreel',
+                embed: 'vimeo',
+                videoId: '1120665473',
+                description: 'A sweeping cut of work over the years across commercial, corporate, government, and documentary.',
+                credits: [
+                    ['Highlights', 'A series of work from over the years'],
+                    ['Published', '2025']
+                ]
+            },
+            {
+                title: 'New Balance — Rome',
+                embed: 'vimeo',
+                videoId: '1120683744',
+                description: 'A short showcase around Run Rome The Marathon, featuring New Balance athletes and the beauty of Rome\'s streets at dawn.',
+                credits: [
+                    ['Client', 'New Balance'],
+                    ['Role', 'Director / Editor'],
+                    ['Deliverables', 'Social campaign, BTS, highlights'],
+                    ['Location', 'Rome, Italy'],
+                    ['Published', '2025']
+                ]
+            },
+            {
+                title: 'Danny Was Here TV',
+                embed: 'youtube',
+                videoId: 'I6U5zDpzLq8',
+                description: 'It\'s been a pleasure working with Dan Egan to launch this new investigative channel. I\'m thrilled to be part of building Danny Was Here TV from the ground up — it\'s been really fun crafting these deep-dive financial analysis pieces. This Gemini IPO investigation required balancing complex regulatory details with engaging storytelling to keep viewers hooked throughout.',
+                credits: [
+                    ['Platform', 'YouTube'],
+                    ['Host', 'Dan Egan'],
+                    ['Role', 'Channel Creator / Lead Editor'],
+                    ['Channel', 'Danny Was Here TV'],
+                    ['Published', 'September 2025']
+                ]
+            },
+            {
+                title: 'Council for Responsible Nutrition',
+                embed: 'vimeo',
+                videoId: '641502508',
+                description: 'We loved building this animation-led explainer for the Council for Responsible Nutrition. Clear visuals and a tight script helped turn a complex topic into a simple, engaging story — crafted for a national release across web and social.',
+                credits: [
+                    ['Client', 'Council for Responsible Nutrition (CRN)'],
+                    ['Role', 'Director / Animator'],
+                    ['Deliverables', 'Web and social variants'],
+                    ['Focus', 'Explainer'],
+                    ['Published', '2022']
+                ]
+            },
+            {
+                title: 'FTC — LeanSpa',
+                embed: 'vimeo',
+                videoId: '641503564',
+                description: 'National campaign series for the Federal Trade Commission addressing deceptive diet ads. This one-minute-thirty spot was one of several, supported by TV, radio, web, and social cutdowns.',
+                credits: [
+                    ['Client', 'Federal Trade Commission (FTC)'],
+                    ['Role', 'Director / Editor'],
+                    ['Deliverables', 'National TV spots, internet ads, radio, social cutdowns'],
+                    ['Location', 'United States'],
+                    ['Published', '2023']
+                ]
+            },
+            {
+                title: 'Justice for Lai Dai Han',
+                embed: 'vimeo',
+                videoId: '641889858',
+                description: 'A powerful documentary shedding light on the sexual violence committed during the Vietnam War and the ongoing fight for justice. This piece required extraordinary sensitivity while maintaining the urgency of the message.',
+                credits: [
+                    ['Client', 'Justice for Lai Dai Han'],
+                    ['Role', 'Director / Producer'],
+                    ['Format', 'Documentary'],
+                    ['Published', '2021']
+                ]
+            },
+            {
+                title: 'Apollo 11 — 50th Anniversary',
+                embed: 'vimeo',
+                videoId: '641599879',
+                description: 'Produced for NASA\'s 50th Anniversary of Apollo 11 in Washington, D.C. This film served as the central projection during the evening ceremony, accompanied by interactive elements and six supporting videos around the Mall. A special night shared with astronauts, delegates, and guests — an honour to help bring to life.',
+                credits: [
+                    ['Client', 'NASA'],
+                    ['Role', 'Producer / Editor'],
+                    ['Deliverables', '6 video inserts, multiple animations'],
+                    ['Notes', 'Premiered during the official DC ceremony with additional interactive projections'],
+                    ['Published', '2019']
+                ]
+            }
+        ];
+
+        // DOM refs
+        const transitionPanel = document.getElementById('pageTransition');
+        const detailOverlay = document.getElementById('projectDetailOverlay');
+        const detailIframe = document.getElementById('detailIframe');
+        const detailTitle = document.getElementById('detailTitle');
+        const detailDesc = document.getElementById('detailDescription');
+        const detailCredits = document.getElementById('detailCredits');
+        const detailBack = document.getElementById('detailBack');
+        const mainContent = document.querySelectorAll('body > :not(.page-transition):not(.project-detail-overlay):not(script)');
+
+        let isTransitioning = false;
+        let savedScrollY = 0;
+
+        function getEmbedUrl(project) {
+            if (project.embed === 'youtube') {
+                return `https://www.youtube.com/embed/${project.videoId}?rel=0&modestbranding=1&playsinline=1`;
+            }
+            return `https://player.vimeo.com/video/${project.videoId}?autoplay=0&loop=0&title=0&byline=0&portrait=0`;
+        }
+
+        function populateDetail(index) {
+            const p = projectData[index];
+            detailIframe.src = getEmbedUrl(p);
+            detailTitle.textContent = p.title;
+            detailDesc.textContent = p.description;
+            detailCredits.innerHTML = p.credits.map(([label, value]) =>
+                `<div class="detail-credit-row">
+                    <span class="detail-credit-label">${label}</span>
+                    <span class="detail-credit-value">${value}</span>
+                </div>`
+            ).join('');
+        }
+
+        function animateDetailContent() {
+            const fadeEls = detailOverlay.querySelectorAll('.detail-fade-in');
+            fadeEls.forEach(el => el.classList.remove('animate'));
+            // Stagger the entrance
+            fadeEls.forEach((el, i) => {
+                setTimeout(() => el.classList.add('animate'), 80 * i);
+            });
+        }
+
+        function openProject(index) {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            savedScrollY = window.scrollY;
+
+            // Phase 1: Panel wipes up, covering the screen
+            transitionPanel.className = 'page-transition wipe-up';
+
+            transitionPanel.addEventListener('animationend', function onWipeUp() {
+                transitionPanel.removeEventListener('animationend', onWipeUp);
+
+                // Swap: hide main, show detail
+                mainContent.forEach(el => el.style.display = 'none');
+                populateDetail(index);
+                detailOverlay.classList.add('visible');
+                detailOverlay.scrollTop = 0;
+
+                // Hide nav on detail page — force dark mode
+                nav.style.display = 'none';
+
+                // Phase 2: Panel wipes down, revealing detail
+                transitionPanel.className = 'page-transition wipe-down';
+
+                transitionPanel.addEventListener('animationend', function onWipeDown() {
+                    transitionPanel.removeEventListener('animationend', onWipeDown);
+                    transitionPanel.className = 'page-transition';
+                    isTransitioning = false;
+                    animateDetailContent();
+                });
+            });
+        }
+
+        function closeProject() {
+            if (isTransitioning) return;
+            isTransitioning = true;
+
+            // Kill the iframe to stop playback
+            detailIframe.src = '';
+
+            // Phase 1: Panel wipes up from bottom
+            transitionPanel.className = 'page-transition wipe-up-reverse';
+
+            transitionPanel.addEventListener('animationend', function onWipeUp() {
+                transitionPanel.removeEventListener('animationend', onWipeUp);
+
+                // Swap: hide detail, show main
+                detailOverlay.classList.remove('visible');
+                mainContent.forEach(el => el.style.display = '');
+                nav.style.display = '';
+                window.scrollTo(0, savedScrollY);
+
+                // Phase 2: Panel drops away
+                transitionPanel.className = 'page-transition wipe-down-reverse';
+
+                transitionPanel.addEventListener('animationend', function onWipeDown() {
+                    transitionPanel.removeEventListener('animationend', onWipeDown);
+                    transitionPanel.className = 'page-transition';
+                    isTransitioning = false;
+                });
+            });
+        }
+
+        // Wire up card clicks
+        document.querySelectorAll('.project').forEach((card, index) => {
+            card.addEventListener('click', (e) => {
+                // Don't interfere with video hover (already handled by mouseenter/leave)
+                openProject(index);
+            });
+        });
+
+        // Wire up back button
+        detailBack.addEventListener('click', closeProject);
+
+        // ESC key closes detail
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && detailOverlay.classList.contains('visible')) {
+                closeProject();
+            }
+        });
     </script>
 </body>
 
