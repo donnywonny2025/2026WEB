@@ -12,6 +12,7 @@
 |---|---|---|
 | `v4.html` | **V4 "The Editorial"** — production site | 🔥 **Active** |
 | `the_editorial.html` | Locked copy of V4 at launch | ✅ Locked |
+| `v4_pre_animations.html` | V4 pre-nav-animations snapshot | ✅ Backup |
 | `v4_baseline.html` | V4 pre-video-hero snapshot | ✅ Backup |
 | `index.html` | Original live site replica | ✅ Reference |
 | `redesign.html` | V2 — previous version | ✅ Archived |
@@ -61,6 +62,11 @@ Original poster images for cards 2, 3, and 6 had cinematic letterbox bars baked 
 - **Shimmer:** Gradient highlight sweeps left-to-right across "CONTACT" text, pauses ~2.5s, loops
 - **Accent line glow:** Light pulse travels down the orange accent line and fades out
 
+### Nav Bar Micro-Animations (Feb 11, 2026)
+- **Logo shimmer:** Faint light sweep across "JEFF KERR" like embossed metal (8s cycle)
+- **Staggered nav link glow:** Work → About → Contact underlines pulse in sequence (runway lights effect)
+- **CTA button sweep:** Diagonal light streak across "START A PROJECT" button (6s cycle)
+
 ## Deployment
 
 The site is a single self-contained HTML file (`v4.html`).
@@ -70,4 +76,13 @@ Video assets in `Videos/` must be deployed alongside.
 ## To Resume
 1. Open `v4.html` — this is the active working file
 2. `the_editorial.html` is the locked launch copy — safe to revert to
-3. All copy verified against live jefferykerr.com on Feb 9, 2026
+3. `v4_pre_animations.html` — revert point before nav animations
+4. All copy verified against live jefferykerr.com on Feb 9, 2026
+
+## Git Versioning
+
+Local git repo initialized. Commit history:
+1. `V4 'The Editorial' — production site with clean posters and contact animations`
+2. `Add nav micro-animations: logo shimmer, staggered link glows, CTA button sweep`
+
+Remote: `git@github.com:colour8k/2026WEB.git` (pending auth setup)
