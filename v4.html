@@ -1082,12 +1082,20 @@
         /* Panel wipe transition */
         .page-transition {
             position: fixed;
-            inset: 0;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             background: #0a0a0a;
             z-index: 10000;
             transform: translateY(100%);
             pointer-events: none;
             will-change: transform;
+        }
+
+        /* Lock body scroll during transitions */
+        body.transitioning {
+            overflow: hidden !important;
         }
 
         .page-transition.wipe-up {
@@ -1149,7 +1157,10 @@
         /* Detail overlay — hidden by default */
         .project-detail-overlay {
             position: fixed;
-            inset: 0;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             z-index: 9000;
             background: #0a0a0a;
             overflow-y: auto;
@@ -1873,6 +1884,7 @@
             if (isTransitioning) return;
             isTransitioning = true;
             savedScrollY = window.scrollY;
+            document.body.classList.add('transitioning');
 
             // Phase 1: Panel wipes up, covering the screen
             transitionPanel.className = 'page-transition wipe-up';
@@ -1901,6 +1913,7 @@
                             transitionPanel.removeEventListener('animationend', onWipeDown);
                             transitionPanel.className = 'page-transition';
                             isTransitioning = false;
+                            document.body.classList.remove('transitioning');
                             animateDetailContent();
                         });
                     });
@@ -1911,6 +1924,7 @@
         function closeProject() {
             if (isTransitioning) return;
             isTransitioning = true;
+            document.body.classList.add('transitioning');
 
             // Kill the iframe to stop playback
             detailIframe.src = '';
@@ -1941,6 +1955,7 @@
                             transitionPanel.removeEventListener('animationend', onWipeDown);
                             transitionPanel.className = 'page-transition';
                             isTransitioning = false;
+                            document.body.classList.remove('transitioning');
                         });
                     });
                 });
