@@ -1880,23 +1880,30 @@
             transitionPanel.addEventListener('animationend', function onWipeUp() {
                 transitionPanel.removeEventListener('animationend', onWipeUp);
 
-                // Swap: hide main, show detail
+                // Pin panel in place — prevent any frame where it snaps to default
+                transitionPanel.style.transform = 'translateY(0%)';
+                transitionPanel.className = 'page-transition';
+
+                // Swap content while panel is fully covering screen
                 mainContent.forEach(el => el.style.display = 'none');
                 populateDetail(index);
                 detailOverlay.classList.add('visible');
                 detailOverlay.scrollTop = 0;
-
-                // Hide nav on detail page — force dark mode
                 nav.style.display = 'none';
 
-                // Phase 2: Panel wipes down, revealing detail
-                transitionPanel.className = 'page-transition wipe-down';
+                // Wait one frame so the swap paints, then start phase 2
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        transitionPanel.style.transform = '';
+                        transitionPanel.className = 'page-transition wipe-down';
 
-                transitionPanel.addEventListener('animationend', function onWipeDown() {
-                    transitionPanel.removeEventListener('animationend', onWipeDown);
-                    transitionPanel.className = 'page-transition';
-                    isTransitioning = false;
-                    animateDetailContent();
+                        transitionPanel.addEventListener('animationend', function onWipeDown() {
+                            transitionPanel.removeEventListener('animationend', onWipeDown);
+                            transitionPanel.className = 'page-transition';
+                            isTransitioning = false;
+                            animateDetailContent();
+                        });
+                    });
                 });
             });
         }
@@ -1914,19 +1921,28 @@
             transitionPanel.addEventListener('animationend', function onWipeUp() {
                 transitionPanel.removeEventListener('animationend', onWipeUp);
 
-                // Swap: hide detail, show main
+                // Pin panel in place
+                transitionPanel.style.transform = 'translateY(0%)';
+                transitionPanel.className = 'page-transition';
+
+                // Swap content while panel is fully covering
                 detailOverlay.classList.remove('visible');
                 mainContent.forEach(el => el.style.display = '');
                 nav.style.display = '';
                 window.scrollTo(0, savedScrollY);
 
-                // Phase 2: Panel drops away
-                transitionPanel.className = 'page-transition wipe-down-reverse';
+                // Wait one frame for layout, then reveal
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        transitionPanel.style.transform = '';
+                        transitionPanel.className = 'page-transition wipe-down-reverse';
 
-                transitionPanel.addEventListener('animationend', function onWipeDown() {
-                    transitionPanel.removeEventListener('animationend', onWipeDown);
-                    transitionPanel.className = 'page-transition';
-                    isTransitioning = false;
+                        transitionPanel.addEventListener('animationend', function onWipeDown() {
+                            transitionPanel.removeEventListener('animationend', onWipeDown);
+                            transitionPanel.className = 'page-transition';
+                            isTransitioning = false;
+                        });
+                    });
                 });
             });
         }
