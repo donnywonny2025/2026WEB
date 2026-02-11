@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeff Kerr — Director & Creative</title>
+    <meta name="description"
+        content="Jeff Kerr produces compelling visual content across entertainment, corporate, and political projects. 15+ years creating. Grand Rapids to the world.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@2.0.8/dist/lottie-player.js"></script>
+    <style>
+        /* Inline animated SVG icon styles */
+        .icon-svg {
+            width: 18px;
+            height: 18px;
+            opacity: 0.4;
+            flex-shrink: 0;
+        }
+
+        .icon-svg path,
+        .icon-svg line,
+        .icon-svg circle,
+        .icon-svg rect,
+        .icon-svg polyline {
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .icon-pulse {
+            animation: icon-float 2s ease-in-out infinite;
+        }
+
+        @keyframes icon-float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-2px);
+            }
+        }
+
+        .cta-btn .icon-svg {
+            width: 20px;
+            height: 20px;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        .cta-btn:hover .icon-svg {
+            opacity: 1;
+        }
+    </style>
+    <style>
+        /* ═══════════════════════════════════════════════
+       RESET & FOUNDATION
+       ═══════════════════════════════════════════════ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(192, 132, 252, 0.2) transparent;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #000;
+            color: #e0e0e0;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(192, 132, 252, 0.2);
+            border-radius: 2px;
+        }
+
+        ::selection {
+            background: rgba(192, 132, 252, 0.25);
+            color: #fff;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* ═══════════════════════════════════════════════
+       WEBGL CANVAS
+       ═══════════════════════════════════════════════ */
+        #noise-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ═══════════════════════════════════════════════
+       THEATRICAL CURTAIN
+       ═══════════════════════════════════════════════ */
+        #curtain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 10000;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #curtain .name {
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 700;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: white;
+            opacity: 0;
+            transform: scale(0.85) translateY(10px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #curtain .tagline {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.3);
+            opacity: 0;
+            transition: opacity 0.8s ease 0.4s;
+        }
+
+        #curtain.reveal .name {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        #curtain.reveal .tagline {
+            opacity: 1;
+        }
+
+        #curtain.dissolve {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* ═══════════════════════════════════════════════
+       LAYOUT
+       ═══════════════════════════════════════════════ */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 clamp(24px, 5vw, 80px);
+        }
+
+        /* ═══════════════════════════════════════════════
+       NAVIGATION
+       ═══════════════════════════════════════════════ */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0 clamp(24px, 5vw, 80px);
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            background: rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            transition: all 0.4s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(0, 0, 0, 0.7);
+            border-bottom-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-logo {
+            font-family: 'Space Mono', monospace;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+        }
+
+        .nav-logo:hover {
+            color: #c084fc;
+        }
+
+        .nav-logo span {
+            color: #c084fc;
+        }
+
+        .nav-activity {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-activity lottie-player {
+            filter: invert(1) opacity(0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.5);
+            transition: color 0.3s ease;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #c084fc;
+            transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .nav-links a:hover {
+            color: #c084fc;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-clock {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 0.05em;
+        }
+
+        /* ═══════════════════════════════════════════════
+       HERO
+       ═══════════════════════════════════════════════ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-top: 72px;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 900px;
+        }
+
+        .hero h1 {
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(2rem, 4.5vw, 3.8rem);
+            font-weight: 700;
+            line-height: 1.08;
+            letter-spacing: -0.03em;
+            color: white;
+            margin-bottom: 32px;
+        }
+
+        .hero h1 .g1 {
+            display: inline;
+            background: linear-gradient(135deg, #c084fc, #818cf8, #60a5fa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 30px rgba(192, 132, 252, 0.3));
+            animation: pulse-g1 4s ease-in-out infinite alternate;
+        }
+
+        .hero h1 .g2 {
+            display: inline;
+            background: linear-gradient(135deg, #60a5fa, #34d399, #2dd4bf);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 30px rgba(96, 165, 250, 0.3));
+            animation: pulse-g2 4s ease-in-out 0.5s infinite alternate;
+        }
+
+        .hero h1 .g3 {
+            display: inline;
+            background: linear-gradient(135deg, #fb923c, #f472b6, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 30px rgba(244, 114, 182, 0.3));
+            animation: pulse-g3 4s ease-in-out 1s infinite alternate;
+        }
+
+        @keyframes pulse-g1 {
+            0% {
+                filter: drop-shadow(0 0 20px rgba(192, 132, 252, 0.2));
+            }
+
+            100% {
+                filter: drop-shadow(0 0 40px rgba(129, 140, 248, 0.45));
+            }
+        }
+
+        @keyframes pulse-g2 {
+            0% {
+                filter: drop-shadow(0 0 20px rgba(96, 165, 250, 0.2));
+            }
+
+            100% {
+                filter: drop-shadow(0 0 40px rgba(45, 212, 191, 0.45));
+            }
+        }
+
+        @keyframes pulse-g3 {
+            0% {
+                filter: drop-shadow(0 0 20px rgba(251, 146, 60, 0.2));
+            }
+
+            100% {
+                filter: drop-shadow(0 0 40px rgba(192, 132, 252, 0.45));
+            }
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 48px;
+        }
+
+        .hero-meta span {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.4);
+            font-weight: 400;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hero-meta .dot {
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+        }
+
+        .hero-meta lottie-player {
+            width: 18px;
+            height: 18px;
+            filter: invert(1) opacity(0.4);
+        }
+
+        /* Hero entrance animations */
+        .hero h1,
+        .hero-meta,
+        .hero-featured,
+        .scroll-indicator {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hero.animate h1 {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0s;
+        }
+
+        .hero.animate .hero-meta {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0.15s;
+        }
+
+        .hero.animate .hero-featured {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0.3s;
+        }
+
+        .hero.animate .scroll-indicator {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0.6s;
+        }
+
+        /* ═══════════════════════════════════════════════
+       SCROLL INDICATOR
+       ═══════════════════════════════════════════════ */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .scroll-indicator span {
+            font-size: 9px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .scroll-indicator lottie-player {
+            width: 32px;
+            height: 32px;
+            filter: invert(1) opacity(0.3);
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateX(-50%) translateY(0);
+            }
+
+            50% {
+                transform: translateX(-50%) translateY(12px);
+            }
+        }
+
+        /* ═══════════════════════════════════════════════
+       FEATURED VIDEO (Hero)
+       ═══════════════════════════════════════════════ */
+        .hero-featured {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            max-width: 100%;
+            aspect-ratio: 16/9;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hero-featured:hover {
+            transform: translateY(-8px) scale(1.005);
+            box-shadow: 0 40px 120px rgba(0, 0, 0, 0.6), 0 0 60px rgba(192, 132, 252, 0.06);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .hero-featured video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .hero-featured .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 40px 32px 28px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, transparent 100%);
+        }
+
+        .hero-featured .play-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s ease;
+        }
+
+        .hero-featured .play-circle lottie-player {
+            width: 36px;
+            height: 36px;
+            filter: invert(1) brightness(2);
+        }
+
+        .hero-featured:hover .play-circle {
+            transform: translate(-50%, -50%) scale(1.15);
+            background: rgba(255, 255, 255, 0.18);
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
+        }
+
+        .card-label {
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .card-title {
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
+            font-weight: 700;
+            color: white;
+        }
+
+        /* ═══════════════════════════════════════════════
+       CLIENT LOGOS
+       ═══════════════════════════════════════════════ */
+        .clients {
+            padding: 80px 0 40px;
+            text-align: center;
+        }
+
+        .clients-label {
+            font-size: 10px;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.2);
+            margin-bottom: 40px;
+        }
+
+        .client-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 48px;
+        }
+
+        .client-list span {
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            color: rgba(255, 255, 255, 0.2);
+            text-transform: uppercase;
+            transition: all 0.4s ease;
+            cursor: default;
+        }
+
+        .client-list span:hover {
+            color: rgba(255, 255, 255, 0.6);
+            text-shadow: 0 0 20px rgba(192, 132, 252, 0.2);
+        }
+
+        /* ═══════════════════════════════════════════════
+       DIVIDING LINE
+       ═══════════════════════════════════════════════ */
+        .divider {
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(192, 132, 252, 0.3), transparent);
+            margin: 40px auto;
+        }
+
+        /* ═══════════════════════════════════════════════
+       SECTION HEADERS
+       ═══════════════════════════════════════════════ */
+        .section-header {
+            text-align: center;
+            padding: 120px 0 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .section-header h2 {
+            font-size: 10px;
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.25);
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .section-header lottie-player {
+            width: 20px;
+            height: 20px;
+            filter: invert(1) opacity(0.25);
+        }
+
+        /* ═══════════════════════════════════════════════
+       PROJECT CARDS
+       ═══════════════════════════════════════════════ */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+
+        .projects-grid.two-col {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .project-card {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0;
+            transform: translateY(40px);
+            filter: blur(6px);
+        }
+
+        .project-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px) scale(1.01);
+            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.5), 0 0 50px rgba(192, 132, 252, 0.05);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .project-card video,
+        .project-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 8s ease-out;
+        }
+
+        .project-card:hover video,
+        .project-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .project-card .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 48px 32px 28px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+            transform: translateY(8px);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .project-card:hover .overlay {
+            transform: translateY(0);
+        }
+
+        .project-card .play-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s ease;
+            opacity: 0.7;
+        }
+
+        .project-card .play-circle lottie-player {
+            width: 28px;
+            height: 28px;
+            filter: invert(1) brightness(2);
+        }
+
+        .project-card:hover .play-circle {
+            transform: translate(-50%, -50%) scale(1.15);
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.14);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.15);
+        }
+
+        .project-desc {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 6px;
+            line-height: 1.5;
+            max-width: 500px;
+        }
+
+        /* ═══════════════════════════════════════════════
+       ABOUT SECTION
+       ═══════════════════════════════════════════════ */
+        .about {
+            padding: 60px 0 120px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: start;
+        }
+
+        .about-text h3 {
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+            font-weight: 700;
+            color: white;
+            line-height: 1.15;
+            margin-bottom: 32px;
+        }
+
+        .about-text p {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .about-text .highlight {
+            color: #c084fc;
+            font-weight: 500;
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .stat-card {
+            padding: 28px 24px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(12px);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(192, 132, 252, 0.04) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .stat-card:hover::after {
+            opacity: 1;
+        }
+
+        .stat-card:hover {
+            border-color: rgba(192, 132, 252, 0.15);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 40px rgba(192, 132, 252, 0.05);
+        }
+
+        .stat-number {
+            font-family: 'Space Mono', monospace;
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: white;
+            line-height: 1;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.35);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-icon {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 20px;
+            height: 20px;
+            filter: invert(1) opacity(0.1);
+            z-index: 1;
+        }
+
+        /* ═══════════════════════════════════════════════
+       CONTACT / CTA
+       ═══════════════════════════════════════════════ */
+        .contact {
+            padding: 120px 0;
+            text-align: center;
+        }
+
+        .contact h2 {
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(1.8rem, 3.5vw, 3rem);
+            font-weight: 700;
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        .contact p {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 48px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 36px;
+            border-radius: 100px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-btn lottie-player {
+            width: 22px;
+            height: 22px;
+            filter: invert(1) opacity(0.6);
+            transition: filter 0.3s ease;
+        }
+
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .cta-btn:hover::before {
+            left: 100%;
+        }
+
+        .cta-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(192, 132, 252, 0.3);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(192, 132, 252, 0.12);
+        }
+
+        .cta-btn:hover lottie-player {
+            filter: invert(1) opacity(1);
+        }
+
+        /* ═══════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════ */
+        footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 40px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .footer-copy {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.2);
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-copy lottie-player {
+            width: 16px;
+            height: 16px;
+            filter: invert(1) opacity(0.2);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 32px;
+        }
+
+        .footer-links a {
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.3);
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #c084fc;
+        }
+
+        /* ═══════════════════════════════════════════════
+       MAGNETIC CURSOR
+       ═══════════════════════════════════════════════ */
+        .magnetic {
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* ═══════════════════════════════════════════════
+       RESPONSIVE
+       ═══════════════════════════════════════════════ */
+        @media (max-width: 900px) {
+            .projects-grid.two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .about {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .client-list {
+                gap: 24px;
+            }
+
+            .contact-links {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .scroll-indicator {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ═══ THEATRICAL ENTRANCE ═══ -->
+    <div id="curtain">
+        <div class="name">KERR</div>
+        <div class="tagline">Director & Creative</div>
+    </div>
+
+    <!-- ═══ NAVIGATION ═══ -->
+    <nav>
+        <a class="nav-logo" href="#"><span>K</span>err</a>
+        <ul class="nav-links">
+            <li><a href="#work">Work</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="nav-right">
+            <div class="nav-clock" id="clock">--:--:--</div>
+        </div>
+    </nav>
+
+    <!-- ═══ HERO ═══ -->
+    <section class="hero" id="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>
+                    I produce <span class="g1">compelling visual content</span>
+                    across <span class="g2">entertainment, corporate,</span>
+                    <span class="g3">and political</span> projects.
+                </h1>
+                <div class="hero-meta">
+                    <span>
+                        <svg class="icon-svg icon-pulse" viewBox="0 0 24 24">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                            <circle cx="12" cy="10" r="3" />
+                        </svg>
+                        Grand Rapids, Michigan / World
+                    </span>
+                    <div class="dot"></div>
+                    <span>
+                        <lottie-player src="https://unpkg.com/react-useanimations/lib/mail/mail.json"
+                            background="transparent" speed="0.6" loop autoplay></lottie-player>
+                        colour8k@mac.com
+                    </span>
+                    <div class="dot"></div>
+                    <span>
+                        <svg class="icon-svg icon-pulse" viewBox="0 0 24 24">
+                            <path
+                                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                        </svg>
+                        407-620-3618
+                    </span>
+                </div>
+            </div>
+
+            <!-- Featured: New Balance -->
+            <div class="hero-featured">
+                <video src="Videos/NBQuickLoop2.mp4" muted loop playsinline autoplay
+                    poster="Videos/NBPOSTER.jpg"></video>
+                <div class="play-circle">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                        <polygon points="8,5 20,12 8,19" />
+                    </svg>
+                </div>
+                <div class="overlay">
+                    <div class="card-label">New Balance · 2025 · Rome, Italy</div>
+                    <div class="card-title">New Balance Campaign</div>
+                </div>
+            </div>
+
+            <!-- Scroll indicator -->
+            <div class="scroll-indicator">
+                <span>Scroll</span>
+                <lottie-player src="https://unpkg.com/react-useanimations/lib/arrowDown/arrowDown.json"
+                    background="transparent" speed="0.7" loop autoplay></lottie-player>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ CLIENTS ═══ -->
+    <section class="container">
+        <div class="clients">
+            <div class="clients-label">Trusted By</div>
+            <div class="client-list">
+                <span>Raytheon</span>
+                <span>Century 21</span>
+                <span>Universal</span>
+                <span>Under Armour</span>
+                <span>Boeing</span>
+                <span>Disney</span>
+                <span>NASA</span>
+                <span>FTC</span>
+            </div>
+        </div>
+        <div class="divider"></div>
+    </section>
+
+    <!-- ═══ WORK ═══ -->
+    <section id="work">
+        <div class="container">
+            <div class="section-header">
+                <h2>Selected Work</h2>
+            </div>
+
+            <!-- Danny + Showreel -->
+            <div class="projects-grid two-col">
+                <div class="project-card">
+                    <video src="Videos/DannyQuickLoop3.mp4" muted loop playsinline
+                        poster="Videos/DannyPoster.jpg"></video>
+                    <div class="play-circle">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                            <polygon points="8,5 20,12 8,19" />
+                        </svg>
+                    </div>
+                    <div class="overlay">
+                        <div class="card-label">Jeff Kerr · 2025</div>
+                        <div class="card-title">Danny Was Here TV</div>
+                        <div class="project-desc">Investigative channel. Creator & lead editor.</div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <video src="Videos/REELQuickLoop.mp4" muted loop playsinline
+                        poster="Videos/Reel_Poster.jpg"></video>
+                    <div class="play-circle">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                            <polygon points="8,5 20,12 8,19" />
+                        </svg>
+                    </div>
+                    <div class="overlay">
+                        <div class="card-label">Showreel · 2025</div>
+                        <div class="card-title">Featured Showreel</div>
+                        <div class="project-desc">Commercial, corporate, government, documentary.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Full Width: CRN -->
+            <div class="projects-grid">
+                <div class="project-card">
+                    <video src="Videos/CRNQuickLoop.mp4" muted loop playsinline poster="Videos/CRNPOSTER.jpg"></video>
+                    <div class="play-circle">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                            <polygon points="8,5 20,12 8,19" />
+                        </svg>
+                    </div>
+                    <div class="overlay">
+                        <div class="card-label">Council for Responsible Nutrition · 2022</div>
+                        <div class="card-title">CRN Explainer</div>
+                        <div class="project-desc">Animation-led explainer. National release across web and social.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FTC + Justice -->
+            <div class="projects-grid two-col">
+                <div class="project-card">
+                    <video src="Videos/FTCLEANQuickLoop.mp4" muted loop playsinline
+                        poster="Videos/FTCLEANPoster.jpg"></video>
+                    <div class="play-circle">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                            <polygon points="8,5 20,12 8,19" />
+                        </svg>
+                    </div>
+                    <div class="overlay">
+                        <div class="card-label">Federal Trade Commission · 2023</div>
+                        <div class="card-title">FTC — LeanSpa Campaign</div>
+                        <div class="project-desc">National campaign addressing deceptive diet ads.</div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <video src="Videos/JusticeLoop.mp4" muted loop playsinline></video>
+                    <div class="play-circle">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                            <polygon points="8,5 20,12 8,19" />
+                        </svg>
+                    </div>
+                    <div class="overlay">
+                        <div class="card-label">Documentary · 2021</div>
+                        <div class="card-title">Justice for Lai Dai Han</div>
+                        <div class="project-desc">Advocacy for survivors of conflict-related sexual violence.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Full Width: NASA -->
+            <div class="projects-grid">
+                <div class="project-card">
+                    <video src="Videos/NASAQuickLoop.mp4" muted loop playsinline poster="Videos/NASAPoster.jpg"></video>
+                    <div class="play-circle">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                            <polygon points="8,5 20,12 8,19" />
+                        </svg>
+                    </div>
+                    <div class="overlay">
+                        <div class="card-label">NASA · 2019 · Washington, D.C.</div>
+                        <div class="card-title">Apollo 11 — 50th Anniversary</div>
+                        <div class="project-desc">Central projection film for NASA's evening ceremony on the National
+                            Mall.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ ABOUT ═══ -->
+    <section id="about">
+        <div class="container">
+            <div class="section-header">
+                <h2>About</h2>
+            </div>
+            <div class="about">
+                <div class="about-text">
+                    <h3>15+ years turning complex stories into visual clarity.</h3>
+                    <p>
+                        From <span class="highlight">NASA's Apollo 11 ceremony</span> to
+                        <span class="highlight">FTC national campaigns</span>, I produce work that
+                        communicates under pressure and at scale. Entertainment to defense.
+                        Brand films to government compliance.
+                    </p>
+                    <p>
+                        Based in Grand Rapids, Michigan. Available worldwide.
+                        I work fast, I work clean, and I don't miss deadlines.
+                    </p>
+                </div>
+                <div class="about-stats">
+                    <div class="stat-card">
+                        <div class="stat-number" data-target="15">0</div>
+                        <div class="stat-label">Years Creating</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" data-target="7">0</div>
+                        <div class="stat-label">Active Projects</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" data-target="6">0</div>
+                        <div class="stat-label">Major Clients</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" data-target="3">0</div>
+                        <div class="stat-label">Sectors</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ CONTACT ═══ -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <h2>Let's build something.</h2>
+            <p>Available for creative direction, production, and post-production across entertainment, corporate, and
+                political work.</p>
+            <div class="contact-links">
+                <a href="mailto:colour8k@mac.com" class="cta-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    Email Me
+                </a>
+                <a href="tel:4076203618" class="cta-btn">
+                    <svg class="icon-svg icon-pulse" viewBox="0 0 24 24">
+                        <path
+                            d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                    </svg>
+                    407-620-3618
+                </a>
+                <a href="https://www.linkedin.com/in/jefferykerr/" class="cta-btn" target="_blank">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" class="feather feather-linkedin">
+                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                        <rect x="2" y="9" width="4" height="12"></rect>
+                        <circle cx="4" cy="4" r="2"></circle>
+                    </svg>
+                    LinkedIn
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer>
+        <div class="container">
+            <div class="footer-inner">
+                <div class="footer-copy">
+                    © 2025 Jeff Kerr
+                </div>
+                <div class="footer-links">
+                    <a href="#hero">Home</a>
+                    <a href="#work">Work</a>
+                    <a href="#contact">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ═══ ENGINE ═══ -->
+    <script>
+        (function () {
+            'use strict';
+
+            // ─── THEATRICAL ENTRANCE ───
+            const curtain = document.getElementById('curtain');
+            setTimeout(() => curtain.classList.add('reveal'), 200);
+            setTimeout(() => curtain.classList.add('dissolve'), 1800);
+            setTimeout(() => curtain.remove(), 2600);
+
+            // ─── HERO ANIMATION ───
+            setTimeout(() => document.querySelector('.hero').classList.add('animate'), 2200);
+
+            // ─── LIVE CLOCK ───
+            const clockEl = document.getElementById('clock');
+            function tick() {
+                const now = new Date();
+                clockEl.textContent = [now.getHours(), now.getMinutes(), now.getSeconds()]
+                    .map(n => String(n).padStart(2, '0')).join(':');
+            }
+            tick(); setInterval(tick, 1000);
+
+            // ─── NAV SCROLL STATE ───
+            const nav = document.querySelector('nav');
+            window.addEventListener('scroll', () => {
+                nav.classList.toggle('scrolled', scrollY > 100);
+            }, { passive: true });
+
+            // ─── WEBGL NOISE BACKGROUND ───
+            (function initNoise() {
+                const c = document.createElement('canvas');
+                c.id = 'noise-bg';
+                document.body.insertBefore(c, document.body.firstChild);
+
+                const gl = c.getContext('webgl', { alpha: false, antialias: false, powerPreference: 'high-performance' });
+                if (!gl) return;
+
+                const vs = `attribute vec2 p; void main(){gl_Position=vec4(p,0,1);}`;
+                const fs = `
+        precision mediump float;
+        uniform float t; uniform vec2 r; uniform float s; uniform vec2 m;
+
+        vec3 mod289(vec3 x){return x-floor(x/289.)*289.;}
+        vec2 mod289(vec2 x){return x-floor(x/289.)*289.;}
+        vec3 permute(vec3 x){return mod289(((x*34.)+1.)*x);}
+
+        float snoise(vec2 v){
+          const vec4 C=vec4(.211325,.366025,-.577350,.024390);
+          vec2 i=floor(v+dot(v,C.yy));
+          vec2 x0=v-i+dot(i,C.xx);
+          vec2 i1=(x0.x>x0.y)?vec2(1,0):vec2(0,1);
+          vec4 x12=x0.xyxy+C.xxzz; x12.xy-=i1;
+          i=mod289(i);
+          vec3 p=permute(permute(i.y+vec3(0,i1.y,1))+i.x+vec3(0,i1.x,1));
+          vec3 m=max(.5-vec3(dot(x0,x0),dot(x12.xy,x12.xy),dot(x12.zw,x12.zw)),0.);
+          m=m*m; m=m*m;
+          vec3 x=2.*fract(p*C.www)-1.;
+          vec3 h=abs(x)-.5;
+          vec3 ox=floor(x+.5);
+          vec3 a0=x-ox;
+          m*=1.79284291-.85373472*(a0*a0+h*h);
+          vec3 g; g.x=a0.x*x0.x+h.x*x0.y; g.yz=a0.yz*x12.xz+h.yz*x12.yw;
+          return 130.*dot(m,g);
+        }
+
+        void main(){
+          vec2 uv=gl_FragCoord.xy/r;
+          float T=t*.08;
+          float S=s*.0003;
+          float n=snoise(uv*1.5+vec2(T*.3,S))*.5
+                 +snoise(uv*3.+vec2(-T*.2,S*1.5))*.3
+                 +snoise(uv*6.+vec2(T*.1,-S))*.2;
+          vec2 mu=m/r;
+          float md=length(uv-mu);
+          float mg=exp(-md*3.)*.12;
+          vec3 col=mix(vec3(.02,.02,.06),vec3(.04,.02,.06),n*.5+.5);
+          col=mix(col,vec3(.03,.03,.04),.5);
+          col+=vec3(.3,.15,.5)*mg;
+          col*=1.-smoothstep(.3,1.2,length(uv-.5)*1.4);
+          col+=(fract(sin(dot(uv*t*100.,vec2(12.9898,78.233)))*43758.5453)-.5)*.03;
+          gl_FragColor=vec4(col,1);
+        }
+      `;
+
+                function cs(src, type) { const sh = gl.createShader(type); gl.shaderSource(sh, src); gl.compileShader(sh); return sh; }
+                const pg = gl.createProgram();
+                gl.attachShader(pg, cs(vs, gl.VERTEX_SHADER));
+                gl.attachShader(pg, cs(fs, gl.FRAGMENT_SHADER));
+                gl.linkProgram(pg); gl.useProgram(pg);
+                const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+                const pos = gl.getAttribLocation(pg, 'p'); gl.enableVertexAttribArray(pos);
+                gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+                const ut = gl.getUniformLocation(pg, 't'), ur = gl.getUniformLocation(pg, 'r'),
+                    us = gl.getUniformLocation(pg, 's'), um = gl.getUniformLocation(pg, 'm');
+
+                let mx = 0, my = 0;
+                document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+                function resize() {
+                    const d = Math.min(devicePixelRatio, 1.5);
+                    c.width = innerWidth * d; c.height = innerHeight * d;
+                    gl.viewport(0, 0, c.width, c.height);
+                }
+                resize(); addEventListener('resize', resize);
+
+                const t0 = Date.now();
+                (function loop() {
+                    const dt = (Date.now() - t0) / 1000;
+                    gl.uniform1f(ut, dt);
+                    gl.uniform2f(ur, c.width, c.height);
+                    gl.uniform1f(us, scrollY);
+                    const d = Math.min(devicePixelRatio, 1.5);
+                    gl.uniform2f(um, mx * d, (innerHeight - my) * d);
+                    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+                    requestAnimationFrame(loop);
+                })();
+            })();
+
+            // ─── SCROLL REVEALS ───
+            const cards = document.querySelectorAll('.project-card');
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const el = entry.target;
+                        const siblings = el.parentElement.querySelectorAll('.project-card');
+                        const idx = Array.from(siblings).indexOf(el);
+                        setTimeout(() => {
+                            el.classList.add('visible');
+                            el.style.transition = 'all 1s cubic-bezier(.16,1,.3,1)';
+                            const v = el.querySelector('video');
+                            if (v) v.play().catch(() => { });
+                        }, idx * 150);
+                        observer.unobserve(el);
+                    }
+                });
+            }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+            cards.forEach(el => observer.observe(el));
+
+            // Reveal sections
+            const secs = document.querySelectorAll('.section-header, .about, .contact, .clients, .divider');
+            const secObs = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.transition = 'opacity 1s ease, transform 1s ease';
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                        secObs.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            secs.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                secObs.observe(el);
+            });
+
+            // ─── NUMBER COUNT-UP ───
+            const statNums = document.querySelectorAll('.stat-number[data-target]');
+            const countObs = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const el = entry.target;
+                        const target = parseInt(el.dataset.target);
+                        const start = Date.now(), dur = 1500;
+                        (function step() {
+                            const p = Math.min((Date.now() - start) / dur, 1);
+                            const e = 1 - Math.pow(1 - p, 3);
+                            el.textContent = Math.round(e * target) + '+';
+                            if (p < 1) requestAnimationFrame(step);
+                        })();
+                        countObs.unobserve(el);
+                    }
+                });
+            }, { threshold: 0.5 });
+            statNums.forEach(el => countObs.observe(el));
+
+
+
+            // ─── PARALLAX ON VIDEOS (gentle Ken Burns) ───
+            let ticking = false;
+            addEventListener('scroll', () => {
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        cards.forEach(card => {
+                            if (!card.classList.contains('visible')) return;
+                            const rect = card.getBoundingClientRect();
+                            const offset = (rect.top + rect.height / 2 - innerHeight / 2) * 0.03;
+                            const v = card.querySelector('video') || card.querySelector('img');
+                            if (v) v.style.transform = `scale(1.06) translateY(${offset}px)`;
+                        });
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, { passive: true });
+
+            // ─── HIDE SCROLL INDICATOR ON SCROLL ───
+            const scrollInd = document.querySelector('.scroll-indicator');
+            let scrollHid = false;
+            addEventListener('scroll', () => {
+                if (!scrollHid && scrollY > 200) {
+                    scrollInd.style.transition = 'opacity 0.5s ease';
+                    scrollInd.style.opacity = '0';
+                    scrollHid = true;
+                }
+            }, { passive: true });
+
+            // ─── AUTOPLAY HERO VIDEO ───
+            const heroVid = document.querySelector('.hero-featured video');
+            if (heroVid) heroVid.play().catch(() => { });
+
+        })();
+    </script>
+
+</body>
+
+</html>
