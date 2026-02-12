@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeff Kerr — Legal & Political Work</title>
+    <meta name="description"
+        content="Jeff Kerr — Legal & Political video production work. Government, advocacy, and political campaigns.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* ═══════════════════════════════════════════
+           POLITICAL PAGE — Overrides & additions
+           ═══════════════════════════════════════════ */
+
+        /* Hero override — shorter, no video */
+        .political-hero {
+            min-height: 60vh;
+            background: var(--black);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 0 48px 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .political-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg,
+                    rgba(10, 10, 10, 1) 0%,
+                    rgba(30, 15, 15, 1) 50%,
+                    rgba(10, 10, 10, 1) 100%);
+            z-index: 0;
+        }
+
+        .political-hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg,
+                    transparent 0%,
+                    rgba(232, 85, 51, 0.3) 50%,
+                    transparent 100%);
+        }
+
+        .political-hero>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .political-hero h1 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(48px, 8vw, 100px);
+            line-height: 0.9;
+            letter-spacing: -2px;
+            text-transform: uppercase;
+            color: var(--text-light);
+            margin-bottom: 16px;
+        }
+
+        .political-hero h1 span {
+            color: var(--accent);
+        }
+
+        .political-hero .hero-sub {
+            font-family: var(--font-body);
+            font-size: 17px;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.5);
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .political-hero .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-body);
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 48px;
+            transition: color 0.3s ease;
+        }
+
+        .political-hero .back-link:hover {
+            color: var(--accent);
+        }
+
+        .political-hero .back-link svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* Confidentiality notice */
+        .confidential-notice {
+            background: rgba(232, 85, 51, 0.06);
+            border-left: 2px solid var(--accent);
+            padding: 16px 24px;
+            margin: 0;
+            padding-left: 72px;
+            padding-right: 48px;
+            padding-top: 32px;
+            padding-bottom: 32px;
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1.6;
+            border-left: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .confidential-notice strong {
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        /* Project grid on this page */
+        .political-work {
+            background: var(--black);
+            color: var(--text-light);
+            padding: 80px 48px;
+        }
+
+        .political-work .work-header {
+            margin-bottom: 60px;
+        }
+
+        /* Footer override — simpler */
+        .political-footer {
+            background: var(--black);
+            padding: 60px 48px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .political-footer a {
+            font-family: var(--font-body);
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            transition: color 0.3s ease;
+        }
+
+        .political-footer a:hover {
+            color: var(--accent);
+        }
+
+        .political-footer .copyright {
+            font-family: var(--font-body);
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ═══════════════════════════════════════════
+         HERO
+         ═══════════════════════════════════════════ -->
+    <section class="political-hero">
+        <a href="v4.html" class="back-link">
+            <svg viewBox="0 0 24 24">
+                <polyline points="15 18 9 12 15 6" />
+            </svg>
+            Back to Main Site
+        </a>
+        <h1>Legal <span>&</span><br>Political</h1>
+        <p class="hero-sub">
+            Government, advocacy, and political campaign work.
+            Fifteen years of compliance-ready, rapid-response video production.
+        </p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         CONFIDENTIAL NOTICE
+         ═══════════════════════════════════════════ -->
+    <div class="confidential-notice">
+        <strong>Private Portfolio.</strong> This page contains work samples shared on a case-by-case basis.
+        Please do not distribute this link without permission.
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         PROJECTS
+         ═══════════════════════════════════════════ -->
+    <section class="political-work">
+        <div class="work-header reveal">
+            <h2>Selected Work</h2>
+            <span class="work-count">03 Projects</span>
+        </div>
+
+        <!-- 01 — FTC -->
+        <div class="project reveal" data-project="0">
+            <div class="project-number">01</div>
+            <div class="project-media">
+                <img src="Videos/FTCLEANPoster.jpg" alt="FTC — LeanSpa">
+                <video src="Videos/FTCLEANQuickLoop.mp4" muted loop playsinline></video>
+                <div class="project-play">
+                    <svg viewBox="0 0 24 24">
+                        <polygon points="8,5 20,12 8,19" />
+                    </svg>
+                </div>
+            </div>
+            <div class="project-info">
+                <div class="project-title">Federal Trade<br>Commission</div>
+                <div class="project-meta">FTC · 2023</div>
+                <div class="project-role">Director / Editor</div>
+            </div>
+        </div>
+
+        <!-- 02 — Justice -->
+        <div class="project reveal" data-project="1">
+            <div class="project-number">02</div>
+            <div class="project-media">
+                <img src="Videos/JusticePoster.jpg" alt="Justice for Lai Dai Han">
+                <video src="Videos/JusticeLoop.mp4" muted loop playsinline></video>
+                <div class="project-play">
+                    <svg viewBox="0 0 24 24">
+                        <polygon points="8,5 20,12 8,19" />
+                    </svg>
+                </div>
+            </div>
+            <div class="project-info">
+                <div class="project-title">Justice for<br>Lai Dai Han</div>
+                <div class="project-meta">Documentary · 2021</div>
+                <div class="project-role">Director / Producer</div>
+            </div>
+        </div>
+
+        <!-- 03 — CRN -->
+        <div class="project reveal" data-project="2">
+            <div class="project-number">03</div>
+            <div class="project-media">
+                <img src="Videos/CRNPOSTER.jpg" alt="Council for Responsible Nutrition">
+                <video src="Videos/CRNQuickLoop.mp4" muted loop playsinline></video>
+                <div class="project-play">
+                    <svg viewBox="0 0 24 24">
+                        <polygon points="8,5 20,12 8,19" />
+                    </svg>
+                </div>
+            </div>
+            <div class="project-info">
+                <div class="project-title">CRN</div>
+                <div class="project-meta">CRN · 2022</div>
+                <div class="project-role">Director / Animator</div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         PAGE TRANSITION PANEL
+         ═══════════════════════════════════════════ -->
+    <div class="page-transition" id="pageTransition"></div>
+
+    <!-- ═══════════════════════════════════════════
+         PROJECT DETAIL OVERLAY
+         ═══════════════════════════════════════════ -->
+    <div class="project-detail-overlay" id="projectDetailOverlay">
+        <div class="detail-container">
+            <a class="detail-back detail-fade-in" id="detailBack">
+                <svg viewBox="0 0 24 24">
+                    <polyline points="15 18 9 12 15 6" />
+                </svg>
+                Back
+            </a>
+            <div class="detail-video detail-fade-in" id="detailVideo">
+                <iframe id="detailIframe" src="" allow="autoplay; fullscreen; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
+            <h1 class="detail-title detail-fade-in" id="detailTitle"></h1>
+            <p class="detail-description detail-fade-in" id="detailDescription"></p>
+            <div class="detail-section-label detail-fade-in">Details</div>
+            <div class="detail-credits detail-fade-in" id="detailCredits"></div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         FOOTER
+         ═══════════════════════════════════════════ -->
+    <footer class="political-footer">
+        <a href="v4.html">← Back to Main Site</a>
+        <span class="copyright">&copy; 2026 Jeff Kerr</span>
+    </footer>
+
+    <script>
+        // ─── Scroll Reveal ───
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // ─── Video hover-to-play ───
+        document.querySelectorAll('.project').forEach(project => {
+            const video = project.querySelector('video');
+            if (!video) return;
+
+            project.addEventListener('mouseenter', () => {
+                video.currentTime = 0;
+                video.play().catch(() => { });
+                video.style.opacity = '1';
+            });
+
+            project.addEventListener('mouseleave', () => {
+                video.pause();
+                video.style.opacity = '0';
+            });
+        });
+
+        // ═══════════════════════════════════════════
+        // PROJECT DETAIL — Same system as main site
+        // ═══════════════════════════════════════════
+        const projectData = [
+            {
+                title: 'FTC — LeanSpa',
+                embed: 'vimeo',
+                videoId: '641503564',
+                description: 'National campaign series for the Federal Trade Commission addressing deceptive diet ads. This one-minute-thirty spot was one of several, supported by TV, radio, web, and social cutdowns.',
+                credits: [
+                    ['Client', 'Federal Trade Commission (FTC)'],
+                    ['Role', 'Director / Editor'],
+                    ['Deliverables', 'National TV spots, internet ads, radio, social cutdowns'],
+                    ['Location', 'United States'],
+                    ['Published', '2023']
+                ]
+            },
+            {
+                title: 'Justice for Lai Dai Han',
+                embed: 'vimeo',
+                videoId: '641889858',
+                description: 'A powerful documentary shedding light on the sexual violence committed during the Vietnam War and the ongoing fight for justice. This piece required extraordinary sensitivity while maintaining the urgency of the message.',
+                credits: [
+                    ['Client', 'Justice for Lai Dai Han'],
+                    ['Role', 'Director / Producer'],
+                    ['Format', 'Documentary'],
+                    ['Published', '2021']
+                ]
+            },
+            {
+                title: 'Council for Responsible Nutrition',
+                embed: 'vimeo',
+                videoId: '641502508',
+                description: 'Animation-led explainer for the Council for Responsible Nutrition. Clear visuals and a tight script helped turn a complex topic into a simple, engaging story — crafted for a national release across web and social.',
+                credits: [
+                    ['Client', 'Council for Responsible Nutrition (CRN)'],
+                    ['Role', 'Director / Animator'],
+                    ['Deliverables', 'Web and social variants'],
+                    ['Focus', 'Explainer'],
+                    ['Published', '2022']
+                ]
+            }
+        ];
+
+        // DOM refs
+        const transitionPanel = document.getElementById('pageTransition');
+        const detailOverlay = document.getElementById('projectDetailOverlay');
+        let detailIframe = document.getElementById('detailIframe');
+        const detailTitle = document.getElementById('detailTitle');
+        const detailDesc = document.getElementById('detailDescription');
+        const detailCredits = document.getElementById('detailCredits');
+        const detailBack = document.getElementById('detailBack');
+        const mainContent = document.querySelectorAll('body > :not(.page-transition):not(.project-detail-overlay):not(script)');
+
+        let isTransitioning = false;
+        let savedScrollY = 0;
+
+        function getEmbedUrl(project) {
+            if (project.embed === 'youtube') {
+                return `https://www.youtube.com/embed/${project.videoId}?rel=0&modestbranding=1&playsinline=1&enablejsapi=0`;
+            }
+            return `https://player.vimeo.com/video/${project.videoId}?autoplay=0&loop=0&title=0&byline=0&portrait=0`;
+        }
+
+        function populateDetail(index) {
+            const p = projectData[index];
+            const container = document.getElementById('detailVideo');
+            if (detailIframe) detailIframe.remove();
+            const newIframe = document.createElement('iframe');
+            newIframe.id = 'detailIframe';
+            newIframe.allow = 'autoplay; fullscreen; picture-in-picture';
+            newIframe.allowFullscreen = true;
+            newIframe.src = getEmbedUrl(p);
+            container.appendChild(newIframe);
+            detailIframe = newIframe;
+
+            detailTitle.textContent = p.title;
+            detailDesc.textContent = p.description;
+            detailCredits.innerHTML = p.credits.map(([label, value]) =>
+                `<div class="detail-credit-row">
+                    <span class="detail-credit-label">${label}</span>
+                    <span class="detail-credit-value">${value}</span>
+                </div>`
+            ).join('');
+        }
+
+        function animateDetailContent() {
+            const fadeEls = detailOverlay.querySelectorAll('.detail-fade-in');
+            fadeEls.forEach(el => el.classList.remove('animate'));
+            fadeEls.forEach((el, i) => {
+                setTimeout(() => el.classList.add('animate'), 80 * i);
+            });
+        }
+
+        const WIPE_MS = 500;
+
+        function lockScroll() {
+            document.body.style.position = 'fixed';
+            document.body.style.top = `-${savedScrollY}px`;
+            document.body.style.left = '0';
+            document.body.style.right = '0';
+        }
+        function unlockScroll() {
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.left = '';
+            document.body.style.right = '';
+        }
+
+        function openProject(index) {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            savedScrollY = window.scrollY;
+            lockScroll();
+
+            transitionPanel.style.transform = 'translateY(0%)';
+
+            setTimeout(() => {
+                mainContent.forEach(el => el.style.display = 'none');
+                populateDetail(index);
+                detailOverlay.classList.add('visible');
+                detailOverlay.scrollTop = 0;
+
+                animateDetailContent();
+                void detailOverlay.offsetHeight;
+
+                transitionPanel.style.transform = 'translateY(-100%)';
+
+                setTimeout(() => {
+                    transitionPanel.style.transition = 'none';
+                    transitionPanel.style.transform = 'translateY(100%)';
+                    void transitionPanel.offsetHeight;
+                    transitionPanel.style.transition = '';
+
+                    unlockScroll();
+                    isTransitioning = false;
+                }, WIPE_MS);
+            }, WIPE_MS);
+        }
+
+        let isClosing = false;
+
+        function closeProject() {
+            if (isClosing) return;
+            isClosing = true;
+
+            if (isTransitioning) {
+                transitionPanel.style.transition = 'none';
+                transitionPanel.style.transform = 'translateY(100%)';
+                void transitionPanel.offsetHeight;
+                transitionPanel.style.transition = '';
+            }
+            isTransitioning = true;
+            lockScroll();
+
+            if (detailIframe) {
+                detailIframe.remove();
+                detailIframe = null;
+            }
+
+            transitionPanel.style.transform = 'translateY(0%)';
+
+            setTimeout(() => {
+                detailOverlay.classList.remove('visible');
+                mainContent.forEach(el => el.style.display = '');
+
+                unlockScroll();
+                window.scrollTo({ top: savedScrollY, behavior: 'instant' });
+                void document.body.offsetHeight;
+
+                transitionPanel.style.transform = 'translateY(100%)';
+
+                setTimeout(() => {
+                    isTransitioning = false;
+                    isClosing = false;
+                }, WIPE_MS);
+            }, WIPE_MS);
+        }
+
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+
+        // Wire up card clicks
+        document.querySelectorAll('.project').forEach((card) => {
+            const index = parseInt(card.dataset.project);
+            if (isNaN(index)) return;
+            card.addEventListener('click', () => {
+                history.pushState({ project: index }, '');
+                openProject(index);
+            });
+        });
+
+        detailBack.addEventListener('click', () => {
+            closeProject();
+            history.back();
+        });
+
+        window.addEventListener('popstate', () => {
+            if (detailOverlay.classList.contains('visible')) {
+                closeProject();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && detailOverlay.classList.contains('visible')) {
+                closeProject();
+                history.back();
+            }
+        });
+    </script>
+
+</body>
+
+</html>
