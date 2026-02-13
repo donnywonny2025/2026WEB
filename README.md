@@ -1,6 +1,6 @@
 # Jeff Kerr Portfolio — "The Editorial"
 
-> **Last updated:** Feb 12, 2026 · **Status:** V4 "The Editorial" — **PRODUCTION SITE**
+> **Last updated:** Feb 13, 2026 · **Status:** V4 "The Editorial" — **PRODUCTION SITE**
 
 ## Active Files
 
@@ -10,20 +10,6 @@
 | `political.html` | Legal & Political work — private shareable page | 🔥 **Active** |
 | `styles.css` | Shared stylesheet (used by both pages) | 🔥 **Active** |
 | `main.js` | Main site JavaScript (transitions, interactions) | 🔥 **Active** |
-
-## Archived / Reference Files
-
-| File | What it is |
-|---|---|
-| `the_editorial.html` | Locked copy of V4 at launch |
-| `v4_pre_animations.html` | V4 pre-nav-animations snapshot |
-| `v4_baseline.html` | V4 pre-video-hero snapshot |
-| `v4_monolith.html.bak` | Monolith backup |
-| `index.html` | Original live site replica |
-| `redesign.html` / `v2_refined.html` | V2 archived |
-| `v3_radical.html` / `v3_radical_polished.html` | V3 archived |
-| `kerr-engine.js` | Legacy JS engine |
-| `upgrade.css` | Legacy upgrade stylesheet |
 
 ## Design System
 
@@ -91,11 +77,9 @@ The site is a set of static files. For deployment:
 
 ## Git
 
-- **Remote:** `git@github.com:colour8k/2026WEB.git`
+- **Remote:** `https://github.com/colour8k/2026web.git`
 - **Branch:** `main`
 
 ## To Resume
 1. Open `v4.html` — main active working file
 2. `political.html` — legal/political private page
-3. `the_editorial.html` — locked launch copy (safe revert point)
-4. `v4_pre_animations.html` — revert point before nav animations
