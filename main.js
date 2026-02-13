@@ -246,6 +246,18 @@ const projectData = [
         ]
     },
     {
+        title: 'Banco Azteca — Banking Explainer',
+        embed: 'youtube',
+        videoId: '8yu5w5SvJp8',
+        description: 'Animation-driven explainer for Banco Azteca, one of Mexico\'s largest financial institutions. Clean motion graphics breaking down banking services for a broad audience.',
+        credits: [
+            ['Client', 'Banco Azteca'],
+            ['Role', 'Director / Animator'],
+            ['Deliverables', 'Explainer video'],
+            ['Focus', 'Motion graphics']
+        ]
+    },
+    {
         title: 'Council for Responsible Nutrition',
         embed: 'vimeo',
         videoId: '641502508',
@@ -313,7 +325,7 @@ let savedScrollY = 0;
 
 function getEmbedUrl(project) {
     if (project.embed === 'youtube') {
-        return `https://www.youtube.com/embed/${project.videoId}?rel=0&modestbranding=1&playsinline=1&enablejsapi=0`;
+        return `https://www.youtube-nocookie.com/embed/${project.videoId}?rel=0&modestbranding=1&playsinline=1`;
     }
     return `https://player.vimeo.com/video/${project.videoId}?autoplay=0&loop=0&title=0&byline=0&portrait=0`;
 }
