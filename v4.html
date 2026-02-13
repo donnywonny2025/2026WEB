@@ -21,21 +21,63 @@
          SPLASH SCREEN
          ═══════════════════════════════════════════ -->
     <div id="splash">
-        <img src="jk-logo.png" alt="JK">
+        <video autoplay muted playsinline>
+            <source src="Jefferykerr_Alpha3.webm" type="video/webm">
+        </video>
     </div>
 
     <!-- ═══════════════════════════════════════════
-         NAVIGATION
+         NAVIGATION — Dropdown Menu
          ═══════════════════════════════════════════ -->
-    <nav id="nav">
-        <a href="#" class="nav-logo"><img src="jk-monogram.png" alt="JK"></a>
-        <ul class="nav-links">
-            <li><a href="#work">Work</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-        <a href="#contact" class="nav-cta">Start a Project</a>
-    </nav>
+    <!-- Floating monogram (home) -->
+    <a href="#" class="floating-logo" id="floatingLogo"><img src="jk-monogram.png" alt="JK"></a>
+
+    <!-- Menu dropdown — top right -->
+    <div class="menu-wrapper" id="menuWrapper">
+        <button class="menu-trigger" id="menuTrigger" aria-expanded="false" aria-haspopup="true">
+            <span class="menu-trigger-text">Menu</span>
+            <svg class="menu-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+        </button>
+        <div class="menu-dropdown" id="menuDropdown" role="menu">
+            <a href="#work" class="menu-item" role="menuitem">
+                <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="7" width="20" height="14" rx="2" />
+                    <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                </svg>
+                <span class="menu-item-label">Work</span>
+            </a>
+            <a href="#about" class="menu-item" role="menuitem">
+                <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M20 21a8 8 0 0 0-16 0" />
+                </svg>
+                <span class="menu-item-label">About</span>
+            </a>
+            <div class="menu-divider"></div>
+            <a href="#contact" class="menu-item" role="menuitem">
+                <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                    <polyline points="22,6 12,13 2,6" />
+                </svg>
+                <span class="menu-item-label">Contact</span>
+            </a>
+            <a href="#faq" class="menu-item" role="menuitem">
+                <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                <span class="menu-item-label">FAQ</span>
+            </a>
+        </div>
+    </div>
 
     <!-- ═══════════════════════════════════════════
          HERO — Video background + massive type
@@ -49,8 +91,12 @@
             </div>
             <p class="hero-subtitle reveal">Creative director, editor,<br>and producer</p>
             <p class="hero-tagline reveal">
-                Entertainment, corporate, and political.
+                Entertainment, corporate, and <span class="hero-cycle-word">political.</span>
             </p>
+        </div>
+        <div class="hero-scroll-indicator" id="heroScrollIndicator">
+            <span class="hero-scroll-text">SCROLL</span>
+            <div class="hero-scroll-line"></div>
         </div>
     </section>
 
@@ -58,9 +104,27 @@
          CLIENTS
          ═══════════════════════════════════════════ -->
     <div class="clients reveal">
-        <div class="clients-inner">
-            <img src="logos/sponsor.svg"
-                alt="Raytheon · New Balance · Disney · Boeing · Under Armour · Universal · Century 21 · NASA · FTC">
+        <div class="marquee-track">
+            <!-- Set A -->
+            <div class="marquee-set">
+                <img src="logos/Raytheon_Technologies-Logo.wine.png" alt="Raytheon Technologies">
+                <img src="logos/Century-21-real-estate-Logo.png" alt="Century 21">
+                <img src="logos/Universal_Pictures_logo.png" alt="Universal Pictures">
+                <img src="logos/Under_armour_logo.svg" alt="Under Armour">
+                <img src="logos/Logo-Boeing.png" alt="Boeing">
+                <img src="logos/Disney_wordmark.svg" alt="Disney">
+                <img src="logos/live-event-sports-streams-new-balance-png-logo-4.png" alt="New Balance">
+            </div>
+            <!-- Set B (duplicate for seamless loop) -->
+            <div class="marquee-set" aria-hidden="true">
+                <img src="logos/Raytheon_Technologies-Logo.wine.png" alt="">
+                <img src="logos/Century-21-real-estate-Logo.png" alt="">
+                <img src="logos/Universal_Pictures_logo.png" alt="">
+                <img src="logos/Under_armour_logo.svg" alt="">
+                <img src="logos/Logo-Boeing.png" alt="">
+                <img src="logos/Disney_wordmark.svg" alt="">
+                <img src="logos/live-event-sports-streams-new-balance-png-logo-4.png" alt="">
+            </div>
         </div>
     </div>
 
@@ -213,16 +277,28 @@
          ═══════════════════════════════════════════ -->
     <section class="about" id="about">
         <div class="about-inner">
-            <div class="about-label reveal">About</div>
-            <h2 class="about-statement reveal">
-                I make things that <span>move</span> people.
-            </h2>
-            <p class="about-text reveal">
-                <strong>Creative director, editor, and producer</strong> based in Grand Rapids, Michigan.
-                Fifteen years across entertainment, corporate, government, and political.
-                I love diving into everything — editing, coding, building apps, motion graphics.
-                <strong>I work fast. I work clean. I don't miss deadlines.</strong>
-            </p>
+            <div class="about-content">
+                <div class="about-text-col">
+                    <div class="about-label reveal">About</div>
+                    <h2 class="about-statement reveal">
+                        Hi, I'm <span>Jeff.</span>
+                    </h2>
+                    <p class="about-text reveal">
+                        I'm a <strong>creative director, editor, and producer</strong> based in Grand Rapids, Michigan.
+                        For the last fifteen years I've been making things that move people — across entertainment,
+                        corporate, government, and political projects. From New Balance campaigns and NASA ceremonies
+                        to rapid-response political ads and Danny Trejo's TV show, I bring the same energy to every cut.
+                    </p>
+                    <p class="about-text reveal">
+                        I edit. I shoot. I animate. I build apps. I code.
+                        If it tells a story and needs to look great, I'm already interested.
+                        <strong>I work fast. I work clean. I don't miss deadlines.</strong>
+                    </p>
+                </div>
+                <div class="about-photo reveal">
+                    <img src="JeffKerr.jpg" alt="Jeff Kerr in the studio">
+                </div>
+            </div>
             <div class="about-stats reveal">
                 <div class="stat">
                     <div class="stat-number" data-target="15">0+</div>
@@ -234,10 +310,10 @@
                 </div>
                 <div class="stat">
                     <div class="stat-number" data-target="7">0+</div>
-                    <div class="stat-label">Active</div>
+                    <div class="stat-label">Active Projects</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-number" data-target="3">0+</div>
+                    <div class="stat-number" data-target="4">0+</div>
                     <div class="stat-label">Sectors</div>
                 </div>
             </div>
@@ -253,6 +329,11 @@
         <h2 class="contact-heading reveal">Let's Work Together</h2>
         <p class="contact-sub reveal">Have a project in mind? I'd love to hear about it.<br>Drop me a line and let's
             create something great.</p>
+        <div class="contact-direct reveal">
+            <a href="tel:4076203618">407-620-3618</a>
+            <span class="contact-direct-divider">&middot;</span>
+            <a href="mailto:colour8k@mac.com">colour8k@mac.com</a>
+        </div>
 
         <form class="contact-form reveal" action="https://formspree.io/f/mrbygakk" method="POST" autocomplete="off">
             <div class="form-group">
@@ -284,6 +365,52 @@
             </div>
             <button type="submit" class="form-submit">Submit</button>
         </form>
+
+        <!-- FAQ Accordion -->
+        <div class="faq reveal" id="faq">
+            <h3 class="faq-heading">Frequently Asked Questions</h3>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>What types of projects do you take on?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Everything from 30-second social cutdowns to full documentary features. If it moves and tells
+                            a story, I'm interested.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>What's your typical turnaround time?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>It depends on scope, but most projects deliver within 2–4 weeks. Rapid-response political
+                            work can turn in 24–48 hours.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>Do you work with remote clients?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Absolutely. Most of my clients are remote. I use frame.io, Zoom, and shared drives to keep
+                            reviews seamless.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>Can you handle the full production process?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes — concept through delivery. Creative direction, shooting, editing, motion graphics,
+                            color, and sound design all under one roof.</p>
+                    </div>
+                </div>
+            </div>
     </section>
 
     <!-- ═══════════════════════════════════════════
@@ -291,7 +418,7 @@
          ═══════════════════════════════════════════ -->
     <footer>
         <video class="footer-video-bg" src="Videos/REELQuickLoop.mp4" autoplay muted loop playsinline></video>
-        <div class="footer-brand">Kerr</div>
+        <div class="footer-brand"><img src="jk-monogram.png" alt="JK" style="height: 48px; width: auto;"></div>
         <div class="footer-divider"></div>
         <div class="footer-contact">
             <a href="tel:4076203618">407-620-3618</a>
@@ -300,6 +427,7 @@
         <nav class="footer-nav">
             <a href="#hero">Home</a>
             <a href="#work">Work</a>
+            <a href="#about">About</a>
             <a href="#contact">Contact</a>
         </nav>
         <div class="footer-social">
@@ -310,7 +438,8 @@
                 </svg>
             </a>
         </div>
-        <div class="footer-copyright">&copy; 2026 Jeff Kerr &middot; Grand Rapids, MI</div>
+        <div class="footer-copyright">&copy; 2026 Jeffery Kerr &middot; Grand Rapids, MI &middot; All Rights Reserved
+        </div>
     </footer>
 
     <!-- ═══════════════════════════════════════════

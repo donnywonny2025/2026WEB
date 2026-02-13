@@ -2,13 +2,102 @@
 (function () {
     const splash = document.getElementById('splash');
     if (splash) {
-        // Wait for the logo animation (1.8s) + hold briefly, then fade out
-        setTimeout(() => {
+        const video = splash.querySelector('video');
+        const dismiss = () => {
             splash.classList.add('fade-out');
-            // Remove from DOM after fade transition completes
             setTimeout(() => splash.remove(), 700);
-        }, 2200);
+        };
+        if (video) {
+            video.addEventListener('ended', dismiss);
+            // Fallback if video fails to load/play
+            setTimeout(dismiss, 5000);
+        } else {
+            setTimeout(dismiss, 2200);
+        }
     }
+})();
+
+// ─── Hero Scroll Indicator (fade on scroll) ───
+(function () {
+    const indicator = document.getElementById('heroScrollIndicator');
+    if (!indicator) return;
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 100) {
+            indicator.classList.add('hidden');
+        } else {
+            indicator.classList.remove('hidden');
+        }
+    }, { passive: true });
+})();
+
+// ─── FAQ Accordion ───
+(function () {
+    document.querySelectorAll('.faq-question').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const item = btn.closest('.faq-item');
+            const wasActive = item.classList.contains('active');
+
+            // Close all
+            document.querySelectorAll('.faq-item.active').forEach(el => {
+                el.classList.remove('active');
+                el.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+            });
+
+            // Open clicked (if it wasn't already open)
+            if (!wasActive) {
+                item.classList.add('active');
+                btn.setAttribute('aria-expanded', 'true');
+            }
+        });
+    });
+})();
+
+// ─── Hero Word Typewriter ───
+(function () {
+    const words = ['political.', 'government.', 'digital.', 'documentary.', 'nonprofit.'];
+    const el = document.querySelector('.hero-cycle-word');
+    if (!el) return;
+
+    let wordIndex = 0;
+    const TYPE_SPEED = 80;
+    const ERASE_SPEED = 50;
+    const HOLD_TIME = 2000;
+
+    function typeWord(word, cb) {
+        let charIndex = 0;
+        const timer = setInterval(() => {
+            charIndex++;
+            el.textContent = word.slice(0, charIndex);
+            if (charIndex >= word.length) {
+                clearInterval(timer);
+                cb();
+            }
+        }, TYPE_SPEED);
+    }
+
+    function eraseWord(cb) {
+        let text = el.textContent;
+        const timer = setInterval(() => {
+            text = text.slice(0, -1);
+            el.textContent = text;
+            if (text.length === 0) {
+                clearInterval(timer);
+                cb();
+            }
+        }, ERASE_SPEED);
+    }
+
+    function cycle() {
+        setTimeout(() => {
+            eraseWord(() => {
+                wordIndex = (wordIndex + 1) % words.length;
+                typeWord(words[wordIndex], cycle);
+            });
+        }, HOLD_TIME);
+    }
+
+    // Start the cycle after initial word is shown
+    cycle();
 })();
 
 // ─── Scroll Reveal ───
@@ -23,45 +112,56 @@ const revealObserver = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-// ─── Nav scroll effect ───
-const nav = document.getElementById('nav');
-const heroSection = document.getElementById('hero');
-const workSection = document.getElementById('work');
-const aboutSection = document.getElementById('about');
-const contactSection = document.getElementById('contact');
+// ─── Dropdown Menu ───
+const menuWrapper = document.getElementById('menuWrapper');
+const menuTrigger = document.getElementById('menuTrigger');
+const menuDropdown = document.getElementById('menuDropdown');
+const floatingLogo = document.getElementById('floatingLogo');
+const menuItems = menuDropdown.querySelectorAll('.menu-item, .menu-cta');
 
-function updateNav() {
-    const scrollY = window.scrollY;
+// Toggle dropdown
+menuTrigger.addEventListener('click', () => {
+    const isOpen = menuDropdown.classList.contains('open');
+    menuDropdown.classList.toggle('open');
+    menuTrigger.classList.toggle('open');
+    menuTrigger.setAttribute('aria-expanded', !isOpen);
+});
 
-    // Add/remove scrolled class
-    if (scrollY > 60) {
-        nav.classList.add('scrolled');
-    } else {
-        nav.classList.remove('scrolled');
+// Close on click outside
+document.addEventListener('click', (e) => {
+    if (!menuWrapper.contains(e.target)) {
+        menuDropdown.classList.remove('open');
+        menuTrigger.classList.remove('open');
+        menuTrigger.setAttribute('aria-expanded', 'false');
     }
+});
 
-    // Dark/light mode based on section backgrounds
-    // Hero = dark (video), Clients = cream, Work = dark, About = cream, Contact = dark
-    const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
-    const workTop = workSection.offsetTop - 80;
-    const workBottom = workSection.offsetTop + workSection.offsetHeight;
-    const aboutTop = aboutSection.offsetTop - 80;
-    const aboutBottom = aboutSection.offsetTop + aboutSection.offsetHeight;
-    const contactTop = contactSection.offsetTop - 80;
-
-    // Light mode only when over cream sections (clients strip & about)
-    const overCream = (scrollY >= heroBottom - 80 && scrollY < workTop) ||
-        (scrollY >= aboutTop && scrollY < contactTop);
-
-    if (overCream) {
-        nav.classList.remove('dark-mode');
-    } else {
-        nav.classList.add('dark-mode');
+// Close on Escape
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menuDropdown.classList.contains('open')) {
+        menuDropdown.classList.remove('open');
+        menuTrigger.classList.remove('open');
+        menuTrigger.setAttribute('aria-expanded', 'false');
     }
-}
+});
 
-window.addEventListener('scroll', updateNav, { passive: true });
-updateNav();
+// Smooth scroll + close on menu item click
+menuItems.forEach(item => {
+    item.addEventListener('click', (e) => {
+        e.preventDefault();
+        const href = item.getAttribute('href');
+        if (href && href.startsWith('#')) {
+            const target = document.getElementById(href.slice(1));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+        // Close dropdown
+        menuDropdown.classList.remove('open');
+        menuTrigger.classList.remove('open');
+        menuTrigger.setAttribute('aria-expanded', 'false');
+    });
+});
 
 // ─── Video hover-to-play ───
 document.querySelectorAll('.project').forEach(project => {
@@ -282,7 +382,8 @@ function openProject(index) {
         populateDetail(index);
         detailOverlay.classList.add('visible');
         detailOverlay.scrollTop = 0;
-        nav.style.display = 'none';
+        menuWrapper.style.display = 'none';
+        floatingLogo.style.display = 'none';
 
         // Start content animations NOW while panel still covers
         // (they'll be fully visible by the time the panel clears)
@@ -338,7 +439,8 @@ function closeProject() {
         // Panel is fully covering — swap content behind it
         detailOverlay.classList.remove('visible');
         mainContent.forEach(el => el.style.display = '');
-        nav.style.display = '';
+        menuWrapper.style.display = '';
+        floatingLogo.style.display = '';
 
         // Restore scroll position instantly behind the panel
         unlockScroll();
