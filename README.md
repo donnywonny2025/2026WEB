@@ -6,7 +6,7 @@
 
 | File | Purpose | Status |
 |---|---|---|
-| `v4.html` | **V4 "The Editorial"** — main production site | 🔥 **Active** |
+| `index.html` | **V4 "The Editorial"** — main production site | 🔥 **Active** |
 | `political.html` | Legal & Political work — private shareable page | 🔥 **Active** |
 | `styles.css` | Shared stylesheet (used by both pages) | 🔥 **Active** |
 | `main.js` | Main site JavaScript (transitions, interactions) | 🔥 **Active** |
@@ -41,7 +41,7 @@ Inspired by Big Dirty Agency, Wist.chat, and Balky Studio.
 
 ## Pages
 
-### Main Site (`v4.html`)
+### Main Site (`index.html`)
 7 projects: Showreel, New Balance Rome, Danny Was Here TV, CRN, FTC, Justice for Lai Dai Han, Apollo 11
 
 ### Legal & Political (`political.html`)
@@ -62,7 +62,7 @@ https://formspree.io/f/xcolour8k
 ### Formspree Setup
 1. Go to [formspree.io](https://formspree.io) and sign in
 2. Create a new form → copy the form endpoint ID (e.g. `f/xyzabc123`)
-3. Replace `xcolour8k` in `v4.html` line 257 with your real form ID
+3. Replace `xcolour8k` in `index.html` with your real form ID
 4. Test by submitting a test message — it will arrive at your Formspree inbox
 
 **Contact:** colour8k@mac.com · 407-620-3618
@@ -70,16 +70,15 @@ https://formspree.io/f/xcolour8k
 ## Deployment
 
 The site is a set of static files. For deployment:
-1. Rename `v4.html` → `index.html`
-2. Push to the GitHub repo connected to Netlify
-3. Video assets in `Videos/` must be deployed alongside
-4. `political.html` deploys as-is (separate URL path)
+1. Push to the GitHub repo connected to Netlify
+2. Video assets in `Videos/` must be deployed alongside
+3. `political.html` deploys as-is (separate URL path)
 
 ## Git
 
-- **Remote:** `https://github.com/colour8k/2026web.git`
+- **Remote:** `https://github.com/donnywonny2025/2026WEB.git`
 - **Branch:** `main`
 
 ## To Resume
-1. Open `v4.html` — main active working file
+1. Open `index.html` — main active working file
 2. `political.html` — legal/political private page
