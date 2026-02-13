@@ -223,7 +223,7 @@ const projectData = [
         title: 'New Balance — Rome',
         embed: 'vimeo',
         videoId: '1120683744',
-        description: 'A short showcase around Run Rome The Marathon, featuring New Balance athletes and the beauty of Rome\'s streets at dawn.',
+        description: 'Run Rome The Marathon for New Balance. Dawn light, athletes in motion, Rome doing what Rome does. Had a great time cutting this one.',
         credits: [
             ['Client', 'New Balance'],
             ['Role', 'Director / Editor'],
