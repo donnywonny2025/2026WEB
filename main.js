@@ -148,9 +148,9 @@ document.addEventListener('keydown', (e) => {
 // Smooth scroll + close on menu item click
 menuItems.forEach(item => {
     item.addEventListener('click', (e) => {
-        e.preventDefault();
         const href = item.getAttribute('href');
         if (href && href.startsWith('#')) {
+            e.preventDefault();
             const target = document.getElementById(href.slice(1));
             if (target) {
                 target.scrollIntoView({ behavior: 'smooth', block: 'start' });
