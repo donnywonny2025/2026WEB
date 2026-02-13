@@ -210,10 +210,10 @@ document.querySelectorAll('.stat-number').forEach(el => statObserver.observe(el)
 
 const projectData = [
     {
-        title: '2026 Showreel',
+        title: 'The Reel',
         embed: 'vimeo',
         videoId: '1120665473',
-        description: 'A sweeping cut of work over the years across commercial, corporate, government, and documentary.',
+        description: '15 years of work. Commercial, government, documentary — everything that made the cut.',
         credits: [
             ['Highlights', 'A series of work from over the years'],
             ['Published', '2025']
