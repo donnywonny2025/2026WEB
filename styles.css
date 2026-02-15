@@ -1633,8 +1633,9 @@ footer>*:not(.footer-video-bg) {
     }
 
     .project {
-        grid-template-columns: 1fr;
-        gap: 16px;
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
     }
 
     .project-number {
