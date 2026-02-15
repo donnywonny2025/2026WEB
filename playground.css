@@ -569,11 +569,24 @@ body::before {
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 6px rgba(232, 85, 51, 0.4), inset -2px -2px 0 rgba(0, 0, 0, 0.3);
+    background: radial-gradient(circle at 35% 35%, #ff8866, var(--accent) 50%, #b83a1a);
+    box-shadow: 0 0 8px rgba(232, 85, 51, 0.4), inset -1px -1px 3px rgba(0, 0, 0, 0.4), inset 1px 1px 2px rgba(255, 255, 255, 0.2);
     z-index: 45;
     pointer-events: none;
     transition: none;
+    transform-origin: center center;
+    will-change: transform, left, top;
+}
+
+.toy-ball-shadow {
+    position: fixed;
+    height: 3px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(0, 0, 0, 0.25), transparent 70%);
+    pointer-events: none;
+    z-index: 44;
+    transition: none;
+    will-change: opacity, width, left;
 }
 
 /* ═══════════════════════════════════════════
@@ -696,4 +709,34 @@ body::before {
 .v1-link:hover {
     color: rgba(255, 255, 255, 0.6);
     border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ═══════════════════════════════════════════
+   RAIN
+   ═══════════════════════════════════════════ */
+
+.rain-drop {
+    position: absolute;
+    width: 1.5px;
+    height: 14px;
+    background: linear-gradient(to bottom, transparent, rgba(140, 170, 220, 0.5));
+    border-radius: 0 0 2px 2px;
+    pointer-events: none;
+}
+
+.rain-splash {
+    position: absolute;
+    width: 4px;
+    height: 2px;
+    border-radius: 50%;
+    background: rgba(140, 170, 220, 0.3);
+    pointer-events: none;
+    transform-origin: center bottom;
+}
+
+/* Rain toggle button active state */
+.cat-btn.rain-active {
+    background: rgba(100, 150, 220, 0.25);
+    border-color: rgba(100, 150, 220, 0.5);
+    color: var(--text-light);
 }

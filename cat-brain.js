@@ -752,6 +752,13 @@
                 break;
             }
 
+            case 'held': {
+                // Cat is being dragged — do nothing, controls.js handles position
+                if (C.cat.stateTimer % 4 < 2) C.setSprite('alert', 0);
+                else C.setSprite('S', 0);
+                break;
+            }
+
             default: {
                 C.setState('idle');
                 C.cat.stateTimer = 0;
@@ -770,11 +777,13 @@
             C.nekoEl.style.transform = 'scale(2)';
         }
 
-        // Position
-        C.nekoEl.style.left = (C.cat.x - 16) + 'px';
-        C.nekoEl.style.top = (C.cat.y - 16) + 'px';
-        C.statusEl.style.left = C.cat.x + 'px';
-        C.statusEl.style.top = (C.cat.y - 40) + 'px';
+        // Position — skip when being dragged
+        if (C.cat.state !== 'held') {
+            C.nekoEl.style.left = (C.cat.x - 16) + 'px';
+            C.nekoEl.style.top = (C.cat.y - 16) + 'px';
+            C.statusEl.style.left = C.cat.x + 'px';
+            C.statusEl.style.top = (C.cat.y - 40) + 'px';
+        }
 
         requestAnimationFrame(C.loop);
     };

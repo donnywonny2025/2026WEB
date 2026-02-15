@@ -221,8 +221,10 @@
        ═══════════════════════════════════════════ */
 
     // Pet (click cat directly)
+    let justDragged = false;
     C.nekoEl.addEventListener('click', (e) => {
         e.stopPropagation();
+        if (justDragged) { justDragged = false; return; }
         if (C.cat.state === 'sleep') {
             C.cat.energy = Math.max(C.cat.energy, 0.4);
             C.showStatus('*yawns* ...huh?');
@@ -253,6 +255,121 @@
     });
 
     // Click-to-startle is now handled in the main click listener above
+
+    /* ═══════════════════════════════════════════
+       DRAG THE CAT
+       ═══════════════════════════════════════════ */
+
+    let dragging = false;
+    let dragOffsetX = 0;
+    let dragOffsetY = 0;
+    let dragStartTime = 0;
+    let dragMoved = false;
+
+    // Make the cat easier to grab with a bigger hit area
+    C.nekoEl.style.padding = '12px';
+    C.nekoEl.style.margin = '-12px';
+
+    function startDrag(clientX, clientY) {
+        if (C.cat.state === 'sleep') {
+            C.cat.energy = Math.max(C.cat.energy, 0.4);
+            C.showStatus('*yawns* ...huh?');
+            C.setState('stretch');
+        }
+        dragging = true;
+        dragMoved = false;
+        dragOffsetX = clientX - C.cat.x;
+        dragOffsetY = clientY - C.cat.y;
+        dragStartTime = Date.now();
+        C.setState('held');
+        C.setSprite('alert', 0);
+        const pickupMsgs = ['mrrOWW!', 'HEY!', 'put me down!', 'eep!', '*dangles*', 'MRROW!'];
+        C.showStatus(pickupMsgs[Math.floor(Math.random() * pickupMsgs.length)], 1500);
+        C.nekoEl.style.cursor = 'grabbing';
+        document.body.style.cursor = 'grabbing';
+    }
+
+    function moveDrag(clientX, clientY) {
+        if (!dragging) return;
+        dragMoved = true;
+        C.cat.x = clientX - dragOffsetX;
+        C.cat.y = clientY - dragOffsetY;
+        // Clamp to viewport
+        C.cat.x = Math.max(16, Math.min(window.innerWidth - 16, C.cat.x));
+        C.cat.y = Math.max(16, Math.min(window.innerHeight - 16, C.cat.y));
+        // Update sprite position immediately
+        C.nekoEl.style.left = (C.cat.x - 16) + 'px';
+        C.nekoEl.style.top = (C.cat.y - 16) + 'px';
+        C.statusEl.style.left = C.cat.x + 'px';
+        C.statusEl.style.top = (C.cat.y - 40) + 'px';
+        // Wiggle sprite while being held
+        if (Date.now() % 300 < 150) {
+            C.setSprite('alert', 0);
+        } else {
+            C.setSprite('S', 0);
+        }
+    }
+
+    function endDrag() {
+        if (!dragging) return;
+        dragging = false;
+        justDragged = dragMoved;  // suppress the click event if we actually moved
+        C.nekoEl.style.cursor = '';
+        document.body.style.cursor = '';
+        const heldTime = Date.now() - dragStartTime;
+        // React based on how long held
+        if (heldTime > 3000) {
+            C.showStatus('*traumatized*', 2000);
+            C.cat.happiness = Math.max(0, C.cat.happiness - 0.15);
+        } else if (heldTime > 1000) {
+            C.showStatus('*hisses* >:(', 1500);
+            C.cat.happiness = Math.max(0, C.cat.happiness - 0.05);
+        } else {
+            C.showStatus('*lands on feet*', 1200);
+        }
+        // Landing squash
+        if (C.juiceLand) C.juiceLand(C.cat.x, C.cat.y + 16);
+        if (C.juiceSquash) C.juiceSquash(1.4, 0.6);
+        if (C.juiceShake) C.juiceShake(3, 5);
+        C.setState('startle');
+        C.cat.startleDir = Math.random() < 0.5 ? -1 : 1;
+    }
+
+    // Mouse events
+    C.nekoEl.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        startDrag(e.clientX, e.clientY);
+    });
+    document.addEventListener('mousemove', (e) => {
+        if (dragging) {
+            e.preventDefault();
+            moveDrag(e.clientX, e.clientY);
+        }
+    });
+    document.addEventListener('mouseup', () => {
+        if (dragging) endDrag();
+    });
+
+    // Touch events
+    C.nekoEl.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const t = e.touches[0];
+        startDrag(t.clientX, t.clientY);
+    }, { passive: false });
+    document.addEventListener('touchmove', (e) => {
+        if (dragging) {
+            const t = e.touches[0];
+            moveDrag(t.clientX, t.clientY);
+        }
+    }, { passive: true });
+    document.addEventListener('touchend', () => {
+        if (dragging) endDrag();
+    });
+
+    // Make cat grabbable
+    C.nekoEl.style.cursor = 'grab';
 
     /* ═══════════════════════════════════════════
        VISITOR HINT — one-shot per session

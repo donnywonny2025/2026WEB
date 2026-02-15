@@ -12,7 +12,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Space+Grotesk:wght@500;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="playground.css?v=6">
+    <link rel="stylesheet" href="playground.css?v=7">
 </head>
 
 <body>
@@ -39,10 +39,26 @@
         <p class="sub">This page is a living experiment. Poke around.</p>
     </div>
 
-    <!-- V1 archive link -->
-    <a href="./playground-v1/" class="v1-link">V1 Cat →</a>
+    <!-- Cat DOM elements -->
+    <div id="atmosphereOverlay"></div>
+    <div id="oneko"></div>
+    <div id="catStatus" class="cat-status"></div>
 
-    <!-- New playground content goes here -->
+    <!-- Cat controls (mobile-friendly) -->
+    <div class="cat-controls">
+        <button id="btnFeed" class="cat-btn" title="Feed">🐟</button>
+        <button id="btnWater" class="cat-btn" title="Water">💧</button>
+        <button id="btnPet" class="cat-btn" title="Pet">✋</button>
+        <button id="btnRain" class="cat-btn" title="Rain">🌧️</button>
+    </div>
+
+    <!-- Cat scripts (order matters: soul → world → brain → controls → juice → rain) -->
+    <script src="./cat-soul.js"></script>
+    <script src="./cat-world.js"></script>
+    <script src="./cat-brain.js"></script>
+    <script src="./cat-controls.js"></script>
+    <script src="./cat-juice.js"></script>
+    <script src="./cat-rain.js"></script>
 
 </body>
 
