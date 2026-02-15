@@ -1815,12 +1815,22 @@ footer>*:not(.footer-video-bg) {
         font-size: 12px;
     }
 
+    .project-media {
+        order: 1 !important;
+        width: 100%;
+    }
+
+    .project-info {
+        order: 2 !important;
+        text-align: left !important;
+    }
+
     .project:nth-child(even) .project-media {
-        order: unset;
+        order: 1 !important;
     }
 
     .project:nth-child(even) .project-info {
-        order: unset;
+        order: 2 !important;
         text-align: left;
     }
 
