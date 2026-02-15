@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World 4 — Jeffery Kerr</title>
+    <meta name="description" content="Sunny Land — a pixel art world. Still rendering.">
+    <link rel="icon" type="image/png" href="jk-monogram.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Space+Grotesk:wght@500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="world4.css">
+</head>
+
+<body>
+
+    <!-- Nav -->
+    <a href="./playground.html" class="back-link">
+        <svg viewBox="0 0 24 24">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back
+    </a>
+
+    <!-- Logo -->
+    <div class="floating-logo">
+        <a href="./index.html"><img src="./jk-monogram.png" alt="JK"></a>
+    </div>
+
+    <!-- Forest background -->
+    <div class="forest-layer" id="forestLayer"></div>
+    <div class="ground-fade"></div>
+
+    <!-- Page content -->
+    <div class="coming-soon">
+        <div class="label" id="labelEl">Playground</div>
+        <h1 id="headingEl"><span>Still<br>Rendering</span></h1>
+        <div class="accent-line" id="accentLine"></div>
+        <p class="sub" id="subEl">This page is a living experiment. Poke around.</p>
+    </div>
+
+    <!-- Foxy canvas -->
+    <canvas id="foxyCanvas"></canvas>
+
+    <!-- Thought bubble -->
+    <div id="thoughtBubble" class="thought-bubble">
+        <div class="thought-text" id="thoughtText"></div>
+        <div class="thought-tail"></div>
+        <div class="thought-tail-sm"></div>
+    </div>
+
+    <!-- Question bubble -->
+    <div id="questionBubble" class="question-bubble">
+        <div class="question-text" id="questionText"></div>
+        <div class="question-options" id="questionOptions"></div>
+        <div class="question-tail"></div>
+        <div class="question-tail-sm"></div>
+    </div>
+
+    <!-- Mood badge -->
+    <div id="moodBadge" class="mood-badge"></div>
+
+    <!-- AI status -->
+    <div class="ai-status" id="aiStatus">
+        <span class="dot" id="aiDot"></span>brain online
+    </div>
+
+    <!-- Foxy controls -->
+    <div class="foxy-controls">
+        <button class="foxy-btn" data-action="run" title="Run">Run</button>
+        <button class="foxy-btn" data-action="jump" title="Jump">Jump</button>
+        <button class="foxy-btn" data-action="crouch" title="Crouch">Crouch</button>
+        <button class="foxy-btn" data-action="climb" title="Climb">Climb</button>
+        <button class="foxy-btn" data-action="hurt" title="Bonk">Bonk</button>
+        <button class="foxy-btn" data-action="toggleAI" title="Toggle AI" id="aiBtnToggle">AI</button>
+    </div>
+
+    <!-- Chat with Foxy -->
+    <div class="foxy-chat" id="foxyChat">
+        <input type="text" id="foxyChatInput" placeholder="Talk to Foxy..." maxlength="100" autocomplete="off">
+        <button id="foxyChatSend" class="foxy-btn">💬</button>
+    </div>
+
+    <!-- Forest generator -->
+    <script src="forest-gen.js"></script>
+    <script src="foxy-buddy.js"></script>
+
+    <!-- Foxy modular system (load order matters) -->
+    <script src="foxy-soul.js"></script>
+    <script src="foxy-body.js"></script>
+    <script src="foxy-world.js"></script>
+    <script src="foxy-brain.js"></script>
+
+</body>
+
+</html>

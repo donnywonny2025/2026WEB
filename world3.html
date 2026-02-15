@@ -339,6 +339,15 @@
             animation: fadeTitle 1s ease forwards 1.3s;
         }
 
+        .world-title .accent-line {
+            width: 40px;
+            height: 2px;
+            background: var(--accent);
+            margin: 16px auto 0;
+            opacity: 0;
+            animation: fadeTitle 1s ease forwards 1.15s;
+        }
+
         @keyframes fadeTitle {
             from {
                 opacity: 0;
@@ -490,9 +499,10 @@
 
     <!-- Title -->
     <div class="world-title" id="worldTitle">
-        <div class="label">World 3</div>
-        <h1>The Canopy</h1>
-        <p class="sub">Deep in the trees.</p>
+        <div class="label">Playground</div>
+        <h1><span>Still<br>Rendering</span></h1>
+        <div class="accent-line"></div>
+        <p class="sub">This page is a living experiment. Poke around.</p>
     </div>
 
     <!-- Cat DOM -->
@@ -567,12 +577,7 @@
             shaftsEl.appendChild(shaft);
         }
 
-        // Fade out title
-        setTimeout(() => {
-            const title = document.getElementById('worldTitle');
-            title.style.transition = 'opacity 2s ease';
-            title.style.opacity = '0';
-        }, 5000);
+        // Title stays visible (matches playground behavior)
     </script>
 
     <!-- Forest ambient -->
