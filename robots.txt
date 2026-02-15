@@ -1,0 +1,5 @@
+# robots.txt for jefferykerr.com
+User-agent: *
+Allow: /
+
+Sitemap: https://www.jefferykerr.com/sitemap.xml
