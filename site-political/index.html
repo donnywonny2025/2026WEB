@@ -13,6 +13,125 @@
         href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* ═══════════════════════════════════════════
+           POLITICAL SECTION — Additions
+           ═══════════════════════════════════════════ */
+
+        /* --- Thin rule separating the two work sections --- */
+        .pol-section-rule {
+            background: var(--black);
+            padding: 0 48px;
+        }
+
+        .pol-section-rule hr {
+            border: none;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.08);
+            margin: 0;
+        }
+
+        /* --- Section intro block --- */
+        .pol-section-intro {
+            background: var(--black);
+            padding: 80px 48px 48px;
+        }
+
+        .pol-section-intro .work-header {
+            margin-bottom: 20px;
+        }
+
+        .pol-section-intro .work-header h2 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(28px, 4vw, 48px);
+            letter-spacing: -1.5px;
+            text-transform: uppercase;
+            color: var(--text-light);
+            line-height: 1;
+        }
+
+        .pol-section-intro .work-header h2 span {
+            color: var(--accent);
+        }
+
+        .pol-section-intro .section-subtitle {
+            font-family: var(--font-body);
+            font-size: 15px;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.45);
+            line-height: 1.6;
+            max-width: 520px;
+            margin-bottom: 32px;
+        }
+
+        .pol-section-intro .confidential-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-body);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--accent);
+            padding: 6px 14px;
+            border: 1px solid rgba(232, 85, 51, 0.25);
+            border-radius: 100px;
+            margin-bottom: 36px;
+        }
+
+        .pol-section-intro .confidential-badge svg {
+            width: 12px;
+            height: 12px;
+            stroke: var(--accent);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* --- Filter tabs --- */
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            font-family: var(--font-body);
+            font-size: 12px;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            padding: 8px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 100px;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-tab:hover {
+            border-color: rgba(255, 255, 255, 0.35);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .filter-tab.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        /* --- Political work grid --- */
+        .political-work {
+            background: var(--black);
+            color: var(--text-light);
+            padding: 48px 48px 80px;
+        }
+
+        .project.filter-hidden {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -30,7 +149,7 @@
          NAVIGATION — Dropdown Menu
          ═══════════════════════════════════════════ -->
     <!-- Floating monogram (home) -->
-    <a href="#" class="floating-logo" id="floatingLogo"><img src="jk-monogram.png" alt="JK"></a>
+    <a href="/" class="floating-logo" id="floatingLogo"><img src="jk-monogram.png" alt="JK"></a>
 
     <!-- Menu dropdown — top right -->
     <div class="menu-wrapper" id="menuWrapper">
@@ -77,13 +196,14 @@
                 <span class="menu-item-label">FAQ</span>
             </a>
             <div class="menu-divider"></div>
-            <a href="playground.html" class="menu-item" role="menuitem">
+            <a href="#political" class="menu-item" role="menuitem">
                 <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                     stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polygon
-                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26" />
+                    <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                    <path d="M2 17l10 5 10-5" />
+                    <path d="M2 12l10 5 10-5" />
                 </svg>
-                <span class="menu-item-label">Playground</span>
+                <span class="menu-item-label">Legal, Political & Government</span>
             </a>
         </div>
     </div>
@@ -92,8 +212,8 @@
          HERO — Video background + massive type
          ═══════════════════════════════════════════ -->
     <section class="hero" id="hero">
-        <video class="hero-video" src="Videos/StatQuickLoop.mp4" muted loop playsinline autoplay
-            poster="Videos/Reel_Poster.jpg"></video>
+        <video class="hero-video" src="../Videos/StatQuickLoop.mp4" muted loop playsinline autoplay
+            poster="../Videos/Reel_Poster.jpg"></video>
         <div>
             <div class="hero-name reveal">
                 <h1 class="hero-wordmark" data-text="Jeffery Kerr">Jeffery<br>Kerr</h1>
@@ -149,9 +269,9 @@
         <!-- 01 — Showreel -->
         <div class="project reveal">
             <div class="project-number">01</div>
-            <div class="project-media">
-                <img src="Videos/Reel_Poster.jpg" alt="Featured Showreel">
-                <video src="Videos/REELQuickLoop.mp4" muted loop playsinline></video>
+            <div class="project-media always-loop">
+                <img src="../Videos/Reel_Poster.jpg" alt="Featured Showreel">
+                <video src="../Videos/REELQuickLoop.mp4" autoplay muted loop playsinline></video>
                 <div class="project-play">
                     <svg viewBox="0 0 24 24">
                         <polygon points="8,5 20,12 8,19" />
@@ -169,8 +289,8 @@
         <div class="project reveal">
             <div class="project-number">02</div>
             <div class="project-media">
-                <img src="Videos/NBPOSTER_clean.jpg" alt="New Balance Rome Marathon">
-                <video src="Videos/NBQuickLoop2.mp4" muted loop playsinline></video>
+                <img src="../Videos/NBPOSTER_clean.jpg" alt="New Balance Rome Marathon">
+                <video src="../Videos/NBQuickLoop2.mp4" muted loop playsinline></video>
                 <div class="project-play">
                     <svg viewBox="0 0 24 24">
                         <polygon points="8,5 20,12 8,19" />
@@ -188,8 +308,8 @@
         <div class="project reveal">
             <div class="project-number">03</div>
             <div class="project-media">
-                <img src="Videos/DannyPoster_clean.jpg" alt="Danny Was Here TV">
-                <video src="Videos/DannyQuickLoop3.mp4" muted loop playsinline></video>
+                <img src="../Videos/DannyPoster_clean.jpg" alt="Danny Was Here TV">
+                <video src="../Videos/DannyQuickLoop3.mp4" muted loop playsinline></video>
                 <div class="project-play">
                     <svg viewBox="0 0 24 24">
                         <polygon points="8,5 20,12 8,19" />
@@ -207,8 +327,8 @@
         <div class="project reveal">
             <div class="project-number">04</div>
             <div class="project-media">
-                <img src="Videos/CRNPOSTER.jpg" alt="Council for Responsible Nutrition">
-                <video src="Videos/CRNQuickLoop.mp4" muted loop playsinline></video>
+                <img src="../Videos/CRNPOSTER.jpg" alt="Council for Responsible Nutrition">
+                <video src="../Videos/CRNQuickLoop.mp4" muted loop playsinline></video>
                 <div class="project-play">
                     <svg viewBox="0 0 24 24">
                         <polygon points="8,5 20,12 8,19" />
@@ -226,8 +346,8 @@
         <div class="project reveal">
             <div class="project-number">05</div>
             <div class="project-media">
-                <img src="Videos/BANCO_Loop.jpg" alt="Banco Azteca Banking Explainer">
-                <video src="Videos/Banco_Loop.mp4" muted loop playsinline></video>
+                <img src="../Videos/BANCO_Loop.jpg" alt="Banco Azteca Banking Explainer">
+                <video src="../Videos/Banco_Loop.mp4" muted loop playsinline></video>
                 <div class="project-play">
                     <svg viewBox="0 0 24 24">
                         <polygon points="8,5 20,12 8,19" />
@@ -245,8 +365,8 @@
         <div class="project reveal">
             <div class="project-number">06</div>
             <div class="project-media">
-                <img src="Videos/FTCLEANPoster.jpg" alt="FTC — LeanSpa">
-                <video src="Videos/FTCLEANQuickLoop.mp4" muted loop playsinline></video>
+                <img src="../Videos/FTCLEANPoster.jpg" alt="FTC — LeanSpa">
+                <video src="../Videos/FTCLEANQuickLoop.mp4" muted loop playsinline></video>
                 <div class="project-play">
                     <svg viewBox="0 0 24 24">
                         <polygon points="8,5 20,12 8,19" />
@@ -264,8 +384,8 @@
         <div class="project reveal">
             <div class="project-number">07</div>
             <div class="project-media">
-                <img src="Videos/JusticePoster.jpg" alt="Justice for Lai Dai Han">
-                <video src="Videos/JusticeLoop.mp4" muted loop playsinline></video>
+                <img src="../Videos/JusticePoster.jpg" alt="Justice for Lai Dai Han">
+                <video src="../Videos/JusticeLoop.mp4" muted loop playsinline></video>
                 <div class="project-play">
                     <svg viewBox="0 0 24 24">
                         <polygon points="8,5 20,12 8,19" />
@@ -283,8 +403,8 @@
         <div class="project reveal">
             <div class="project-number">08</div>
             <div class="project-media">
-                <img src="Videos/NASAPoster.jpg" alt="Apollo 11 — 50th Anniversary">
-                <video src="Videos/NASAQuickLoop.mp4" muted loop playsinline></video>
+                <img src="../Videos/NASAPoster.jpg" alt="Apollo 11 — 50th Anniversary">
+                <video src="../Videos/NASAQuickLoop.mp4" muted loop playsinline></video>
                 <div class="project-play">
                     <svg viewBox="0 0 24 24">
                         <polygon points="8,5 20,12 8,19" />
@@ -301,6 +421,221 @@
     </section>
 
     <!-- ═══════════════════════════════════════════
+         LEGAL & POLITICAL — Additional section
+         ═══════════════════════════════════════════ -->
+    <div class="pol-section-rule">
+        <hr>
+    </div>
+
+    <div class="pol-section-intro" id="political">
+        <div class="confidential-badge">
+            <svg viewBox="0 0 24 24">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            Private Portfolio
+        </div>
+        <div class="work-header reveal">
+            <h2>Legal, Political <span>&amp;</span> Government</h2>
+            <span class="work-count political-count">10 Projects</span>
+        </div>
+        <p class="section-subtitle">
+            Government, advocacy, and political campaign work.
+            Fifteen years of compliance-ready, rapid-response production.
+        </p>
+        <div class="filter-tabs reveal">
+            <button class="filter-tab active" data-filter="all">All</button>
+            <button class="filter-tab" data-filter="political">Political</button>
+            <button class="filter-tab" data-filter="government">Government</button>
+            <button class="filter-tab" data-filter="legal">Legal</button>
+        </div>
+    </div>
+
+    <section class="political-work">
+
+        <!-- 01 — Trump Taj 1 -->
+        <div class="project reveal" data-pol-project="0" data-category="political">
+            <div class="project-number">01</div>
+            <div class="project-media">
+                <img src="https://img.youtube.com/vi/kO5SH1bXPhE/maxresdefault.jpg" alt="Trump Taj Mahal — Part 1">
+                <div class="project-play">
+                    <svg viewBox="0 0 24 24">
+                        <polygon points="8,5 20,12 8,19" />
+                    </svg>
+                </div>
+            </div>
+            <div class="project-info">
+                <div class="project-title">Trump Taj<br>Mahal — Pt. 1</div>
+                <div class="project-meta">Political · Ad</div>
+                <div class="project-role">Editor</div>
+            </div>
+        </div>
+
+        <!-- 02 — Trump Taj 2 -->
+        <div class="project reveal" data-pol-project="1" data-category="political">
+            <div class="project-number">02</div>
+            <div class="project-media">
+                <img src="https://img.youtube.com/vi/DZajWmSKwjU/maxresdefault.jpg" alt="Trump Taj Mahal — Part 2">
+                <div class="project-play">
+                    <svg viewBox="0 0 24 24">
+                        <polygon points="8,5 20,12 8,19" />
+                    </svg>
+                </div>
+            </div>
+            <div class="project-info">
+                <div class="project-title">Trump Taj<br>Mahal — Pt. 2</div>
+                <div class="project-meta">Political · Ad</div>
+                <div class="project-role">Editor</div>
+            </div>
+        </div>
+
+        <!-- 03 — David Curry -->
+        <div class="project reveal" data-pol-project="2" data-category="political">
+            <div class="project-number">03</div>
+            <div class="project-media">
+                <img src="https://img.youtube.com/vi/GMD6_PnGfMA/maxresdefault.jpg" alt="David Curry Announcement">
+                <div class="project-play">
+                    <svg viewBox="0 0 24 24">
+                        <polygon points="8,5 20,12 8,19" />
+                    </svg>
+                </div>
+            </div>
+            <div class="project-info">
+                <div class="project-title">David Curry<br>Announcement</div>
+                <div class="project-meta">Political · Campaign</div>
+                <div class="project-role">Editor</div>
+            </div>
+        </div>
+
+        <!-- 04 — Law & Order -->
+        <div class="project reveal" data-pol-project="3" data-category="political">
+            <div class="project-number">04</div>
+            <div class="project-media">
+                <img src="https://img.youtube.com/vi/Hf6xlsqQBr4/maxresdefault.jpg" alt="Law & Order TV :30">
+                <div class="project-play">
+                    <svg viewBox="0 0 24 24">
+                        <polygon points="8,5 20,12 8,19" />
+                    </svg>
+                </div>
+            </div>
+            <div class="project-info">
+                <div class="project-title">Law &<br>Order</div>
+                <div class="project-meta">Political · TV :30</div>
+                <div class="project-role">Editor</div>
+            </div>
+        </div>
+
+        <!-- 05 — Chickasha -->
+        <div class="project reveal" data-pol-project="4" data-category="political">
+            <div class="project-number">05</div>
+            <div class="project-media">
+                <img src="https://img.youtube.com/vi/73L1JUTXlg8/maxresdefault.jpg" alt="Chickasha Murder :60">
+                <div class="project-play">
+                    <svg viewBox="0 0 24 24">
+                        <polygon points="8,5 20,12 8,19" />
+                    </svg>
+                </div>
+            </div>
+            <div class="project-info">
+                <div class="project-title">Chickasha<br>Murder</div>
+                <div class="project-meta">Political · :60</div>
+                <div class="project-role">Editor</div>
+            </div>
+        </div>
+
+        <!-- 06 — McConaughey Lobbying -->
+        <div class="project reveal" data-pol-project="5" data-category="political">
+            <div class="project-number">06</div>
+            <div class="project-media">
+                <img src="https://img.youtube.com/vi/s2OI_a9mOBM/maxresdefault.jpg" alt="McConaughey Lobbying">
+                <div class="project-play">
+                    <svg viewBox="0 0 24 24">
+                        <polygon points="8,5 20,12 8,19" />
+                    </svg>
+                </div>
+            </div>
+            <div class="project-info">
+                <div class="project-title">McConaughey<br>Lobbying</div>
+                <div class="project-meta">Political</div>
+                <div class="project-role">Editor</div>
+            </div>
+        </div>
+
+        <!-- 07 — Legal Proceedings I -->
+        <div class="project reveal" data-pol-project="6" data-category="legal">
+            <div class="project-number">07</div>
+            <div class="project-media">
+                <img src="https://img.youtube.com/vi/IfL5xvKUvdE/maxresdefault.jpg" alt="Legal Proceedings">
+                <div class="project-play">
+                    <svg viewBox="0 0 24 24">
+                        <polygon points="8,5 20,12 8,19" />
+                    </svg>
+                </div>
+            </div>
+            <div class="project-info">
+                <div class="project-title">Legal<br>Proceedings — I</div>
+                <div class="project-meta">Legal</div>
+                <div class="project-role">Editor</div>
+            </div>
+        </div>
+
+        <!-- 08 — Legal Proceedings II -->
+        <div class="project reveal" data-pol-project="7" data-category="legal">
+            <div class="project-number">08</div>
+            <div class="project-media">
+                <img src="https://img.youtube.com/vi/YzIiSskJOrs/maxresdefault.jpg" alt="Legal Proceedings">
+                <div class="project-play">
+                    <svg viewBox="0 0 24 24">
+                        <polygon points="8,5 20,12 8,19" />
+                    </svg>
+                </div>
+            </div>
+            <div class="project-info">
+                <div class="project-title">Legal<br>Proceedings — II</div>
+                <div class="project-meta">Legal</div>
+                <div class="project-role">Editor</div>
+            </div>
+        </div>
+
+        <!-- 09 — Banco Austin -->
+        <div class="project reveal" data-pol-project="8" data-category="government">
+            <div class="project-number">09</div>
+            <div class="project-media">
+                <img src="https://img.youtube.com/vi/UR0bXieWumw/maxresdefault.jpg" alt="Banco Austin">
+                <div class="project-play">
+                    <svg viewBox="0 0 24 24">
+                        <polygon points="8,5 20,12 8,19" />
+                    </svg>
+                </div>
+            </div>
+            <div class="project-info">
+                <div class="project-title">Banco<br>Austin</div>
+                <div class="project-meta">Government</div>
+                <div class="project-role">Editor</div>
+            </div>
+        </div>
+
+        <!-- 10 — AISC -->
+        <div class="project reveal" data-pol-project="9" data-category="government">
+            <div class="project-number">10</div>
+            <div class="project-media">
+                <img src="https://img.youtube.com/vi/Q7wWzs8vnP0/maxresdefault.jpg" alt="AISC American Steel">
+                <div class="project-play">
+                    <svg viewBox="0 0 24 24">
+                        <polygon points="8,5 20,12 8,19" />
+                    </svg>
+                </div>
+            </div>
+            <div class="project-info">
+                <div class="project-title">AISC<br>American Steel</div>
+                <div class="project-meta">Government</div>
+                <div class="project-role">Director / Editor</div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ═══════════════════════════════════════════
          ABOUT — Back to cream
          ═══════════════════════════════════════════ -->
     <section class="about" id="about">
@@ -311,13 +646,13 @@
                     <h2 class="about-statement reveal">
                         Hi, I'm <span>Jeff.</span>
                     </h2>
-                    <p class="about-text reveal">
+                    <p class="about-text reveal" data-word-reveal>
                         I'm a <strong>creative director, editor, and producer</strong> based in Grand Rapids, Michigan.
                         For the last fifteen years I've been making things that move people — across entertainment,
                         corporate, government, and political projects. From New Balance campaigns and NASA ceremonies
                         to rapid-response political ads and Danny Trejo's TV show, I bring the same energy to every cut.
                     </p>
-                    <p class="about-text reveal">
+                    <p class="about-text reveal" data-word-reveal>
                         I edit. I animate. I build apps. I code.
                         If it tells a story and needs to look great, I'm already interested.
                         <strong>I work fast. I work clean. I don't miss deadlines.</strong>
@@ -445,7 +780,7 @@
          FOOTER
          ═══════════════════════════════════════════ -->
     <footer>
-        <video class="footer-video-bg" src="Videos/REELQuickLoop.mp4" autoplay muted loop playsinline></video>
+        <video class="footer-video-bg" src="../Videos/REELQuickLoop.mp4" autoplay muted loop playsinline></video>
         <div class="footer-brand"><img src="jk-monogram.png" alt="JK" style="height: 48px; width: auto;"></div>
         <div class="footer-divider"></div>
         <div class="footer-contact">
@@ -456,6 +791,7 @@
             <a href="#hero">Home</a>
             <a href="#work">Work</a>
             <a href="#about">About</a>
+            <a href="#political">Legal, Political & Government</a>
             <a href="#contact">Contact</a>
         </nav>
         <div class="footer-social">
@@ -501,6 +837,127 @@
          JAVASCRIPT
          ═══════════════════════════════════════════ -->
     <script src="main.js" defer></script>
+    <script>
+        // ═══════════════════════════════════════════
+        // POLITICAL PROJECT DETAIL DATA
+        // ═══════════════════════════════════════════
+        const polProjectData = [
+            {
+                title: 'Trump Taj Mahal — Part 1',
+                embed: 'youtube', videoId: 'kO5SH1bXPhE',
+                description: 'Political attack ad targeting Trump\'s Taj Mahal casino failures. Hard-hitting rapid-response spot designed for maximum impact across broadcast and digital.',
+                credits: [['Type', 'Political Ad'], ['Role', 'Editor'], ['Format', 'Broadcast / Digital']]
+            },
+            {
+                title: 'Trump Taj Mahal — Part 2',
+                embed: 'youtube', videoId: 'DZajWmSKwjU',
+                description: 'Follow-up political spot continuing the Taj Mahal narrative. Built for rapid deployment across TV, web, and social platforms.',
+                credits: [['Type', 'Political Ad'], ['Role', 'Editor'], ['Format', 'Broadcast / Digital']]
+            },
+            {
+                title: 'David Curry — Announcement',
+                embed: 'youtube', videoId: 'GMD6_PnGfMA',
+                description: 'Campaign announcement video for David Curry. Clean, authoritative messaging designed to launch a political candidacy with impact.',
+                credits: [['Type', 'Campaign Ad'], ['Role', 'Editor'], ['Format', 'Broadcast / Digital']]
+            },
+            {
+                title: 'Law & Order — TV :30',
+                embed: 'youtube', videoId: 'Hf6xlsqQBr4',
+                description: 'Hard-hitting law and order themed political TV spot. Thirty-second broadcast ad built for rapid deployment.',
+                credits: [['Type', 'Political Ad'], ['Role', 'Editor'], ['Format', 'TV :30']]
+            },
+            {
+                title: 'Chickasha Murder',
+                embed: 'youtube', videoId: '73L1JUTXlg8',
+                description: 'Hard-hitting sixty-second political spot. Rapid-response ad designed for broadcast and digital deployment.',
+                credits: [['Type', 'Political Ad'], ['Role', 'Editor'], ['Format', ':60']]
+            },
+            {
+                title: 'McConaughey Lobbying',
+                embed: 'youtube', videoId: 's2OI_a9mOBM',
+                description: 'Political lobbying and advocacy video. Powerful, persuasive messaging designed for legislative impact and public awareness campaigns.',
+                credits: [['Type', 'Political'], ['Role', 'Editor'], ['Format', 'Digital']]
+            },
+            {
+                title: 'Legal Proceedings — I',
+                embed: 'youtube', videoId: 'IfL5xvKUvdE',
+                description: 'Professional legal video production. Clear, compelling messaging crafted for proceedings and formal presentations.',
+                credits: [['Type', 'Legal'], ['Role', 'Editor'], ['Format', 'Digital']]
+            },
+            {
+                title: 'Legal Proceedings — II',
+                embed: 'youtube', videoId: 'YzIiSskJOrs',
+                description: 'Polished legal video production. Designed to support formal communications, presentations, and courtroom use.',
+                credits: [['Type', 'Legal'], ['Role', 'Editor'], ['Format', 'Digital']]
+            },
+            {
+                title: 'Banco Austin',
+                embed: 'youtube', videoId: 'UR0bXieWumw',
+                description: 'Government video production for Banco Austin. Clear, professional messaging for public-facing communications.',
+                credits: [['Type', 'Government'], ['Role', 'Editor'], ['Format', 'Digital']]
+            },
+            {
+                title: 'AISC — American Steel',
+                embed: 'youtube', videoId: 'Q7wWzs8vnP0',
+                description: 'Branded content piece for the American Institute of Steel Construction. A clean, polished look at the strength and versatility of structural steel in modern building.',
+                credits: [['Type', 'Government'], ['Role', 'Director / Editor'], ['Format', 'Digital']]
+            }
+        ];
+
+        // ─── Political project click handler ───
+        // Uses the same openProject/closeProject panel-wipe system from main.js
+        document.querySelectorAll('[data-pol-project]').forEach(card => {
+            card.addEventListener('click', () => {
+                const idx = parseInt(card.dataset.polProject);
+                const p = polProjectData[idx];
+
+                // Temporarily add this political project to the main projectData array
+                // at a known index so openProject() can use it
+                const tempIndex = projectData.length; // append to end
+                projectData.push({
+                    title: p.title,
+                    embed: p.embed || 'youtube',
+                    videoId: p.videoId,
+                    description: p.description,
+                    credits: p.credits
+                });
+
+                // Use the main transition system
+                history.pushState({ project: tempIndex }, '');
+                openProject(tempIndex);
+
+                // Clean up after the transition finishes (~1s)
+                setTimeout(() => {
+                    projectData.splice(tempIndex, 1);
+                }, 1200);
+            });
+        });
+
+        // ─── Category Filter ───
+        const filterTabs = document.querySelectorAll('.filter-tab');
+        const polProjects = document.querySelectorAll('[data-category]');
+        const polCount = document.querySelector('.political-count');
+
+        filterTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                filterTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const filter = tab.dataset.filter;
+                let visibleCount = 0;
+                polProjects.forEach(project => {
+                    if (filter === 'all' || project.dataset.category === filter) {
+                        project.classList.remove('filter-hidden');
+                        // Keep visible class so there's no jarring re-animation
+                        project.classList.add('visible');
+                        visibleCount++;
+                    } else {
+                        project.classList.add('filter-hidden');
+                    }
+                });
+                polCount.textContent = String(visibleCount).padStart(2, '0') + ' Projects';
+            });
+        });
+    </script>
 </body>
 
 </html>
