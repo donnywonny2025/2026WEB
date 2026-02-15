@@ -439,6 +439,9 @@
             case 'hurt': soul.stats.totalBonks++; break;
             case 'idle': soul.stats.totalIdles++; break;
         }
+        // Track in session for energy decay calculation
+        session.actionHistory.push(action || 'idle');
+        if (session.actionHistory.length > 10) session.actionHistory.shift();
     }
 
     function recordPosition(xPercent) {
@@ -478,6 +481,7 @@
         startTime: Date.now(),
         lastInteraction: Date.now(),
         idleStreak: 0,
+        actionHistory: ['idle'],
     };
 
     /* ─── NEEDS SYSTEM — decay over time ─── */
@@ -620,6 +624,9 @@
         soul.longestSession = Math.max(soul.longestSession, sessionLen);
         decayNeeds();
         evolvePersonality();
+        const n = soul.needs;
+        const tag = n.energy < 25 ? '💀 EXHAUSTED' : n.energy < 50 ? '😴 sleepy...' : n.energy < 70 ? '🥱 getting tired' : '⚡ good';
+        console.log(`[Foxy Needs] 🍖${Math.round(n.hunger)} 💧${Math.round(n.thirst)} 🎮${Math.round(n.fun)} ⚡${Math.round(n.energy)} — ${tag}`);
         saveSoul();
     }, 5000);
 

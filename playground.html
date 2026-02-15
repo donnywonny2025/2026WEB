@@ -28,11 +28,16 @@
     <button id="btnWorld1" class="world-btn">World 1</button>
     <button id="btnWorld2" class="world-btn" style="top:95px">World 2</button>
     <button id="btnWorld3" class="world-btn" style="top:130px">World 3</button>
+    <button id="btnWorld4" class="world-btn" style="top:165px">World 4</button>
 
     <!-- Logo -->
     <div class="floating-logo">
         <a href="./index.html"><img src="./jk-monogram.png" alt="JK"></a>
     </div>
+
+    <!-- Forest background -->
+    <div class="forest-layer" id="forestLayer"></div>
+    <div class="ground-fade"></div>
 
     <!-- Main content -->
     <div class="coming-soon">
@@ -42,26 +47,50 @@
         <p class="sub">This page is a living experiment. Poke around.</p>
     </div>
 
-    <!-- Cat DOM elements -->
-    <div id="atmosphereOverlay"></div>
-    <div id="oneko"></div>
-    <div id="catStatus" class="cat-status"></div>
+    <!-- Foxy canvas -->
+    <canvas id="foxyCanvas"></canvas>
 
-    <!-- Cat controls (mobile-friendly) -->
-    <div class="cat-controls">
-        <button id="btnFeed" class="cat-btn" title="Feed">🐟</button>
-        <button id="btnWater" class="cat-btn" title="Water">💧</button>
-        <button id="btnPet" class="cat-btn" title="Pet">✋</button>
-        <button id="btnRain" class="cat-btn" title="Rain">🌧️</button>
+    <!-- Thought bubble -->
+    <div id="thoughtBubble" class="thought-bubble">
+        <div class="thought-text" id="thoughtText"></div>
+        <div class="thought-tail"></div>
+        <div class="thought-tail-sm"></div>
     </div>
 
-    <!-- Cat scripts (order matters: soul → world → brain → controls → juice → rain) -->
-    <script src="./cat-soul.js"></script>
-    <script src="./cat-world.js"></script>
-    <script src="./cat-brain.js"></script>
-    <script src="./cat-controls.js"></script>
-    <script src="./cat-juice.js"></script>
-    <script src="./cat-rain.js"></script>
+    <!-- Question bubble -->
+    <div id="questionBubble" class="question-bubble">
+        <div class="question-text" id="questionText"></div>
+        <div class="question-options" id="questionOptions"></div>
+        <div class="question-tail"></div>
+        <div class="thought-tail-sm"></div>
+    </div>
+
+    <!-- Mood badge -->
+    <div id="moodBadge" class="mood-badge"></div>
+
+    <!-- AI status -->
+    <div class="ai-status" id="aiStatus">
+        <span class="dot" id="aiDot"></span>brain online
+    </div>
+
+    <!-- Need icons (appear above Foxy when needs are low) -->
+    <div id="foxyNeedIcons" class="foxy-need-icons"></div>
+
+    <!-- Chat with Foxy -->
+    <div class="foxy-chat" id="foxyChat">
+        <input type="text" id="foxyChatInput" placeholder="Talk to Foxy..." maxlength="100" autocomplete="off">
+        <button id="foxyChatSend" class="foxy-btn">💬</button>
+    </div>
+
+    <!-- Forest generator -->
+    <script src="forest-gen.js"></script>
+    <script src="foxy-buddy.js"></script>
+
+    <!-- Foxy modular system (load order matters) -->
+    <script src="foxy-soul.js"></script>
+    <script src="foxy-body.js"></script>
+    <script src="foxy-world.js"></script>
+    <script src="foxy-brain.js"></script>
     <script>
         document.getElementById('btnWorld1').addEventListener('click', () => {
             window.location.href = './world1.html';
@@ -71,6 +100,9 @@
         });
         document.getElementById('btnWorld3').addEventListener('click', () => {
             window.location.href = './world3.html';
+        });
+        document.getElementById('btnWorld4').addEventListener('click', () => {
+            window.location.href = './playground.html'; // Highlight current
         });
     </script>
 

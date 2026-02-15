@@ -12,7 +12,24 @@
 
     const GEMINI_KEY = 'AIzaSyAuv6bFLIj5zQkcbmSl_s1nMMZZfKWq8QI';
     const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
-    const GEMINI_COOLDOWN = 30000; // 30 seconds between calls
+    const GEMINI_COOLDOWN = 12000; // 12 seconds between main brain calls
+
+    /* ─── HARD RATE LIMITER — 10 requests/min rolling window ─── */
+    const API_MAX_PER_MINUTE = 10;
+    const apiTimestamps = []; // rolling window of call times
+    function canCallAPI() {
+        const now = Date.now();
+        // Purge timestamps older than 60s
+        while (apiTimestamps.length > 0 && apiTimestamps[0] < now - 60000) apiTimestamps.shift();
+        if (apiTimestamps.length >= API_MAX_PER_MINUTE) {
+            console.log('[Foxy API] Rate limit hit (' + apiTimestamps.length + '/min). Skipping.');
+            return false;
+        }
+        return true;
+    }
+    function recordAPICall() {
+        apiTimestamps.push(Date.now());
+    }
 
     /* ─── UI REFERENCES ─── */
 
@@ -163,8 +180,10 @@
 
     // General-purpose Gemini quick-think: give it a situation, it responds as Foxy
     async function callGeminiQuick(situation, delayMs) {
+        if (!canCallAPI()) return; // hard rate limit
+        recordAPICall();
         apiCallCounter++;
-        console.log('[Foxy AI] Call #' + apiCallCounter + ':', situation.slice(0, 60) + '...');
+        console.log('[Foxy AI] Call #' + apiCallCounter + ' (' + apiTimestamps.length + '/min):', situation.slice(0, 60) + '...');
         try {
             var nearby = F.world.getNearby();
             var pos = F.body.getPosition();
@@ -204,13 +223,13 @@
     // Smart thought: takes a behavior hint like '*sniff sniff*' and asks Gemini
     // to generate a real thought. Falls back to the hint if Gemini is busy or rate limited.
     var lastSmartThoughtTime = 0;
-    var SMART_THOUGHT_COOLDOWN = 8000; // minimum 8s between AI thought calls (~7.5/min)
+    var SMART_THOUGHT_COOLDOWN = 4000; // minimum 4s between AI thought calls
 
     function smartThought(hint) {
         if (!hint) return;
         var now = Date.now();
         // Rate limit: if too soon or already pending, show canned hint
-        if (geminiThoughtPending || (now - lastSmartThoughtTime) < SMART_THOUGHT_COOLDOWN) {
+        if (geminiThoughtPending || (now - lastSmartThoughtTime) < SMART_THOUGHT_COOLDOWN || !canCallAPI()) {
             showThought(hint);
             return;
         }
@@ -1092,6 +1111,8 @@
         var now = Date.now();
         if (now - lastGeminiCall < GEMINI_COOLDOWN) return;
         if (!aiEnabled) return;
+        if (!canCallAPI()) return; // hard rate limit
+        recordAPICall();
         lastGeminiCall = now;
         geminiCallCount++;
 
@@ -1433,7 +1454,7 @@
 
     document.addEventListener('click', (e) => {
         // Ignore clicks on Foxy canvas, buttons, or question options
-        if (e.target.closest('#foxyCanvas, .foxy-btn, .question-opt, .foxy-controls, .back-link, .foxy-chat')) return;
+        if (e.target.closest('#foxyCanvas, .foxy-btn, .question-opt, .foxy-controls, .back-link, .foxy-chat, .need-icon, .foxy-need-icons')) return;
         if (!aiEnabled) return;
 
         var clickX = e.clientX;
@@ -1744,6 +1765,99 @@
         }
     }, 100);
 
+    /* ─── NEED ICONS — Tamagotchi care system ─── */
+
+    const needIconsContainer = document.getElementById('foxyNeedIcons');
+    const NEED_THRESHOLDS = {
+        hunger: { icon: '🍖', threshold: 40, critical: 15, amount: 40, reactions: ["*munch munch* yum!", "food coma incoming...", "okay THAT was good", "*inhales food*", "Jeff's cooking? 5 stars."] },
+        thirst: { icon: '💧', threshold: 40, critical: 15, amount: 40, reactions: ["*slurp* refreshing!", "water > everything", "hydrated fox = happy fox", "*gulp gulp gulp*", "ahhhh sparkling!"] },
+        energy: { icon: '💤', threshold: 35, critical: 15, amount: 30, reactions: ["just... five more minutes...", "*power nap activated*", "zzz... wait what", "recharging at 200%", "okay that helped"] },
+        fun: { icon: '🎾', threshold: 30, critical: 15, amount: 25, reactions: ["YESSS playtime!", "*does a backflip*", "entertainment acquired!", "this is the best day", "more more MORE!"] },
+    };
+    let activeNeedIcons = {};
+
+    function updateNeedIcons() {
+        if (!F.soul || !F.soul.needs || !F.body) return;
+        const needs = F.soul.needs;
+        const pos = F.body.getPosition();
+        if (!pos) return;
+
+        // Position container above Foxy (pos.x and pos.y are screen pixels)
+        needIconsContainer.style.left = (pos.x - 20) + 'px';
+        needIconsContainer.style.top = (pos.y - 60) + 'px';
+
+        // Check each need
+        for (const [need, config] of Object.entries(NEED_THRESHOLDS)) {
+            const val = needs[need];
+            const isLow = val < config.threshold;
+            const isCritical = val < config.critical;
+
+            if (isLow && !activeNeedIcons[need]) {
+                // Create icon
+                const btn = document.createElement('button');
+                btn.className = 'need-icon' + (isCritical ? ' critical' : '');
+                btn.textContent = config.icon;
+                btn.title = need + ': ' + Math.round(val);
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    careForFoxy(need);
+                });
+                needIconsContainer.appendChild(btn);
+                activeNeedIcons[need] = btn;
+            } else if (isLow && activeNeedIcons[need]) {
+                // Update critical state
+                activeNeedIcons[need].className = 'need-icon' + (isCritical ? ' critical' : '');
+                activeNeedIcons[need].title = need + ': ' + Math.round(val);
+            } else if (!isLow && activeNeedIcons[need]) {
+                // Remove icon with animation
+                const btn = activeNeedIcons[need];
+                btn.classList.add('popping-out');
+                setTimeout(() => btn.remove(), 300);
+                delete activeNeedIcons[need];
+            }
+        }
+    }
+
+    function careForFoxy(need) {
+        const config = NEED_THRESHOLDS[need];
+        if (!config) return;
+
+        // Fulfill the need
+        F.fulfillNeed(need, config.amount);
+
+        // Pick a random reaction
+        const reaction = config.reactions[Math.floor(Math.random() * config.reactions.length)];
+        showThought(reaction);
+        setMood('happy');
+
+        // Log the experience
+        if (F.logExperience) {
+            F.logExperience(need + '_care', 'The human took care of my ' + need + '!', 'happy');
+        }
+
+        // Remove the icon with pop-out
+        if (activeNeedIcons[need]) {
+            const btn = activeNeedIcons[need];
+            btn.classList.add('popping-out');
+            setTimeout(() => btn.remove(), 300);
+            delete activeNeedIcons[need];
+        }
+
+        // Floating score popup
+        const popup = document.createElement('div');
+        popup.className = 'care-popup';
+        popup.textContent = config.icon + ' +' + config.amount;
+        popup.style.left = needIconsContainer.style.left;
+        popup.style.top = needIconsContainer.style.top;
+        document.body.appendChild(popup);
+        setTimeout(() => popup.remove(), 1200);
+
+        console.log('[Foxy Care] ' + config.icon + ' ' + need + ' fulfilled! (+' + config.amount + ')');
+    }
+
+    // Update icons every 2 seconds
+    setInterval(updateNeedIcons, 2000);
+
     /* ─── EXPORT ─── */
 
     F.brain = {
@@ -1751,10 +1865,12 @@
         showQuestion,
         setMood,
         playerTakeover,
+        careForFoxy,
         _quickThink: callGeminiQuick,
         _smartThought: smartThought,
         isEnabled: () => aiEnabled,
         getApiCalls: () => apiCallCounter,
+        getApiRate: () => apiTimestamps.length + '/min',
         start: startBrain,
         stop: () => {
             aiEnabled = false;
