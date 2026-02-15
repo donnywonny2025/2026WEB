@@ -1,0 +1,699 @@
+/* ═══════════════════════════════════════════════════════
+   PLAYGROUND.CSS — All styles for the cat playground
+   ═══════════════════════════════════════════════════════ */
+
+:root {
+    --black: #0a0a0a;
+    --cream: #f0ebe0;
+    --accent: #e85533;
+    --text-light: #f5f5f5;
+    --text-muted: rgba(255, 255, 255, 0.45);
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--black);
+    color: var(--text-light);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 40%, rgba(232, 85, 51, 0.04) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════
+   PAGE LAYOUT
+   ═══════════════════════════════════════════ */
+
+.coming-soon {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.coming-soon .label {
+    font-family: var(--font-body);
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 32px;
+    display: inline-block;
+    /* FIX: shrink to text width for accurate platform bounds */
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+}
+
+.coming-soon h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(48px, 10vw, 120px);
+    line-height: 0.9;
+    letter-spacing: -3px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+}
+
+.coming-soon h1 span {
+    display: inline-block;
+    /* FIX: was 'block' — shrink to text width for platform bounds */
+    background: linear-gradient(90deg, var(--text-light), var(--accent), var(--text-light));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 4s ease-in-out infinite;
+}
+
+.coming-soon .sub {
+    font-size: 17px;
+    font-weight: 300;
+    color: var(--text-muted);
+    max-width: 420px;
+    margin: 0 auto 48px;
+    line-height: 1.6;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.6s;
+}
+
+.back-link {
+    position: fixed;
+    top: 28px;
+    right: 32px;
+    z-index: 100;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.1s;
+}
+
+.back-link:hover {
+    color: var(--accent);
+}
+
+.back-link svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+}
+
+.accent-line {
+    width: 48px;
+    height: 2px;
+    background: var(--accent);
+    margin: 0 auto 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.5s;
+    box-shadow: 0 0 16px rgba(232, 85, 51, 0.4);
+}
+
+.floating-logo {
+    position: fixed;
+    top: 28px;
+    left: 32px;
+    z-index: 100;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.1s;
+}
+
+.floating-logo img {
+    height: 36px;
+    width: auto;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.floating-logo img:hover {
+    opacity: 1;
+}
+
+/* ═══════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════ */
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shimmer {
+
+    0%,
+    100% {
+        background-position: 0% center;
+    }
+
+    50% {
+        background-position: 200% center;
+    }
+}
+
+/* ═══════════════════════════════════════════
+   ONEKO CAT (sprite-based)
+   ═══════════════════════════════════════════ */
+
+#oneko {
+    width: 32px;
+    height: 32px;
+    position: fixed;
+    image-rendering: pixelated;
+    background-image: url(./oneko.gif);
+    z-index: 50;
+    cursor: pointer;
+    pointer-events: auto;
+    transform: scale(2);
+    transform-origin: bottom center;
+}
+
+/* Particles (hearts, zzz, food) */
+.particle {
+    position: fixed;
+    z-index: 51;
+    pointer-events: none;
+    font-size: 16px;
+    opacity: 1;
+}
+
+.particle.float {
+    animation: particleFloat 1.2s ease-out forwards;
+}
+
+.particle.zzz {
+    animation: zzzFloat 2s ease-out forwards;
+}
+
+@keyframes particleFloat {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(0.5);
+    }
+
+    30% {
+        opacity: 1;
+        transform: translateY(-20px) scale(1.1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.3);
+    }
+}
+
+@keyframes zzzFloat {
+    0% {
+        opacity: 0.8;
+        transform: translateY(0) translateX(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-35px) translateX(15px);
+    }
+}
+
+/* Ground items */
+.ground-item {
+    position: fixed;
+    z-index: 49;
+    font-size: 18px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.ground-item.visible {
+    opacity: 1;
+}
+
+.ground-item.consumed {
+    animation: itemConsume 0.5s ease forwards;
+}
+
+@keyframes itemConsume {
+    to {
+        opacity: 0;
+        transform: scale(0) translateY(-10px);
+    }
+}
+
+/* Status bubble */
+.cat-status {
+    position: fixed;
+    z-index: 52;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-family: var(--font-body);
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(5px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    white-space: nowrap;
+}
+
+.cat-status.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ═══════════════════════════════════════════
+   INTERACTION BAR
+   ═══════════════════════════════════════════ */
+
+.cat-controls {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1.2s;
+}
+
+.cat-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 10px 18px;
+    color: var(--text-muted);
+    font-family: var(--font-body);
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cat-btn:hover {
+    background: rgba(232, 85, 51, 0.12);
+    border-color: rgba(232, 85, 51, 0.35);
+    color: var(--text-light);
+}
+
+.cat-btn:active {
+    transform: scale(0.95);
+}
+
+.cat-btn .emoji {
+    font-size: 16px;
+}
+
+/* Button feedback flash */
+.cat-btn.active {
+    background: rgba(232, 85, 51, 0.25);
+    border-color: var(--accent);
+    color: var(--text-light);
+    transition: none;
+}
+
+/* ═══════════════════════════════════════════
+   CLICK RIPPLE — delicate layered rings
+   ═══════════════════════════════════════════ */
+
+.click-ripple {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    pointer-events: none;
+    z-index: 48;
+}
+
+/* Soft center dot */
+.click-ripple::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: rgba(232, 85, 51, 0.15);
+    animation: rippleDot 0.5s ease-out forwards;
+}
+
+/* Outer ring */
+.click-ripple::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1px solid rgba(232, 85, 51, 0.2);
+    animation: rippleRing 0.7s ease-out forwards;
+}
+
+/* Second ring (via extra element spawned in JS) */
+.click-ripple-outer {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1px solid rgba(240, 235, 224, 0.08);
+    pointer-events: none;
+    z-index: 47;
+    animation: rippleRingSlow 0.9s ease-out forwards;
+}
+
+@keyframes rippleDot {
+    0% {
+        transform: scale(0);
+        opacity: 0.4;
+    }
+
+    40% {
+        transform: scale(1);
+        opacity: 0.15;
+    }
+
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+@keyframes rippleRing {
+    0% {
+        transform: scale(0);
+        opacity: 0.35;
+    }
+
+    100% {
+        transform: scale(5);
+        opacity: 0;
+    }
+}
+
+@keyframes rippleRingSlow {
+    0% {
+        transform: scale(0);
+        opacity: 0.15;
+    }
+
+    100% {
+        transform: scale(8);
+        opacity: 0;
+    }
+}
+
+/* ═══════════════════════════════════════════
+   SPAWN ITEMS (yarn, toys)
+   ═══════════════════════════════════════════ */
+
+.spawn-item {
+    position: fixed;
+    z-index: 49;
+    font-size: 22px;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0) translateY(-20px);
+    animation: spawnPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes spawnPop {
+    0% {
+        opacity: 0;
+        transform: scale(0) translateY(-20px);
+    }
+
+    60% {
+        opacity: 1;
+        transform: scale(1.3) translateY(-5px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.spawn-item.consumed {
+    animation: itemConsume 0.5s ease forwards;
+}
+
+/* ═══════════════════════════════════════════
+   FIREWORK PARTICLES
+   ═══════════════════════════════════════════ */
+
+.firework {
+    position: fixed;
+    z-index: 55;
+    pointer-events: none;
+    font-size: 8px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: fireworkBurst 1s ease-out forwards;
+}
+
+@keyframes fireworkBurst {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+    }
+
+    60% {
+        opacity: 0.8;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(var(--fx), var(--fy)) scale(0.2);
+    }
+}
+
+/* ═══════════════════════════════════════════
+   SCREEN FLICKER / GLITCH
+   ═══════════════════════════════════════════ */
+
+.screen-flicker {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    pointer-events: none;
+    background: rgba(232, 85, 51, 0.03);
+    animation: flickerPulse 0.15s ease-in-out 3;
+}
+
+@keyframes flickerPulse {
+
+    0%,
+    100% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+.screen-glitch {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    pointer-events: none;
+    animation: glitchShake 0.3s ease-in-out;
+}
+
+@keyframes glitchShake {
+
+    0%,
+    100% {
+        transform: translate(0);
+        filter: none;
+    }
+
+    20% {
+        transform: translate(-2px, 1px);
+        filter: hue-rotate(20deg);
+    }
+
+    40% {
+        transform: translate(2px, -1px);
+        filter: hue-rotate(-20deg);
+    }
+
+    60% {
+        transform: translate(-1px, 2px);
+        filter: hue-rotate(10deg);
+    }
+
+    80% {
+        transform: translate(1px, -2px);
+    }
+}
+
+/* ═══════════════════════════════════════════
+   BOUNCING BALL
+   ═══════════════════════════════════════════ */
+
+.toy-ball {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 6px rgba(232, 85, 51, 0.4), inset -2px -2px 0 rgba(0, 0, 0, 0.3);
+    z-index: 45;
+    pointer-events: none;
+    transition: none;
+}
+
+/* ═══════════════════════════════════════════
+   AMBIENT DUST MOTES
+   ═══════════════════════════════════════════ */
+
+.dust-mote {
+    position: fixed;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: rgba(240, 235, 224, 0.08);
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* ═══════════════════════════════════════════
+   NIGHT STARS
+   ═══════════════════════════════════════════ */
+
+.night-star {
+    position: fixed;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.15);
+    pointer-events: none;
+    z-index: 3;
+    animation: twinkle 3s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+
+    0%,
+    100% {
+        opacity: 0.05;
+    }
+
+    50% {
+        opacity: 0.25;
+    }
+}
+
+/* ═══════════════════════════════════════════
+   WORLD EVENTS
+   ═══════════════════════════════════════════ */
+
+.world-bird {
+    position: fixed;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.2);
+    pointer-events: none;
+    z-index: 8;
+    letter-spacing: -1px;
+}
+
+.world-leaf {
+    position: fixed;
+    font-size: 12px;
+    color: rgba(232, 85, 51, 0.25);
+    pointer-events: none;
+    z-index: 8;
+}
+
+.world-star-streak {
+    position: fixed;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 6;
+    box-shadow: -8px 4px 0 rgba(255, 255, 255, 0.6),
+        -16px 8px 0 rgba(255, 255, 255, 0.3),
+        -24px 12px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* ═══════════════════════════════════════════
+   ATMOSPHERE OVERLAY
+   ═══════════════════════════════════════════ */
+
+#atmosphereOverlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    transition: background 8s ease;
+}
+
+/* ═══════════════════════════════════════════
+   GAME JUICE — Particle System
+   ═══════════════════════════════════════════ */
+
+.juice-particle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    will-change: transform, opacity;
+    border-radius: 50%;
+}
+
+/* ═══════════════════════════════════════════
+   V1 ARCHIVE LINK
+   ═══════════════════════════════════════════ */
+
+.v1-link {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    color: rgba(255, 255, 255, 0.25);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    text-decoration: none;
+    padding: 6px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    z-index: 100;
+}
+
+.v1-link:hover {
+    color: rgba(255, 255, 255, 0.6);
+    border-color: rgba(255, 255, 255, 0.3);
+}

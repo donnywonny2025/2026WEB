@@ -6,19 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Playground — Jeffery Kerr</title>
     <meta name="description" content="Interactive playground featuring a curious pixel cat. Still rendering.">
-    <link rel="icon" type="image/png" href="jk-monogram.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Space+Grotesk:wght@500;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="playground.css?v=6">
+    <link rel="stylesheet" href="playground.css?v=5">
 </head>
 
 <body>
 
     <!-- Back link -->
-    <a href="./index.html" class="back-link">
+    <a href="../v4.html" class="back-link">
         <svg viewBox="0 0 24 24">
             <line x1="19" y1="12" x2="5" y2="12"></line>
             <polyline points="12 19 5 12 12 5"></polyline>
@@ -28,7 +27,7 @@
 
     <!-- Logo -->
     <div class="floating-logo">
-        <a href="./index.html"><img src="./jk-monogram.png" alt="JK"></a>
+        <a href="../v4.html"><img src="../jk-monogram.png" alt="JK"></a>
     </div>
 
     <!-- Main content -->
@@ -39,10 +38,26 @@
         <p class="sub">This page is a living experiment. Poke around.</p>
     </div>
 
-    <!-- V1 archive link -->
-    <a href="./playground-v1/" class="v1-link">V1 Cat →</a>
+    <!-- Atmosphere overlay -->
+    <div id="atmosphereOverlay"></div>
 
-    <!-- New playground content goes here -->
+    <!-- Cat sprite -->
+    <div id="oneko"></div>
+    <div class="cat-status" id="catStatus"></div>
+
+    <!-- Controls -->
+    <div class="cat-controls">
+        <button class="cat-btn" id="btnFeed"><span class="emoji">🐟</span> Feed</button>
+        <button class="cat-btn" id="btnWater"><span class="emoji">💧</span> Water</button>
+        <button class="cat-btn" id="btnPet"><span class="emoji">🐾</span> Pet</button>
+    </div>
+
+    <!-- Module scripts (order matters) -->
+    <script src="cat-soul.js?v=5"></script>
+    <script src="cat-world.js?v=5"></script>
+    <script src="cat-juice.js?v=5"></script>
+    <script src="cat-brain.js?v=5"></script>
+    <script src="cat-controls.js?v=5"></script>
 
 </body>
 

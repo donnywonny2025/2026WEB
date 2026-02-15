@@ -18,16 +18,7 @@ node_modules/
 # Archived old versions
 archive/
 
-# Playground / dev-only files
-playground.html
-playground.css
-playground-v1/
+# Dev-only docs
 PLAYGROUND.md
 PLAYGROUND_V2_HANDOFF.md
 DEPLOY_PLAN.md
-cat-brain.js
-cat-controls.js
-cat-juice.js
-cat-soul.js
-cat-world.js
-oneko.gif
