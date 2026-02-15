@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marble Run — Level 1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0f0f1a;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        .ui {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            color: #fff;
+        }
+
+        .ui h2 {
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 10px;
+        }
+
+        .drop-btn {
+            padding: 12px 28px;
+            background: rgba(255, 120, 50, 0.2);
+            border: 1px solid rgba(255, 120, 50, 0.4);
+            color: #ff7832;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-family: inherit;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .drop-btn:hover {
+            background: rgba(255, 120, 50, 0.35);
+        }
+
+        .reset-btn {
+            padding: 8px 20px;
+            background: rgba(100, 100, 200, 0.15);
+            border: 1px solid rgba(100, 100, 200, 0.3);
+            color: #8888cc;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-family: inherit;
+        }
+
+        .info {
+            margin-top: 14px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.25);
+            line-height: 1.6;
+        }
+
+        .status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            text-align: right;
+        }
+
+        .status .label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .status .value {
+            font-size: 22px;
+            color: #ff7832;
+            font-weight: 700;
+        }
+
+        #debug {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.2);
+            z-index: 100;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="ui">
+        <h2>Marble Run — Level 1</h2>
+        <button class="drop-btn" id="btnDrop">🔵 Drop Marble</button>
+        <button class="reset-btn" id="btnReset">↺ Reset</button>
+        <p class="info">Drag to orbit · Scroll to zoom<br>SPACE = drop · R = reset</p>
+    </div>
+
+    <div class="status">
+        <div class="label">Marbles</div>
+        <div class="value" id="marbleCount">0</div>
+    </div>
+    <div id="debug"></div>
+
+    <script type="importmap">
+{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.162.0/examples/jsm/"
+}}
+</script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+        // ═══ SCENE ═══
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x12121f);
+        scene.fog = new THREE.FogExp2(0x12121f, 0.02);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(8, 8, 10);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.4;
+        document.body.appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.target.set(2, 2, 2);
+        controls.update();
+
+        // ═══ LIGHTING ═══
+        scene.add(new THREE.AmbientLight(0x606080, 1.0));
+        scene.add(new THREE.HemisphereLight(0x9999dd, 0x222244, 0.8));
+
+        const sun = new THREE.DirectionalLight(0xffeedd, 2.5);
+        sun.position.set(8, 12, 6);
+        sun.castShadow = true;
+        sun.shadow.mapSize.set(2048, 2048);
+        sun.shadow.camera.near = 0.5;
+        sun.shadow.camera.far = 40;
+        sun.shadow.camera.left = -10;
+        sun.shadow.camera.right = 10;
+        sun.shadow.camera.top = 10;
+        sun.shadow.camera.bottom = -5;
+        sun.shadow.bias = -0.002;
+        scene.add(sun);
+
+        const backLight = new THREE.DirectionalLight(0x6666cc, 0.4);
+        backLight.position.set(-5, 4, -6);
+        scene.add(backLight);
+
+        // ═══ GROUND ═══
+        const groundMesh = new THREE.Mesh(
+            new THREE.PlaneGeometry(40, 40),
+            new THREE.MeshStandardMaterial({ color: 0x151525, roughness: 0.9 })
+        );
+        groundMesh.rotation.x = -Math.PI / 2;
+        groundMesh.receiveShadow = true;
+        scene.add(groundMesh);
+        scene.add(new THREE.GridHelper(40, 80, 0x1a1a33, 0x151528));
+
+        // ═══ TRACK LAYOUT ═══
+        // All pieces: Y=0 is base, channel runs along Z axis by default
+        // Grid: 1 unit = 1 tile. Track height = 0.5
+        // Ramps (slant): 0.75 tall, so they transition 0.25 height
+        // Helix-half: 1.5 tall, drops 1.0 (from top to bottom exit)
+        //
+        // LAYOUT: Zigzag going down from height 4 to ground
+        // Track flows in -Z by default ("forward"), rotations change direction
+        //
+        // Rotation reference (Y-axis):
+        //   0        = channel flows in -Z 
+        //   PI/2     = channel flows in -X
+        //   PI       = channel flows in +Z
+        //   -PI/2    = channel flows in +X
+
+        const loader = new GLTFLoader();
+        const BASE = './kenney_marble-kit/Models/GLB%20format/';
+        const trackMeshes = [];
+        let loadedCount = 0;
+
+        // ──────────────────────────────────────────────
+        // LEVEL DESIGN — Connected track from top to bottom
+        // Each piece positioned using the grid system
+        // Heights: Level 4 → Level 3 → Level 2 → Level 1 → Ground
+        // Each "level" is 0.5 units apart (one track height)
+        // ──────────────────────────────────────────────
+
+        const H = 0.5; // track height
+
+        const trackLayout = [
+            // ═══ LEVEL 5 (y=4.0) — START ═══
+            // Funnel entry at the top
+            { file: 'funnel.glb', pos: [0, 4.0, 0], rot: [0, 0, 0] },
+            // Straight leading forward
+            { file: 'straight.glb', pos: [0, 4.0, -1], rot: [0, 0, 0] },
+            // Ramp down (loses 0.25 height, goes from y=4.0 to ~3.75)
+            { file: 'ramp-long-a.glb', pos: [0, 3.5, -2.5], rot: [0, 0, 0] },
+
+            // ═══ LEVEL 4 (y=3.5) ═══
+            // Straight continuation
+            { file: 'straight.glb', pos: [0, 3.5, -4], rot: [0, 0, 0] },
+            // Curve: turn right (now heading +X)
+            { file: 'curve.glb', pos: [0.5, 3.5, -5.5], rot: [0, Math.PI, 0] },
+            // Straight heading +X
+            { file: 'straight.glb', pos: [1.5, 3.5, -4.5], rot: [0, -Math.PI / 2, 0] },
+            { file: 'straight.glb', pos: [2.5, 3.5, -4.5], rot: [0, -Math.PI / 2, 0] },
+            // Ramp down
+            { file: 'ramp-long-a.glb', pos: [4, 3.0, -4.5], rot: [0, -Math.PI / 2, 0] },
+
+            // ═══ LEVEL 3 (y=3.0) ═══
+            { file: 'straight.glb', pos: [5.5, 3.0, -4.5], rot: [0, -Math.PI / 2, 0] },
+            // Curve: turn to go +Z
+            { file: 'curve.glb', pos: [7, 3.0, -4], rot: [0, -Math.PI / 2, 0] },
+            // Straight heading +Z
+            { file: 'straight.glb', pos: [6, 3.0, -3], rot: [0, Math.PI, 0] },
+            { file: 'straight.glb', pos: [6, 3.0, -2], rot: [0, Math.PI, 0] },
+            // Ramp down
+            { file: 'ramp-long-a.glb', pos: [6, 2.5, -0.5], rot: [0, Math.PI, 0] },
+
+            // ═══ LEVEL 2 (y=2.5) ═══
+            { file: 'straight.glb', pos: [6, 2.5, 1], rot: [0, Math.PI, 0] },
+            // Curve: turn left (now heading -X)
+            { file: 'curve.glb', pos: [5.5, 2.5, 2.5], rot: [0, 0, 0] },
+            // Straight heading -X
+            { file: 'straight.glb', pos: [4.5, 2.5, 1.5], rot: [0, Math.PI / 2, 0] },
+            { file: 'straight.glb', pos: [3.5, 2.5, 1.5], rot: [0, Math.PI / 2, 0] },
+            { file: 'straight.glb', pos: [2.5, 2.5, 1.5], rot: [0, Math.PI / 2, 0] },
+            // Ramp down
+            { file: 'ramp-long-a.glb', pos: [1, 2.0, 1.5], rot: [0, Math.PI / 2, 0] },
+
+            // ═══ LEVEL 1 (y=2.0) ═══
+            { file: 'straight.glb', pos: [-0.5, 2.0, 1.5], rot: [0, Math.PI / 2, 0] },
+            // Curve: turn to -Z
+            { file: 'curve.glb', pos: [-2, 2.0, 1], rot: [0, Math.PI / 2, 0] },
+            // Helix drop! (drops 1.5 units, from y=2.0 to y=0.5)
+            { file: 'helix-half-right.glb', pos: [-1, 0.5, -1], rot: [0, 0, 0] },
+
+            // ═══ GROUND (y=0.0) ═══
+            // Landing straight
+            { file: 'straight.glb', pos: [-1, 0.0, -3], rot: [0, 0, 0] },
+            { file: 'straight.glb', pos: [-1, 0.0, -4], rot: [0, 0, 0] },
+            // End piece
+            { file: 'end-rounded.glb', pos: [-1, 0.0, -5], rot: [0, 0, 0] },
+
+            // ═══ SUPPORTS ═══
+            // Under level 5 start
+            { file: 'support-single-top.glb', pos: [0, 3.5, 0], rot: [0, 0, 0] },
+            { file: 'support-single-middle.glb', pos: [0, 3.0, 0], rot: [0, 0, 0] },
+            { file: 'support-single-middle.glb', pos: [0, 2.5, 0], rot: [0, 0, 0] },
+            { file: 'support-single-middle.glb', pos: [0, 2.0, 0], rot: [0, 0, 0] },
+            { file: 'support-single-middle.glb', pos: [0, 1.5, 0], rot: [0, 0, 0] },
+            { file: 'support-single-middle.glb', pos: [0, 1.0, 0], rot: [0, 0, 0] },
+            { file: 'support-single-bottom.glb', pos: [0, 0.5, 0], rot: [0, 0, 0] },
+
+            // Under level 3-4 corner
+            { file: 'support-single-top.glb', pos: [6, 2.5, -3], rot: [0, 0, 0] },
+            { file: 'support-single-middle.glb', pos: [6, 2.0, -3], rot: [0, 0, 0] },
+            { file: 'support-single-middle.glb', pos: [6, 1.5, -3], rot: [0, 0, 0] },
+            { file: 'support-single-middle.glb', pos: [6, 1.0, -3], rot: [0, 0, 0] },
+            { file: 'support-single-bottom.glb', pos: [6, 0.5, -3], rot: [0, 0, 0] },
+
+            // Under level 2
+            { file: 'support-single-top.glb', pos: [3.5, 2.0, 1.5], rot: [0, 0, 0] },
+            { file: 'support-single-middle.glb', pos: [3.5, 1.5, 1.5], rot: [0, 0, 0] },
+            { file: 'support-single-middle.glb', pos: [3.5, 1.0, 1.5], rot: [0, 0, 0] },
+            { file: 'support-single-bottom.glb', pos: [3.5, 0.5, 1.5], rot: [0, 0, 0] },
+
+            // ═══ DECORATIONS ═══
+            { file: 'tree.glb', pos: [-4, 0, -2], rot: [0, 0.5, 0] },
+            { file: 'tree-tall.glb', pos: [8, 0, 0], rot: [0, 1.2, 0] },
+            { file: 'tree-large.glb', pos: [-3, 0, 3], rot: [0, 2.5, 0] },
+            { file: 'banner.glb', pos: [0, 4.5, 0.5], rot: [0, 0, 0] },
+            { file: 'banner-hanging.glb', pos: [-1, 0.5, -5], rot: [0, 0, 0] },
+        ];
+
+        const totalPieces = trackLayout.length;
+
+        trackLayout.forEach(piece => {
+            loader.load(BASE + piece.file, (gltf) => {
+                const model = gltf.scene;
+                model.position.set(...piece.pos);
+                model.rotation.set(...piece.rot);
+
+                model.traverse(child => {
+                    if (child.isMesh) {
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+                        trackMeshes.push(child);
+                    }
+                });
+
+                scene.add(model);
+                loadedCount++;
+
+                if (loadedCount >= totalPieces) {
+                    console.log('🎉 All', totalPieces, 'pieces loaded! Track meshes:', trackMeshes.length);
+                }
+            }, undefined, (err) => {
+                loadedCount++;
+                console.warn('⚠ Failed:', piece.file, err);
+            });
+        });
+
+        // ═══ MARBLES ═══
+        const marbles = [];
+        let marbleCount = 0;
+        const marbleGeo = new THREE.SphereGeometry(0.08, 24, 24);
+        const COLORS = [0x4488ff, 0xff4466, 0x44ff88, 0xffaa33, 0xff66cc, 0x66eeff, 0xaaff44];
+        const raycaster = new THREE.Raycaster();
+        const _down = new THREE.Vector3(0, -1, 0);
+        const GRAVITY = new THREE.Vector3(0, -9.82, 0);
+
+        function dropMarble() {
+            marbleCount++;
+            document.getElementById('marbleCount').textContent = marbleCount;
+
+            const color = COLORS[marbleCount % COLORS.length];
+            const mat = new THREE.MeshPhysicalMaterial({
+                color, metalness: 0.85, roughness: 0.08,
+                clearcoat: 1.0, clearcoatRoughness: 0.05,
+            });
+            const mesh = new THREE.Mesh(marbleGeo, mat);
+            mesh.castShadow = true;
+
+            // Drop into the funnel at the top
+            const x = (Math.random() - 0.5) * 0.1;
+            const y = 5.0;
+            const z = (Math.random() - 0.5) * 0.1;
+            mesh.position.set(x, y, z);
+            scene.add(mesh);
+
+            marbles.push({ mesh, vel: new THREE.Vector3(0, 0, 0), alive: true, R: 0.08 });
+
+            const flash = new THREE.PointLight(color, 3, 2);
+            flash.position.set(x, y, z);
+            scene.add(flash);
+            setTimeout(() => scene.remove(flash), 250);
+        }
+
+        function resetMarbles() {
+            marbles.forEach(m => { scene.remove(m.mesh); m.mesh.material.dispose(); });
+            marbles.length = 0;
+            marbleCount = 0;
+            document.getElementById('marbleCount').textContent = '0';
+        }
+
+        // ═══ PHYSICS (Raycast-based) ═══
+        const _normal = new THREE.Vector3();
+
+        function updateMarble(m, dt) {
+            if (!m.alive) return;
+
+            // Gravity
+            m.vel.addScaledVector(GRAVITY, dt);
+
+            // Predict next position
+            const nx = m.mesh.position.x + m.vel.x * dt;
+            const ny = m.mesh.position.y + m.vel.y * dt;
+            const nz = m.mesh.position.z + m.vel.z * dt;
+
+            // Raycast down from above marble
+            raycaster.set(new THREE.Vector3(nx, ny + 0.3, nz), _down);
+            raycaster.far = 0.8;
+            const hits = raycaster.intersectObjects(trackMeshes, false);
+
+            if (hits.length > 0) {
+                const hit = hits[0];
+                const surfaceY = hit.point.y;
+
+                if (ny - m.R < surfaceY) {
+                    // Place on surface
+                    m.mesh.position.set(nx, surfaceY + m.R, nz);
+
+                    // Get world-space normal
+                    _normal.copy(hit.face.normal);
+                    hit.object.updateMatrixWorld();
+                    const nm = new THREE.Matrix3().getNormalMatrix(hit.object.matrixWorld);
+                    _normal.applyMatrix3(nm).normalize();
+
+                    // Bounce/slide
+                    const dot = m.vel.dot(_normal);
+                    if (dot < 0) {
+                        m.vel.addScaledVector(_normal, -dot * 1.3);
+                        m.vel.multiplyScalar(0.96); // friction
+                    }
+
+                    // Rolling force: gravity projected along surface
+                    const gDot = GRAVITY.dot(_normal);
+                    const tangent = GRAVITY.clone().addScaledVector(_normal, -gDot);
+                    m.vel.addScaledVector(tangent, dt * 0.6);
+                } else {
+                    m.mesh.position.set(nx, ny, nz);
+                }
+            } else {
+                m.mesh.position.set(nx, ny, nz);
+            }
+
+            // Also do multi-directional raycasts for walls
+            const dirs = [
+                new THREE.Vector3(1, 0, 0), new THREE.Vector3(-1, 0, 0),
+                new THREE.Vector3(0, 0, 1), new THREE.Vector3(0, 0, -1),
+            ];
+            for (const dir of dirs) {
+                raycaster.set(m.mesh.position, dir);
+                raycaster.far = m.R + 0.02;
+                const wallHits = raycaster.intersectObjects(trackMeshes, false);
+                if (wallHits.length > 0) {
+                    // Push away from wall
+                    const wn = wallHits[0].face.normal.clone();
+                    wallHits[0].object.updateMatrixWorld();
+                    wn.applyMatrix3(new THREE.Matrix3().getNormalMatrix(wallHits[0].object.matrixWorld)).normalize();
+                    const wd = m.vel.dot(wn);
+                    if (wd < 0) {
+                        m.vel.addScaledVector(wn, -wd * 1.1);
+                    }
+                    m.mesh.position.addScaledVector(wn, 0.005);
+                }
+            }
+
+            // Ground
+            if (m.mesh.position.y < m.R) {
+                m.mesh.position.y = m.R;
+                m.vel.y *= -0.2;
+                m.vel.x *= 0.95;
+                m.vel.z *= 0.95;
+                if (Math.abs(m.vel.y) < 0.03) m.vel.y = 0;
+            }
+
+            // Rolling visual
+            const speed = m.vel.length();
+            if (speed > 0.01) {
+                const axis = new THREE.Vector3(-m.vel.z, 0, m.vel.x).normalize();
+                m.mesh.rotateOnWorldAxis(axis, speed * dt * 8);
+            }
+
+            // Cleanup
+            if (m.mesh.position.y < -5 || m.mesh.position.length() > 25) {
+                scene.remove(m.mesh); m.mesh.material.dispose(); m.alive = false;
+            }
+        }
+
+        // ═══ UI ═══
+        document.getElementById('btnDrop').addEventListener('click', dropMarble);
+        document.getElementById('btnReset').addEventListener('click', resetMarbles);
+        document.addEventListener('keydown', e => {
+            if (e.code === 'Space') { e.preventDefault(); dropMarble(); }
+            if (e.code === 'KeyR') resetMarbles();
+        });
+
+        // ═══ LOOP ═══
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const dt = Math.min(clock.getDelta(), 0.033);
+
+            const steps = 4;
+            const subDt = dt / steps;
+            for (let s = 0; s < steps; s++) {
+                marbles.forEach(m => updateMarble(m, subDt));
+            }
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+
+</html>

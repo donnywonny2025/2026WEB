@@ -12,7 +12,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Space+Grotesk:wght@500;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="playground.css?v=7">
+    <link rel="stylesheet" href="playground.css?v=8">
 </head>
 
 <body>
@@ -25,6 +25,9 @@
         </svg>
         Back
     </a>
+    <button id="btnWorld1" class="world-btn">World 1</button>
+    <button id="btnWorld2" class="world-btn" style="top:95px">World 2</button>
+    <button id="btnWorld3" class="world-btn" style="top:130px">World 3</button>
 
     <!-- Logo -->
     <div class="floating-logo">
@@ -59,6 +62,17 @@
     <script src="./cat-controls.js"></script>
     <script src="./cat-juice.js"></script>
     <script src="./cat-rain.js"></script>
+    <script>
+        document.getElementById('btnWorld1').addEventListener('click', () => {
+            window.location.href = './world1.html';
+        });
+        document.getElementById('btnWorld2').addEventListener('click', () => {
+            window.location.href = './world2.html';
+        });
+        document.getElementById('btnWorld3').addEventListener('click', () => {
+            window.location.href = './world3.html';
+        });
+    </script>
 
 </body>
 

@@ -127,6 +127,32 @@ body::before {
     stroke-width: 2;
 }
 
+.world-btn {
+    position: fixed;
+    top: 60px;
+    right: 32px;
+    z-index: 100;
+    font-family: var(--font-body);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+}
+
+.world-btn:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: rgba(232, 85, 51, 0.06);
+}
+
 .accent-line {
     width: 48px;
     height: 2px;

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Measure Pieces</title>
+</head>
+
+<body style="background:#111;color:#fff;font-family:monospace;padding:20px;">
+    <h2>Kenney Marble Kit — Piece Measurements</h2>
+    <pre id="log">Loading...</pre>
+    <script type="importmap">
+{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.162.0/examples/jsm/"
+}}
+</script>
+    <script type="module">
+        import * as THREE from 'three';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+        const loader = new GLTFLoader();
+        const BASE = './kenney_marble-kit/Models/GLB%20format/';
+        const logEl = document.getElementById('log');
+        let output = '';
+
+        const pieces = [
+            'straight.glb',
+            'straight-wide.glb',
+            'curve.glb',
+            'curve-large.glb',
+            'curve-solid.glb',
+            'bend.glb',
+            'bend-large.glb',
+            'slant-a.glb',
+            'slant-long-a.glb',
+            'ramp-start-a.glb',
+            'ramp-long-a.glb',
+            'ramp-end-a.glb',
+            'helix-half-right.glb',
+            'helix-right.glb',
+            'helix-quarter-right.glb',
+            'end-rounded.glb',
+            'end-hole-rounded.glb',
+            'end-square.glb',
+            'funnel.glb',
+            'funnel-long.glb',
+            'tunnel.glb',
+            'support-single-top.glb',
+            'support-single-middle.glb',
+            'support-single-bottom.glb',
+            'support-color-single-top.glb',
+            'wave-a.glb',
+            'bump-a.glb',
+            'split.glb',
+            'cross.glb',
+            'corner.glb',
+            's-curve-left.glb',
+            'marble-high.glb',
+            'marble-low.glb',
+            'tree.glb',
+            'banner.glb',
+        ];
+
+        let loaded = 0;
+
+        pieces.forEach(file => {
+            loader.load(BASE + file, (gltf) => {
+                const model = gltf.scene;
+                const box = new THREE.Box3().setFromObject(model);
+                const size = new THREE.Vector3();
+                const center = new THREE.Vector3();
+                box.getSize(size);
+                box.getCenter(center);
+
+                const line = `${file.padEnd(30)} | Size: ${size.x.toFixed(3)} x ${size.y.toFixed(3)} x ${size.z.toFixed(3)} | Min: (${box.min.x.toFixed(3)}, ${box.min.y.toFixed(3)}, ${box.min.z.toFixed(3)}) | Max: (${box.max.x.toFixed(3)}, ${box.max.y.toFixed(3)}, ${box.max.z.toFixed(3)})`;
+                output += line + '\n';
+                loaded++;
+
+                if (loaded >= pieces.length) {
+                    // Sort by filename
+                    output = output.split('\n').sort().join('\n');
+                    logEl.textContent = output;
+                    console.log(output);
+                } else {
+                    logEl.textContent = `Loading... ${loaded}/${pieces.length}`;
+                }
+            }, undefined, (err) => {
+                output += `${file.padEnd(30)} | FAILED TO LOAD\n`;
+                loaded++;
+                if (loaded >= pieces.length) {
+                    output = output.split('\n').sort().join('\n');
+                    logEl.textContent = output;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

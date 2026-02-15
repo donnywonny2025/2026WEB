@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World 1 — Jeffery Kerr</title>
+    <meta name="description" content="World 1. A new place to explore.">
+    <link rel="icon" type="image/png" href="jk-monogram.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Space+Grotesk:wght@500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --font-heading: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --sky-top: #0a0e1a;
+            --sky-mid: #121a2e;
+            --sky-bottom: #1a2940;
+            --ground: #0d1117;
+            --grass: #1a3a2a;
+            --accent: #e85533;
+            --text: rgba(255, 255, 255, 0.85);
+            --text-muted: rgba(255, 255, 255, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--sky-top);
+            color: var(--text);
+            font-family: var(--font-body);
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ═══ SKY ═══ */
+        .sky {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(to bottom,
+                    var(--sky-top) 0%,
+                    var(--sky-mid) 40%,
+                    var(--sky-bottom) 70%,
+                    #1e3350 100%);
+            z-index: 0;
+        }
+
+        /* ═══ STARS ═══ */
+        .stars {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--dur) ease-in-out infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% {
+                opacity: var(--min-o);
+            }
+
+            100% {
+                opacity: var(--max-o);
+            }
+        }
+
+        /* ═══ MOON ═══ */
+        .moon {
+            position: fixed;
+            top: 8%;
+            right: 15%;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #f0e6d3, #d4c4a8);
+            box-shadow:
+                0 0 40px rgba(240, 230, 211, 0.15),
+                0 0 100px rgba(240, 230, 211, 0.05);
+            z-index: 2;
+            opacity: 0;
+            animation: fadeIn 2s ease forwards 0.5s;
+        }
+
+        .moon::after {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 18px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: rgba(180, 160, 130, 0.2);
+        }
+
+        /* ═══ GROUND ═══ */
+        .ground {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 35%;
+            z-index: 3;
+        }
+
+        .ground-layer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .ground-far {
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(15, 40, 25, 0.6) 30%, #0d1a12);
+        }
+
+        .ground-mid {
+            height: 70%;
+            background: linear-gradient(to bottom, transparent, #0f1f16 40%, #0a1610);
+        }
+
+        .ground-near {
+            height: 40%;
+            background: #080f0b;
+        }
+
+        /* Grass blades along the horizon line */
+        .grass-line {
+            position: absolute;
+            top: 0;
+            left: -5%;
+            right: -5%;
+            height: 20px;
+            overflow: hidden;
+        }
+
+        .grass-blade {
+            position: absolute;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to top, #1a3a2a, transparent);
+            transform-origin: bottom center;
+            animation: sway var(--dur) ease-in-out infinite alternate;
+        }
+
+        @keyframes sway {
+            0% {
+                transform: rotate(var(--from));
+            }
+
+            100% {
+                transform: rotate(var(--to));
+            }
+        }
+
+        /* ═══ NAV ═══ */
+        .back-link {
+            position: fixed;
+            top: 28px;
+            right: 32px;
+            z-index: 100;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-body);
+            font-size: 13px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards 0.1s;
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+        }
+
+        .back-link svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .floating-logo {
+            position: fixed;
+            top: 24px;
+            left: 32px;
+            z-index: 100;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .floating-logo img {
+            width: 40px;
+            height: 40px;
+        }
+
+        /* ═══ WORLD TITLE ═══ */
+        .world-title {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 10;
+            pointer-events: none;
+            padding: 0 24px;
+            padding-bottom: 20%;
+        }
+
+        .world-title .label {
+            font-family: var(--font-body);
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 16px;
+            opacity: 0;
+            animation: fadeTitle 1s ease forwards 0.8s;
+        }
+
+        .world-title h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(28px, 7vw, 56px);
+            font-weight: 700;
+            line-height: 1;
+            color: rgba(255, 255, 255, 0.9);
+            opacity: 0;
+            animation: fadeTitle 1s ease forwards 1.0s;
+        }
+
+        .world-title .sub {
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 300;
+            opacity: 0;
+            animation: fadeTitle 1s ease forwards 1.3s;
+        }
+
+        @keyframes fadeTitle {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ═══ MUSIC BUTTON ═══ */
+        .music-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 100;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards 1.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .music-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ═══ CAT DOM ═══ */
+        #oneko {
+            width: 32px;
+            height: 32px;
+            position: fixed;
+            z-index: 50;
+            image-rendering: pixelated;
+            pointer-events: auto;
+            cursor: grab;
+            transform: scale(2);
+            transform-origin: top left;
+        }
+
+        .cat-status {
+            position: fixed;
+            z-index: 51;
+            font-family: var(--font-body);
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.7);
+            pointer-events: none;
+            text-align: center;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+            transition: opacity 0.3s ease;
+        }
+
+        /* ═══ CONTROLS ═══ */
+        .cat-controls {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards 1.5s;
+        }
+
+        .cat-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text);
+            font-size: 22px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cat-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Ball + shadow */
+        .toy-ball {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%, #ff6b4a, #cc3311);
+            box-shadow: inset -2px -2px 3px rgba(0, 0, 0, 0.3), 0 0 6px rgba(255, 80, 40, 0.15);
+            z-index: 45;
+            display: none;
+            transform-origin: center;
+        }
+
+        .toy-ball-shadow {
+            position: fixed;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.25);
+            z-index: 44;
+            display: none;
+        }
+
+        /* Atmosphere overlay */
+        #atmosphereOverlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 4;
+            transition: background 3s ease;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Nav -->
+    <a href="./playground.html" class="back-link">
+        <svg viewBox="0 0 24 24">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back
+    </a>
+
+    <div class="floating-logo">
+        <a href="./index.html"><img src="./jk-monogram.png" alt="JK"></a>
+    </div>
+
+    <!-- Sky & Environment -->
+    <div class="sky"></div>
+    <div class="stars" id="starsContainer"></div>
+    <div class="moon"></div>
+
+    <!-- Ground -->
+    <div class="ground">
+        <div class="ground-layer ground-far"></div>
+        <div class="ground-layer ground-mid">
+            <div class="grass-line" id="grassLine"></div>
+        </div>
+        <div class="ground-layer ground-near"></div>
+    </div>
+
+    <!-- Title -->
+    <div class="world-title" id="worldTitle">
+        <div class="label">World 1</div>
+        <h1>The Meadow</h1>
+        <p class="sub">A quiet place under the stars.</p>
+    </div>
+
+    <!-- Cat DOM -->
+    <div id="atmosphereOverlay"></div>
+    <div id="oneko"></div>
+    <div id="catStatus" class="cat-status"></div>
+
+    <!-- Music toggle -->
+    <button id="btnMusic" class="music-btn" title="Toggle Music">🔇</button>
+
+
+    <!-- Stars + Grass generation -->
+    <script>
+        // Stars
+        const starsEl = document.getElementById('starsContainer');
+        for (let i = 0; i < 120; i++) {
+            const s = document.createElement('div');
+            s.className = 'star';
+            s.style.left = Math.random() * 100 + '%';
+            s.style.top = Math.random() * 60 + '%';
+            s.style.setProperty('--dur', (2 + Math.random() * 4) + 's');
+            s.style.setProperty('--min-o', (0.1 + Math.random() * 0.2).toFixed(2));
+            s.style.setProperty('--max-o', (0.5 + Math.random() * 0.5).toFixed(2));
+            s.style.animationDelay = (Math.random() * 3) + 's';
+            const size = Math.random() < 0.1 ? 3 : (Math.random() < 0.3 ? 2 : 1);
+            s.style.width = size + 'px';
+            s.style.height = size + 'px';
+            starsEl.appendChild(s);
+        }
+
+        // Grass
+        const grassEl = document.getElementById('grassLine');
+        for (let i = 0; i < 200; i++) {
+            const g = document.createElement('div');
+            g.className = 'grass-blade';
+            g.style.left = (i / 200 * 110) + '%';
+            g.style.height = (8 + Math.random() * 14) + 'px';
+            g.style.setProperty('--dur', (1.5 + Math.random() * 2) + 's');
+            g.style.setProperty('--from', (-5 - Math.random() * 8) + 'deg');
+            g.style.setProperty('--to', (5 + Math.random() * 8) + 'deg');
+            g.style.animationDelay = (Math.random() * 2) + 's';
+            g.style.opacity = 0.3 + Math.random() * 0.4;
+            grassEl.appendChild(g);
+        }
+
+        // Fade out title after a few seconds
+        setTimeout(() => {
+            const title = document.getElementById('worldTitle');
+            title.style.transition = 'opacity 2s ease';
+            title.style.opacity = '0';
+        }, 5000);
+    </script>
+
+    <!-- Cat scripts -->
+    <script src="./cat-soul.js"></script>
+    <script src="./cat-world.js"></script>
+    <script src="./cat-brain.js"></script>
+    <script src="./cat-controls.js"></script>
+    <script src="./cat-juice.js"></script>
+    <script src="./cat-rain.js"></script>
+    <script src="./meadow-ambient.js"></script>
+    <script src="./meadow-life.js"></script>
+
+</body>
+
+</html>

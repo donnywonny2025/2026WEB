@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World 2 — Jeffery Kerr</title>
+    <meta name="description" content="World 2. The Shore. Where the waves meet the night.">
+    <link rel="icon" type="image/png" href="jk-monogram.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Space+Grotesk:wght@500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --font-heading: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --sky-top: #050a14;
+            --sky-mid: #0a1628;
+            --sky-bottom: #0f2040;
+            --ocean-deep: #071220;
+            --ocean-mid: #0a1a30;
+            --ocean-surface: #0d2240;
+            --sand: #1a1610;
+            --sand-wet: #12100c;
+            --accent: #4a9eff;
+            --text: rgba(255, 255, 255, 0.85);
+            --text-muted: rgba(255, 255, 255, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--sky-top);
+            color: var(--text);
+            font-family: var(--font-body);
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ═══ SKY ═══ */
+        .sky {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(to bottom,
+                    var(--sky-top) 0%,
+                    var(--sky-mid) 30%,
+                    var(--sky-bottom) 55%,
+                    #122a4a 100%);
+            z-index: 0;
+        }
+
+        /* ═══ STARS ═══ */
+        .stars {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--dur) ease-in-out infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% {
+                opacity: var(--min-o);
+            }
+
+            100% {
+                opacity: var(--max-o);
+            }
+        }
+
+        /* ═══ MOON ═══ */
+        .moon {
+            position: fixed;
+            top: 10%;
+            left: 20%;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #f0e6d3, #d4c4a8);
+            box-shadow:
+                0 0 40px rgba(240, 230, 211, 0.2),
+                0 0 100px rgba(240, 230, 211, 0.08);
+            z-index: 2;
+            opacity: 0;
+            animation: fadeIn 2s ease forwards 0.5s;
+        }
+
+        /* ═══ MOON REFLECTION ═══ */
+        .moon-reflection {
+            position: fixed;
+            top: 52%;
+            left: 18%;
+            width: 80px;
+            height: 150px;
+            background: linear-gradient(to bottom,
+                    rgba(240, 230, 211, 0.06),
+                    rgba(240, 230, 211, 0.02),
+                    transparent);
+            filter: blur(12px);
+            z-index: 5;
+            opacity: 0;
+            animation: shimmer 4s ease-in-out infinite alternate, fadeIn 2s ease forwards 1s;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: scaleX(1);
+                opacity: 0.6;
+            }
+
+            50% {
+                transform: scaleX(1.3);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scaleX(0.8);
+                opacity: 0.5;
+            }
+        }
+
+        /* ═══ OCEAN ═══ */
+        .ocean {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            z-index: 3;
+            background: linear-gradient(to bottom,
+                    var(--ocean-surface) 0%,
+                    var(--ocean-mid) 30%,
+                    var(--ocean-deep) 100%);
+        }
+
+        /* Wave layers */
+        .wave {
+            position: absolute;
+            top: 0;
+            left: -5%;
+            right: -5%;
+            height: 20px;
+            overflow: hidden;
+        }
+
+        .wave::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            background: repeating-linear-gradient(90deg,
+                    transparent 0%,
+                    rgba(255, 255, 255, 0.03) 25%,
+                    transparent 50%);
+            animation: waveMove var(--speed) linear infinite;
+        }
+
+        @keyframes waveMove {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .wave-1 {
+            top: -4px;
+            --speed: 8s;
+        }
+
+        .wave-1::before {
+            background: repeating-linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.04) 20%, transparent 45%);
+        }
+
+        .wave-2 {
+            top: 6px;
+            --speed: 12s;
+            opacity: 0.6;
+        }
+
+        .wave-3 {
+            top: 14px;
+            --speed: 15s;
+            opacity: 0.3;
+        }
+
+        /* Horizon glow */
+        .horizon-glow {
+            position: absolute;
+            top: -30px;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(to bottom,
+                    transparent,
+                    rgba(15, 32, 64, 0.3),
+                    rgba(13, 34, 64, 0.6));
+            filter: blur(8px);
+        }
+
+        /* ═══ BEACH / SAND ═══ */
+        .beach {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 15%;
+            z-index: 6;
+        }
+
+        .sand {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(to bottom,
+                    var(--sand-wet) 0%,
+                    var(--sand) 40%,
+                    #1e1a14 100%);
+        }
+
+        .sand-wet-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(to bottom,
+                    rgba(20, 40, 60, 0.4),
+                    transparent);
+        }
+
+        /* Foam at shoreline */
+        .foam-container {
+            position: absolute;
+            top: -6px;
+            left: -5%;
+            right: -5%;
+            height: 12px;
+            overflow: hidden;
+            z-index: 7;
+        }
+
+        .foam-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            background: repeating-linear-gradient(90deg,
+                    transparent 0%,
+                    rgba(255, 255, 255, 0.06) 10%,
+                    rgba(255, 255, 255, 0.1) 15%,
+                    transparent 25%);
+            animation: foamDrift 10s linear infinite;
+        }
+
+        @keyframes foamDrift {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* ═══ NAV ═══ */
+        .back-link {
+            position: fixed;
+            top: 28px;
+            right: 32px;
+            z-index: 100;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-body);
+            font-size: 13px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards 0.1s;
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+        }
+
+        .back-link svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .floating-logo {
+            position: fixed;
+            top: 24px;
+            left: 32px;
+            z-index: 100;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .floating-logo img {
+            width: 40px;
+            height: 40px;
+        }
+
+        /* ═══ WORLD TITLE ═══ */
+        .world-title {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 10;
+            pointer-events: none;
+            padding: 0 24px;
+            padding-bottom: 20%;
+        }
+
+        .world-title .label {
+            font-family: var(--font-body);
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 16px;
+            opacity: 0;
+            animation: fadeTitle 1s ease forwards 0.8s;
+        }
+
+        .world-title h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(28px, 7vw, 56px);
+            font-weight: 700;
+            line-height: 1;
+            color: rgba(255, 255, 255, 0.9);
+            opacity: 0;
+            animation: fadeTitle 1s ease forwards 1.0s;
+        }
+
+        .world-title .sub {
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 300;
+            opacity: 0;
+            animation: fadeTitle 1s ease forwards 1.3s;
+        }
+
+        @keyframes fadeTitle {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ═══ MUSIC BUTTON ═══ */
+        .music-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 100;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards 1.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .music-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ═══ CAT DOM ═══ */
+        #oneko {
+            width: 32px;
+            height: 32px;
+            position: fixed;
+            z-index: 50;
+            image-rendering: pixelated;
+            pointer-events: auto;
+            cursor: grab;
+            transform: scale(2);
+            transform-origin: top left;
+        }
+
+        .cat-status {
+            position: fixed;
+            z-index: 51;
+            font-family: var(--font-body);
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.7);
+            pointer-events: none;
+            text-align: center;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+            transition: opacity 0.3s ease;
+        }
+
+        /* Ball + shadow */
+        .toy-ball {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%, #ff6b4a, #cc3311);
+            box-shadow: inset -2px -2px 3px rgba(0, 0, 0, 0.3), 0 0 6px rgba(255, 80, 40, 0.15);
+            z-index: 45;
+            display: none;
+            transform-origin: center;
+        }
+
+        .toy-ball-shadow {
+            position: fixed;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.25);
+            z-index: 44;
+            display: none;
+        }
+
+        #atmosphereOverlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 4;
+            transition: background 3s ease;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Nav -->
+    <a href="./playground.html" class="back-link">
+        <svg viewBox="0 0 24 24">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back
+    </a>
+
+    <div class="floating-logo">
+        <a href="./index.html"><img src="./jk-monogram.png" alt="JK"></a>
+    </div>
+
+    <!-- Sky & Stars -->
+    <div class="sky"></div>
+    <div class="stars" id="starsContainer"></div>
+    <div class="moon"></div>
+    <div class="moon-reflection"></div>
+
+    <!-- Ocean -->
+    <div class="ocean">
+        <div class="horizon-glow"></div>
+        <div class="wave wave-1"></div>
+        <div class="wave wave-2"></div>
+        <div class="wave wave-3"></div>
+    </div>
+
+    <!-- Beach -->
+    <div class="beach">
+        <div class="foam-container">
+            <div class="foam-line"></div>
+        </div>
+        <div class="sand">
+            <div class="sand-wet-line"></div>
+        </div>
+    </div>
+
+    <!-- Title -->
+    <div class="world-title" id="worldTitle">
+        <div class="label">World 2</div>
+        <h1>The Shore</h1>
+        <p class="sub">Where the waves meet the night.</p>
+    </div>
+
+    <!-- Cat DOM -->
+    <div id="atmosphereOverlay"></div>
+    <div id="oneko"></div>
+    <div id="catStatus" class="cat-status"></div>
+
+    <!-- Music toggle -->
+    <button id="btnMusic" class="music-btn" title="Toggle Music">🔇</button>
+
+    <!-- Stars generation -->
+    <script>
+        const starsEl = document.getElementById('starsContainer');
+        for (let i = 0; i < 100; i++) {
+            const s = document.createElement('div');
+            s.className = 'star';
+            s.style.left = Math.random() * 100 + '%';
+            s.style.top = Math.random() * 45 + '%';
+            s.style.setProperty('--dur', (2 + Math.random() * 4) + 's');
+            s.style.setProperty('--min-o', (0.1 + Math.random() * 0.2).toFixed(2));
+            s.style.setProperty('--max-o', (0.5 + Math.random() * 0.5).toFixed(2));
+            s.style.animationDelay = (Math.random() * 3) + 's';
+            const size = Math.random() < 0.1 ? 3 : (Math.random() < 0.3 ? 2 : 1);
+            s.style.width = size + 'px';
+            s.style.height = size + 'px';
+            starsEl.appendChild(s);
+        }
+
+        // Fade out title
+        setTimeout(() => {
+            const title = document.getElementById('worldTitle');
+            title.style.transition = 'opacity 2s ease';
+            title.style.opacity = '0';
+        }, 5000);
+    </script>
+
+    <!-- Shore ambient -->
+    <script>
+        (function () {
+            let ctx = null, masterGain = null, playing = false;
+            let oceanAudio = null, oceanSource = null, oceanGain = null;
+
+            const OCEAN_FILES = ['./sounds/ocean1.mp3', './sounds/ocean2.mp3', './sounds/ocean3.mp3'];
+
+            function init() {
+                ctx = new (window.AudioContext || window.webkitAudioContext)();
+                masterGain = ctx.createGain();
+                masterGain.gain.value = 0;
+                masterGain.connect(ctx.destination);
+            }
+
+            function start() {
+                if (playing) return;
+                if (!ctx) init();
+                if (ctx.state === 'suspended') ctx.resume();
+                playing = true;
+
+                masterGain.gain.setValueAtTime(0, ctx.currentTime);
+                masterGain.gain.linearRampToValueAtTime(1, ctx.currentTime + 3);
+
+                // Random ocean track, looped
+                const src = OCEAN_FILES[Math.floor(Math.random() * OCEAN_FILES.length)];
+                oceanAudio = new Audio(src);
+                oceanAudio.crossOrigin = 'anonymous';
+                oceanAudio.loop = true;
+                oceanSource = ctx.createMediaElementSource(oceanAudio);
+                oceanGain = ctx.createGain();
+                oceanGain.gain.value = 0.4;
+                oceanSource.connect(oceanGain);
+                oceanGain.connect(masterGain);
+                oceanAudio.play().catch(() => { });
+                console.log('[shore] 🌊 ocean started:', src);
+            }
+
+            function stop() {
+                if (!playing) return;
+                playing = false;
+                masterGain.gain.cancelScheduledValues(ctx.currentTime);
+                masterGain.gain.setValueAtTime(masterGain.gain.value, ctx.currentTime);
+                masterGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 2);
+                setTimeout(() => {
+                    if (oceanAudio) { oceanAudio.pause(); oceanAudio = null; }
+                    oceanSource = null; oceanGain = null;
+                }, 2500);
+            }
+
+            function toggle() { if (playing) stop(); else start(); return playing; }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const btn = document.getElementById('btnMusic');
+                if (btn) {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const isPlaying = toggle();
+                        btn.style.background = isPlaying ? 'rgba(74,158,255,0.2)' : '';
+                        btn.style.borderColor = isPlaying ? 'rgba(74,158,255,0.3)' : '';
+                        btn.textContent = isPlaying ? '🔊' : '🔇';
+                    });
+                }
+            });
+        })();
+    </script>
+
+    <!-- Cat scripts -->
+    <script src="./cat-soul.js"></script>
+    <script src="./cat-world.js"></script>
+    <script src="./cat-brain.js"></script>
+    <script src="./cat-controls.js"></script>
+    <script src="./cat-juice.js"></script>
+    <script src="./cat-rain.js"></script>
+    <script src="./meadow-life.js"></script>
+
+</body>
+
+</html>

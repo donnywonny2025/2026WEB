@@ -49,7 +49,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=4">
     <link rel="icon" type="image/png" href="jk-monogram.png">
     <link rel="apple-touch-icon" href="jk-monogram.png">
 
@@ -209,9 +209,9 @@
         <!-- 01 — Showreel -->
         <div class="project reveal">
             <div class="project-number">01</div>
-            <div class="project-media">
+            <div class="project-media always-loop">
                 <img src="Videos/Reel_Poster.jpg" alt="Featured Showreel">
-                <video src="Videos/REELQuickLoop.mp4" muted loop playsinline></video>
+                <video src="Videos/REELQuickLoop.mp4" autoplay muted loop playsinline></video>
                 <div class="project-play">
                     <svg viewBox="0 0 24 24">
                         <polygon points="8,5 20,12 8,19" />
@@ -371,13 +371,13 @@
                     <h2 class="about-statement reveal">
                         Hi, I'm <span>Jeff.</span>
                     </h2>
-                    <p class="about-text reveal">
+                    <p class="about-text reveal" data-word-reveal>
                         I'm a <strong>creative director, editor, and producer</strong> based in Grand Rapids, Michigan.
                         For the last fifteen years I've been making things that move people — across entertainment,
                         corporate, government, and political projects. From New Balance campaigns and NASA ceremonies
                         to rapid-response political ads and Danny Trejo's TV show, I bring the same energy to every cut.
                     </p>
-                    <p class="about-text reveal">
+                    <p class="about-text reveal" data-word-reveal>
                         I edit. I animate. I build apps. I code.
                         If it tells a story and needs to look great, I'm already interested.
                         <strong>I work fast. I work clean. I don't miss deadlines.</strong>
@@ -560,7 +560,7 @@
     <!-- ═══════════════════════════════════════════
          JAVASCRIPT
          ═══════════════════════════════════════════ -->
-    <script src="main.js" defer></script>
+    <script src="main.js?v=4" defer></script>
 </body>
 
 </html>

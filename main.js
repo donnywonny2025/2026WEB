@@ -163,21 +163,37 @@ menuItems.forEach(item => {
     });
 });
 
-// ─── Video hover-to-play ───
+// ─── Video scroll-to-play + text shimmer (IntersectionObserver) ───
+const projectObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        const project = entry.target;
+        const video = project.querySelector('video');
+        const isAlwaysLoop = !!project.querySelector('.always-loop');
+
+        if (entry.isIntersecting) {
+            // Trigger text shimmer
+            project.classList.remove('in-view');
+            void project.offsetWidth; // force reflow to restart animation
+            project.classList.add('in-view');
+
+            // Play video (skip always-loop — it handles itself)
+            if (video && !isAlwaysLoop) {
+                video.play().catch(() => { });
+                video.style.opacity = '1';
+            }
+        } else {
+            project.classList.remove('in-view');
+
+            if (video && !isAlwaysLoop) {
+                video.pause();
+                video.style.opacity = '0';
+            }
+        }
+    });
+}, { threshold: 0.3 });
+
 document.querySelectorAll('.project').forEach(project => {
-    const video = project.querySelector('video');
-    if (!video) return;
-
-    project.addEventListener('mouseenter', () => {
-        video.currentTime = 0;
-        video.play().catch(() => { });
-        video.style.opacity = '1';
-    });
-
-    project.addEventListener('mouseleave', () => {
-        video.pause();
-        video.style.opacity = '0';
-    });
+    projectObserver.observe(project);
 });
 
 // ─── Stat count-up ───
@@ -203,6 +219,77 @@ const statObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.5 });
 
 document.querySelectorAll('.stat-number').forEach(el => statObserver.observe(el));
+
+// ─── Premium word-reveal for About paragraphs ───
+document.querySelectorAll('[data-word-reveal]').forEach(el => {
+    const originalHTML = el.innerHTML;
+    function wrapWords(node) {
+        const frag = document.createDocumentFragment();
+        node.childNodes.forEach(child => {
+            if (child.nodeType === 3) {
+                child.textContent.split(/(\s+)/).forEach(w => {
+                    if (/^\s+$/.test(w) || w === '') {
+                        frag.appendChild(document.createTextNode(w));
+                    } else {
+                        const span = document.createElement('span');
+                        span.className = 'word-reveal';
+                        span.textContent = w;
+                        frag.appendChild(span);
+                    }
+                });
+            } else if (child.nodeName === 'STRONG') {
+                const strong = document.createElement('strong');
+                child.textContent.split(/(\s+)/).forEach(w => {
+                    if (/^\s+$/.test(w) || w === '') {
+                        strong.appendChild(document.createTextNode(w));
+                    } else {
+                        const span = document.createElement('span');
+                        span.className = 'word-reveal';
+                        span.textContent = w;
+                        strong.appendChild(span);
+                    }
+                });
+                frag.appendChild(strong);
+            } else {
+                frag.appendChild(child.cloneNode(true));
+            }
+        });
+        return frag;
+    }
+    el.innerHTML = '';
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = originalHTML;
+    el.appendChild(wrapWords(tempDiv));
+});
+
+// Orchestrate: stagger paragraphs with 1.5s gap
+const wordRevealEls = Array.from(document.querySelectorAll('[data-word-reveal]'));
+let aboutAnimStarted = false;
+
+const aboutRevealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting && !aboutAnimStarted) {
+            aboutAnimStarted = true;
+            aboutRevealObserver.disconnect();
+
+            wordRevealEls.forEach((el, pIdx) => {
+                const words = el.querySelectorAll('.word-reveal');
+                const totalDuration = 3500;
+                const stagger = Math.min(totalDuration / words.length, 65);
+                const paragraphDelay = pIdx * 1500; // 1.5s between paragraphs
+
+                setTimeout(() => {
+                    words.forEach((word, i) => {
+                        word.style.transitionDelay = `${i * stagger}ms`;
+                        word.classList.add('revealed');
+                    });
+                }, paragraphDelay);
+            });
+        }
+    });
+}, { threshold: 0.2 });
+
+wordRevealEls.forEach(el => aboutRevealObserver.observe(el));
 
 // ═══════════════════════════════════════════
 // PROJECT DETAIL PAGES + PANEL WIPE TRANSITION

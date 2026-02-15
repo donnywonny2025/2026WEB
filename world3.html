@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World 3 — Jeffery Kerr</title>
+    <meta name="description" content="World 3. The Canopy. Deep in the trees.">
+    <link rel="icon" type="image/png" href="jk-monogram.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Space+Grotesk:wght@500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --font-heading: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --sky-top: #040806;
+            --sky-mid: #0a1a10;
+            --sky-bottom: #0e2818;
+            --canopy: #061208;
+            --floor: #050a06;
+            --accent: #6ddb72;
+            --text: rgba(255, 255, 255, 0.85);
+            --text-muted: rgba(255, 255, 255, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--sky-top);
+            color: var(--text);
+            font-family: var(--font-body);
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ═══ SKY (barely visible through canopy) ═══ */
+        .sky {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(to bottom,
+                    var(--sky-top) 0%,
+                    var(--sky-mid) 40%,
+                    var(--sky-bottom) 100%);
+            z-index: 0;
+        }
+
+        /* ═══ STARS (few, filtered through leaves) ═══ */
+        .stars {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--dur) ease-in-out infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% {
+                opacity: var(--min-o);
+            }
+
+            100% {
+                opacity: var(--max-o);
+            }
+        }
+
+        /* ═══ FOG LAYERS ═══ */
+        .fog {
+            position: fixed;
+            z-index: 5;
+            width: 200%;
+            height: 100px;
+            background: linear-gradient(90deg,
+                    transparent 0%,
+                    rgba(100, 160, 100, 0.03) 20%,
+                    rgba(80, 140, 80, 0.05) 40%,
+                    rgba(100, 160, 100, 0.03) 60%,
+                    transparent 80%,
+                    rgba(80, 140, 80, 0.04) 100%);
+            filter: blur(20px);
+            pointer-events: none;
+        }
+
+        .fog-1 {
+            top: 30%;
+            animation: fogDrift 40s linear infinite;
+        }
+
+        .fog-2 {
+            top: 50%;
+            animation: fogDrift 55s linear infinite reverse;
+            opacity: 0.7;
+        }
+
+        .fog-3 {
+            top: 65%;
+            animation: fogDrift 35s linear infinite;
+            opacity: 0.5;
+            height: 60px;
+        }
+
+        @keyframes fogDrift {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* ═══ TREE LAYERS (silhouettes) ═══ */
+        .tree-layer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        /* Far trees — darkest, smallest */
+        .trees-far {
+            height: 75%;
+            z-index: 2;
+        }
+
+        .tree-trunk {
+            position: absolute;
+            bottom: 0;
+            background: linear-gradient(to top, #0a1a0e, #05100a 60%, transparent);
+            border-radius: 2px 2px 0 0;
+        }
+
+        /* Mid trees */
+        .trees-mid {
+            height: 85%;
+            z-index: 3;
+        }
+
+        /* Near trees — closest, biggest */
+        .trees-near {
+            height: 90%;
+            z-index: 6;
+        }
+
+        /* Tree canopy (overhead dark mass) */
+        .canopy-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 25%;
+            background: linear-gradient(to bottom,
+                    rgba(4, 8, 6, 0.95) 0%,
+                    rgba(6, 18, 8, 0.7) 50%,
+                    transparent 100%);
+            z-index: 7;
+            pointer-events: none;
+        }
+
+        /* ═══ FOREST FLOOR ═══ */
+        .forest-floor {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20%;
+            z-index: 4;
+            background: linear-gradient(to bottom,
+                    transparent 0%,
+                    rgba(5, 10, 6, 0.6) 20%,
+                    var(--floor) 50%,
+                    #030604 100%);
+        }
+
+        /* Undergrowth — small plants */
+        .undergrowth {
+            position: absolute;
+            top: 0;
+            left: -5%;
+            right: -5%;
+            height: 30px;
+            overflow: hidden;
+        }
+
+        .fern {
+            position: absolute;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to top, #1a3a2a, #0d2018 70%, transparent);
+            transform-origin: bottom center;
+            animation: fernSway var(--dur) ease-in-out infinite alternate;
+            border-radius: 1px;
+        }
+
+        @keyframes fernSway {
+            0% {
+                transform: rotate(var(--from)) scaleY(1);
+            }
+
+            100% {
+                transform: rotate(var(--to)) scaleY(1.05);
+            }
+        }
+
+        /* ═══ LIGHT SHAFTS (god rays through canopy) ═══ */
+        .light-shaft {
+            position: fixed;
+            top: 0;
+            width: 60px;
+            height: 70%;
+            background: linear-gradient(to bottom,
+                    rgba(120, 180, 100, 0.02) 0%,
+                    rgba(120, 180, 100, 0.04) 30%,
+                    rgba(120, 180, 100, 0.01) 70%,
+                    transparent 100%);
+            transform: skewX(-5deg);
+            filter: blur(15px);
+            z-index: 8;
+            pointer-events: none;
+            opacity: 0;
+            animation: shaftPulse var(--dur) ease-in-out infinite alternate;
+        }
+
+        @keyframes shaftPulse {
+            0% {
+                opacity: 0.3;
+            }
+
+            100% {
+                opacity: 0.8;
+            }
+        }
+
+        /* ═══ NAV ═══ */
+        .back-link {
+            position: fixed;
+            top: 28px;
+            right: 32px;
+            z-index: 100;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-body);
+            font-size: 13px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards 0.1s;
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+        }
+
+        .back-link svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .floating-logo {
+            position: fixed;
+            top: 24px;
+            left: 32px;
+            z-index: 100;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .floating-logo img {
+            width: 40px;
+            height: 40px;
+        }
+
+        /* ═══ WORLD TITLE ═══ */
+        .world-title {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 10;
+            pointer-events: none;
+            padding: 0 24px;
+            padding-bottom: 20%;
+        }
+
+        .world-title .label {
+            font-family: var(--font-body);
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 16px;
+            opacity: 0;
+            animation: fadeTitle 1s ease forwards 0.8s;
+        }
+
+        .world-title h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(28px, 7vw, 56px);
+            font-weight: 700;
+            line-height: 1;
+            color: rgba(255, 255, 255, 0.9);
+            opacity: 0;
+            animation: fadeTitle 1s ease forwards 1.0s;
+        }
+
+        .world-title .sub {
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 300;
+            opacity: 0;
+            animation: fadeTitle 1s ease forwards 1.3s;
+        }
+
+        @keyframes fadeTitle {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ═══ MUSIC BUTTON ═══ */
+        .music-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 100;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards 1.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .music-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ═══ CAT DOM ═══ */
+        #oneko {
+            width: 32px;
+            height: 32px;
+            position: fixed;
+            z-index: 50;
+            image-rendering: pixelated;
+            pointer-events: auto;
+            cursor: grab;
+            transform: scale(2);
+            transform-origin: top left;
+        }
+
+        .cat-status {
+            position: fixed;
+            z-index: 51;
+            font-family: var(--font-body);
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.7);
+            pointer-events: none;
+            text-align: center;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+            transition: opacity 0.3s ease;
+        }
+
+        .toy-ball {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%, #ff6b4a, #cc3311);
+            box-shadow: inset -2px -2px 3px rgba(0, 0, 0, 0.3), 0 0 6px rgba(255, 80, 40, 0.15);
+            z-index: 45;
+            display: none;
+            transform-origin: center;
+        }
+
+        .toy-ball-shadow {
+            position: fixed;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.25);
+            z-index: 44;
+            display: none;
+        }
+
+        #atmosphereOverlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 4;
+            transition: background 3s ease;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Nav -->
+    <a href="./playground.html" class="back-link">
+        <svg viewBox="0 0 24 24">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back
+    </a>
+    <div class="floating-logo">
+        <a href="./index.html"><img src="./jk-monogram.png" alt="JK"></a>
+    </div>
+
+    <!-- Sky -->
+    <div class="sky"></div>
+    <div class="stars" id="starsContainer"></div>
+
+    <!-- Canopy overlay -->
+    <div class="canopy-overlay"></div>
+
+    <!-- Fog -->
+    <div class="fog fog-1"></div>
+    <div class="fog fog-2"></div>
+    <div class="fog fog-3"></div>
+
+    <!-- Tree layers -->
+    <div class="tree-layer trees-far" id="treesFar"></div>
+    <div class="tree-layer trees-mid" id="treesMid"></div>
+
+    <!-- Forest floor -->
+    <div class="forest-floor">
+        <div class="undergrowth" id="undergrowth"></div>
+    </div>
+
+    <!-- Near trees (foreground) -->
+    <div class="tree-layer trees-near" id="treesNear"></div>
+
+    <!-- Light shafts -->
+    <div id="lightShafts"></div>
+
+    <!-- Title -->
+    <div class="world-title" id="worldTitle">
+        <div class="label">World 3</div>
+        <h1>The Canopy</h1>
+        <p class="sub">Deep in the trees.</p>
+    </div>
+
+    <!-- Cat DOM -->
+    <div id="atmosphereOverlay"></div>
+    <div id="oneko"></div>
+    <div id="catStatus" class="cat-status"></div>
+
+    <!-- Music toggle -->
+    <button id="btnMusic" class="music-btn" title="Toggle Music">🔇</button>
+
+    <!-- Forest generation -->
+    <script>
+        // Stars (few, through canopy gaps)
+        const starsEl = document.getElementById('starsContainer');
+        for (let i = 0; i < 40; i++) {
+            const s = document.createElement('div');
+            s.className = 'star';
+            s.style.left = Math.random() * 100 + '%';
+            s.style.top = Math.random() * 30 + '%';
+            s.style.setProperty('--dur', (2 + Math.random() * 4) + 's');
+            s.style.setProperty('--min-o', (0.05 + Math.random() * 0.1).toFixed(2));
+            s.style.setProperty('--max-o', (0.2 + Math.random() * 0.3).toFixed(2));
+            s.style.animationDelay = (Math.random() * 3) + 's';
+            starsEl.appendChild(s);
+        }
+
+        // Generate trees
+        function generateTrees(containerId, count, minH, maxH, color1, color2, minW, maxW) {
+            const el = document.getElementById(containerId);
+            for (let i = 0; i < count; i++) {
+                const trunk = document.createElement('div');
+                trunk.className = 'tree-trunk';
+                const w = minW + Math.random() * (maxW - minW);
+                const h = minH + Math.random() * (maxH - minH);
+                trunk.style.left = (i / count * 100) + (Math.random() * 5 - 2.5) + '%';
+                trunk.style.width = w + 'px';
+                trunk.style.height = h + '%';
+                trunk.style.background = `linear-gradient(to top, ${color1}, ${color2} 60%, transparent)`;
+                trunk.style.opacity = 0.6 + Math.random() * 0.4;
+                el.appendChild(trunk);
+            }
+        }
+
+        generateTrees('treesFar', 20, 40, 70, '#081408', '#040a04', 4, 10);
+        generateTrees('treesMid', 14, 50, 80, '#061008', '#030804', 6, 16);
+        generateTrees('treesNear', 6, 60, 95, '#040c06', '#020602', 12, 30);
+
+        // Undergrowth (ferns)
+        const undergrowthEl = document.getElementById('undergrowth');
+        for (let i = 0; i < 150; i++) {
+            const f = document.createElement('div');
+            f.className = 'fern';
+            f.style.left = (i / 150 * 110) + '%';
+            f.style.height = (6 + Math.random() * 18) + 'px';
+            f.style.setProperty('--dur', (2 + Math.random() * 3) + 's');
+            f.style.setProperty('--from', (-3 - Math.random() * 5) + 'deg');
+            f.style.setProperty('--to', (3 + Math.random() * 5) + 'deg');
+            f.style.animationDelay = (Math.random() * 2) + 's';
+            f.style.opacity = 0.3 + Math.random() * 0.4;
+            undergrowthEl.appendChild(f);
+        }
+
+        // Light shafts
+        const shaftsEl = document.getElementById('lightShafts');
+        for (let i = 0; i < 3; i++) {
+            const shaft = document.createElement('div');
+            shaft.className = 'light-shaft';
+            shaft.style.left = (15 + i * 30 + Math.random() * 10) + '%';
+            shaft.style.width = (40 + Math.random() * 50) + 'px';
+            shaft.style.setProperty('--dur', (6 + Math.random() * 6) + 's');
+            shaft.style.animationDelay = (Math.random() * 4) + 's';
+            shaftsEl.appendChild(shaft);
+        }
+
+        // Fade out title
+        setTimeout(() => {
+            const title = document.getElementById('worldTitle');
+            title.style.transition = 'opacity 2s ease';
+            title.style.opacity = '0';
+        }, 5000);
+    </script>
+
+    <!-- Forest ambient -->
+    <script>
+        (function () {
+            let ctx = null, masterGain = null, playing = false;
+            let windAudio = null, windSource = null, windGain = null;
+            let cricketAudio = null, cricketSource = null, cricketGain = null;
+            let dogTimeout = null;
+
+            const DOG_FILES = ['./sounds/dog1.mp3', './sounds/dog2.mp3', './sounds/dog3.mp3', './sounds/dog4.mp3'];
+
+            function init() {
+                ctx = new (window.AudioContext || window.webkitAudioContext)();
+                masterGain = ctx.createGain();
+                masterGain.gain.value = 0;
+                masterGain.connect(ctx.destination);
+            }
+
+            function playDog() {
+                if (!playing) return;
+                const file = DOG_FILES[Math.floor(Math.random() * DOG_FILES.length)];
+                const audio = new Audio(file);
+                audio.volume = 0.04 + Math.random() * 0.08;
+                audio.playbackRate = 0.7 + Math.random() * 0.5;
+                audio.play().catch(() => { });
+                dogTimeout = setTimeout(playDog, 20000 + Math.random() * 40000);
+            }
+
+            function start() {
+                if (playing) return;
+                if (!ctx) init();
+                if (ctx.state === 'suspended') ctx.resume();
+                playing = true;
+
+                masterGain.gain.setValueAtTime(0, ctx.currentTime);
+                masterGain.gain.linearRampToValueAtTime(1, ctx.currentTime + 3);
+
+                // Deep forest wind
+                windAudio = new Audio('./sounds/wind-nature2.mp3');
+                windAudio.crossOrigin = 'anonymous';
+                windAudio.loop = true;
+                windSource = ctx.createMediaElementSource(windAudio);
+                windGain = ctx.createGain();
+                windGain.gain.value = 0.25;
+                windSource.connect(windGain);
+                windGain.connect(masterGain);
+                windAudio.play().catch(() => { });
+
+                // Forest crickets / insects
+                cricketAudio = new Audio('./sounds/crickets1.mp3');
+                cricketAudio.crossOrigin = 'anonymous';
+                cricketAudio.loop = true;
+                cricketSource = ctx.createMediaElementSource(cricketAudio);
+                cricketGain = ctx.createGain();
+                cricketGain.gain.value = 0.20;
+                cricketSource.connect(cricketGain);
+                cricketGain.connect(masterGain);
+                cricketAudio.play().catch(() => { });
+
+                // Very distant dogs
+                dogTimeout = setTimeout(playDog, 15000);
+            }
+
+            function stop() {
+                if (!playing) return;
+                playing = false;
+                masterGain.gain.cancelScheduledValues(ctx.currentTime);
+                masterGain.gain.setValueAtTime(masterGain.gain.value, ctx.currentTime);
+                masterGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 2);
+                setTimeout(() => {
+                    if (windAudio) { windAudio.pause(); windAudio = null; }
+                    if (cricketAudio) { cricketAudio.pause(); cricketAudio = null; }
+                }, 2500);
+                if (dogTimeout) { clearTimeout(dogTimeout); dogTimeout = null; }
+            }
+
+            function toggle() { if (playing) stop(); else start(); return playing; }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const btn = document.getElementById('btnMusic');
+                if (btn) {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const isPlaying = toggle();
+                        btn.style.background = isPlaying ? 'rgba(109,219,114,0.15)' : '';
+                        btn.style.borderColor = isPlaying ? 'rgba(109,219,114,0.3)' : '';
+                        btn.textContent = isPlaying ? '🔊' : '🔇';
+                    });
+                }
+            });
+        })();
+    </script>
+
+    <!-- Cat scripts -->
+    <script src="./cat-soul.js"></script>
+    <script src="./cat-world.js"></script>
+    <script src="./cat-brain.js"></script>
+    <script src="./cat-controls.js"></script>
+    <script src="./cat-juice.js"></script>
+    <script src="./cat-rain.js"></script>
+    <script src="./meadow-life.js"></script>
+
+</body>
+
+</html>
