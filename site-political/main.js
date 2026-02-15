@@ -593,3 +593,97 @@ document.addEventListener('keydown', (e) => {
         history.back(); // clean up the pushState entry
     }
 });
+
+// ═══════════════════════════════════════════
+// AJAX FORM SUBMISSION — Shows popup instead of redirect
+// ═══════════════════════════════════════════
+(function () {
+    const form = document.querySelector('.contact-form');
+    if (!form) return;
+
+    // Create modal overlay
+    const modal = document.createElement('div');
+    modal.className = 'thank-you-modal';
+    modal.innerHTML = `
+        <div class="thank-you-inner">
+            <div class="thank-you-icon">✓</div>
+            <h2>Thank You</h2>
+            <p>Your message has been sent.<br>I'll be in touch soon.</p>
+            <button class="thank-you-close">Got it</button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    const closeModal = () => {
+        modal.classList.remove('visible');
+        setTimeout(() => modal.style.display = 'none', 400);
+    };
+
+    modal.querySelector('.thank-you-close').addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('visible')) closeModal();
+    });
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = form.querySelector('.form-submit');
+        const originalText = btn.textContent;
+        btn.textContent = 'Sending…';
+        btn.disabled = true;
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: { 'Accept': 'application/json' }
+            });
+
+            if (response.ok) {
+                form.reset();
+                modal.style.display = 'flex';
+                requestAnimationFrame(() => modal.classList.add('visible'));
+            } else {
+                alert('Oops — something went wrong. Please try again.');
+            }
+        } catch (err) {
+            alert('Network error. Please check your connection and try again.');
+        }
+
+        btn.textContent = originalText;
+        btn.disabled = false;
+    });
+})();
+
+// ═══════════════════════════════════════════
+// MOBILE VIDEO AUTOPLAY FIX
+// ═══════════════════════════════════════════
+(function () {
+    // On mobile, attempt to play all muted inline videos when they enter viewport
+    // Uses a lower threshold and handles play promise rejections
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (!isMobile) return;
+
+    const mobileVideoObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const video = entry.target;
+            if (entry.isIntersecting) {
+                video.play().catch(() => {
+                    // Some mobile browsers need a user gesture — add a one-time touch handler
+                    const playOnTouch = () => {
+                        video.play().catch(() => { });
+                        document.removeEventListener('touchstart', playOnTouch);
+                    };
+                    document.addEventListener('touchstart', playOnTouch, { once: true });
+                });
+                video.style.opacity = '1';
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.project-media video').forEach(video => {
+        mobileVideoObserver.observe(video);
+    });
+})();
