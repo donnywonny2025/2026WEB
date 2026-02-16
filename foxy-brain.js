@@ -572,43 +572,84 @@
             });
         }
 
-        // EAT — when hungry
+        // EAT — walk to the food dish when hungry
         if (needs.hunger < 40) {
+            var foodItem = w.items.find(function (i) { return i.type === 'food'; });
+            var foodX = foodItem ? foodItem.centerX : W * 0.75;
             behaviors.push({
                 name: 'eat',
-                weight: (100 - needs.hunger) / 30,
+                weight: 2.5 + (100 - needs.hunger) / 15,
                 steps: [
-                    { anim: 'run', duration: 1200, target_x: W * 0.3, thought: 'so hungry...' },
-                    { anim: 'crouch', duration: 1500, thought: '*foraging*' },
+                    { anim: 'look_around', duration: 800, thought: 'so hungry...' },
+                    { anim: 'run', duration: 2000, target_x: foodX, thought: 'ooh cherries!' },
+                    { anim: 'sniff', duration: 1000, thought: '*sniff sniff*' },
                     {
-                        anim: 'idle', duration: 2000, thought: '*munch munch*',
-                        onStart: () => { F.fulfillNeed('hunger', 35); setMood('happy'); }
+                        anim: 'crouch', duration: 1500, thought: '*crunch crunch*',
+                        onStart: function () { F.fulfillNeed('hunger', 35); setMood('happy'); }
                     },
-                    { anim: 'idle', duration: 800, thought: 'yum!' },
+                    { anim: 'idle', duration: 1200, thought: 'yum! that hit the spot' },
                 ]
             });
         }
 
-        // DRINK — when thirsty
+        // DRINK — walk to the water bowl when thirsty
         if (needs.thirst < 40) {
+            var waterItem = w.items.find(function (i) { return i.type === 'water'; });
+            var waterX = waterItem ? waterItem.centerX : W * 0.18;
             behaviors.push({
                 name: 'drink',
-                weight: (100 - needs.thirst) / 30,
+                weight: 2.5 + (100 - needs.thirst) / 15,
                 steps: [
-                    { anim: 'run', duration: 1200, target_x: W * 0.7, thought: 'need water...' },
+                    { anim: 'idle', duration: 600, thought: 'parched...' },
+                    { anim: 'run', duration: 2000, target_x: waterX, thought: 'water!' },
                     {
-                        anim: 'crouch', duration: 2000, thought: '*slurp slurp*',
-                        onStart: () => { F.fulfillNeed('thirst', 40); setMood('happy'); }
+                        anim: 'crouch', duration: 2000, thought: '*lap lap lap*',
+                        onStart: function () { F.fulfillNeed('thirst', 40); setMood('happy'); }
                     },
-                    { anim: 'idle', duration: 1000, thought: 'refreshing!' },
+                    { anim: 'idle', duration: 1000, thought: 'ahhhh refreshing' },
                 ]
             });
         }
 
-        // SIT QUIETLY — high priority chance to just be a normal fox (CHILL MODE)
+        // CHASE BALL — run to ball, kick it, chase it!
+        if (needs.fun < 60) {
+            var ballItem = w.items.find(function (i) { return i.type === 'ball'; });
+            if (ballItem) {
+                var ballEl = document.getElementById('itemBall');
+                var kickDir = (ballItem.centerX > W / 2) ? -1 : 1;
+                var kickTarget = Math.max(10, Math.min(85, (ballItem.centerX / W * 100) + kickDir * (15 + Math.random() * 20)));
+                behaviors.push({
+                    name: 'chase_ball',
+                    weight: 2.0 + (60 - needs.fun) / 12 + traits.playfulness * 2.0,
+                    steps: [
+                        { anim: 'look_around', duration: 600, thought: 'ball!' },
+                        { anim: 'run', duration: 1800, target_x: ballItem.centerX, thought: 'gonna get it!' },
+                        {
+                            anim: 'pounce', duration: 800, thought: '*POUNCE!*',
+                            onStart: function () {
+                                if (ballEl) {
+                                    ballEl.classList.add('kicked');
+                                    ballEl.style.left = kickTarget + '%';
+                                    setTimeout(function () { ballEl.classList.remove('kicked'); }, 1200);
+                                }
+                                setMood('playful');
+                            }
+                        },
+                        { anim: 'run', duration: 1500, target_x: kickTarget / 100 * W, thought: 'AGAIN!' },
+                        {
+                            anim: 'pounce', duration: 800, thought: '*got it!*',
+                            onStart: function () { F.fulfillNeed('fun', 30); }
+                        },
+                        { anim: 'idle', duration: 1200, thought: 'best game ever' },
+                    ]
+                });
+            }
+        }
+
+        // SIT QUIETLY — just be a normal fox (but less often now there's stuff to do)
         behaviors.push({
             name: 'sit_quietly',
-            weight: 2.0 + traits.laziness * 3.0,
+            weight: 0.8 + traits.laziness * 1.2,
             steps: [
                 { anim: 'sit', duration: 3000 },
                 { anim: 'look_around', duration: 2500 },
@@ -958,9 +999,9 @@
         // Determine outcome based on what happened
         var outcome = 'neutral';
         if (nearby.nearLeftWall || nearby.nearRightWall) outcome = 'hit_wall';
-        else if (behaviorName === 'zoomies' || behaviorName === 'firefly_chase') outcome = 'fun';
+        else if (behaviorName === 'zoomies' || behaviorName === 'firefly_chase' || behaviorName === 'chase_ball') outcome = 'fun';
         else if (behaviorName === 'nap') outcome = 'rested';
-        else if (behaviorName === 'eat' || behaviorName === 'drink') outcome = 'satisfied';
+        else if (behaviorName === 'eat' || behaviorName === 'drink' || behaviorName === 'snack_time') outcome = 'satisfied';
         else if (behaviorName === 'investigate_heading' || behaviorName === 'text_reader') outcome = 'learned';
         else if (behaviorName === 'wall_bonk') outcome = 'hurt';
         else if (behaviorName === 'scared') outcome = 'startled';
