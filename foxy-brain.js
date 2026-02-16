@@ -1850,6 +1850,7 @@
 
         ballEl.addEventListener('click', function (e) {
             e.stopPropagation();
+            console.log('[BALL] Clicked! Throwing...');
 
             // Pick a random landing spot (10-90% of screen width)
             var targetPct = 10 + Math.random() * 80;
