@@ -690,7 +690,7 @@ body::before {
    BOUNCING BALL
    ═══════════════════════════════════════════ */
 
-.toy-ball {
+.toy-ball:not(.foxy-item) {
     position: fixed;
     width: 10px;
     height: 10px;
@@ -1895,28 +1895,57 @@ body::before {
 }
 
 .ball-sprite {
-    width: 24px;
-    height: 24px;
-    background: #c8e64e;
-    border-radius: 4px;
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle at 35% 35%, #e2f77a 0%, #c8e64e 40%, #8cc63f 80%, #6aa52e 100%);
+    border-radius: 50%;
     image-rendering: pixelated;
     position: relative;
     box-shadow:
-        inset -4px -4px 0 #8cc63f,
-        inset 4px 4px 0 #e2f77a,
-        0 2px 4px rgba(0, 0, 0, 0.5);
+        inset -3px -3px 0 #6aa52e,
+        inset 3px 3px 0 #e2f77a,
+        0 3px 8px rgba(0, 0, 0, 0.5),
+        0 0 12px rgba(200, 230, 78, 0.3);
+    animation: ballIdle 2s ease-in-out infinite;
 }
 
 /* Pixel stripe on ball */
 .ball-sprite::before {
     content: '';
     position: absolute;
-    top: 4px;
-    left: 2px;
-    width: 20px;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.35);
-    border-radius: 1px;
+    top: 8px;
+    left: 4px;
+    width: 32px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 3px;
+    transform: rotate(-15deg);
+}
+
+/* Second stripe for tennis ball look */
+.ball-sprite::after {
+    content: '';
+    position: absolute;
+    bottom: 8px;
+    left: 4px;
+    width: 32px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 3px;
+    transform: rotate(15deg);
+}
+
+/* Gentle idle wobble to draw attention */
+@keyframes ballIdle {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-3px) rotate(5deg);
+    }
 }
 
 /* Ball kicked state — bounce arc */
