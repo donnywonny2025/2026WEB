@@ -17,8 +17,8 @@
 
 <body>
 
-    <!-- Back link -->
-    <a href="./index.html" class="back-link">
+    <!-- Back link (dynamic — returns to referrer context) -->
+    <a id="backLink" href="./index.html" class="back-link">
         <svg viewBox="0 0 24 24">
             <line x1="19" y1="12" x2="5" y2="12"></line>
             <polyline points="12 19 5 12 12 5"></polyline>
@@ -30,9 +30,25 @@
     <button id="btnWorld3" class="world-btn" style="top:130px">World 3</button>
     <button id="btnWorld4" class="world-btn" style="top:165px">World 4</button>
 
+    <!-- Audio toggle -->
+    <button id="audioToggle" class="audio-toggle" title="Toggle ambient jazz">
+        <div class="eq-bars">
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+        </div>
+    </button>
+
+    <!-- Hidden YouTube player -->
+    <div id="ytPlayerWrap"
+        style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;overflow:hidden;pointer-events:none;">
+        <div id="ytPlayer"></div>
+    </div>
+
     <!-- Logo -->
     <div class="floating-logo">
-        <a href="./index.html"><img src="./jk-monogram.png" alt="JK"></a>
+        <a id="logoLink" href="./index.html"><img src="./jk-monogram.png" alt="JK"></a>
     </div>
 
     <!-- Forest background -->
@@ -91,7 +107,23 @@
     <script src="foxy-body.js"></script>
     <script src="foxy-world.js"></script>
     <script src="foxy-brain.js"></script>
+    <!-- YouTube IFrame API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+
     <script>
+        // ─── Context-aware back routing ───
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            const fromPolitical = params.get('from') === 'political' ||
+                                  document.referrer.includes('site-political');
+            if (fromPolitical) {
+                const backUrl = '/site-political/';
+                document.getElementById('backLink').href = backUrl;
+                document.getElementById('logoLink').href = backUrl;
+            }
+        })();
+
+        // ─── World navigation ───
         document.getElementById('btnWorld1').addEventListener('click', () => {
             window.location.href = './world1.html';
         });
@@ -102,7 +134,57 @@
             window.location.href = './world3.html';
         });
         document.getElementById('btnWorld4').addEventListener('click', () => {
-            window.location.href = './playground.html'; // Highlight current
+            window.location.href = './playground.html';
+        });
+
+        // ─── Ambient Jazz (YouTube IFrame API) ───
+        var ytReady = false;
+        var player = null;
+        var isPlaying = false;
+        var audioBtn = document.getElementById('audioToggle');
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('ytPlayer', {
+                videoId: 'ziOus5-1kXw',
+                playerVars: {
+                    autoplay: 0,
+                    controls: 0,
+                    disablekb: 1,
+                    fs: 0,
+                    modestbranding: 1,
+                    rel: 0,
+                    showinfo: 0,
+                    loop: 1,
+                    playlist: 'ziOus5-1kXw'
+                },
+                events: {
+                    onReady: function(e) {
+                        ytReady = true;
+                        e.target.setVolume(15);
+                    },
+                    onStateChange: function(e) {
+                        // If video ends, loop it
+                        if (e.data === YT.PlayerState.ENDED) {
+                            player.seekTo(0);
+                            player.playVideo();
+                        }
+                    }
+                }
+            });
+        }
+
+        audioBtn.addEventListener('click', function() {
+            if (!ytReady || !player) return;
+            if (isPlaying) {
+                player.pauseVideo();
+                isPlaying = false;
+                audioBtn.classList.remove('playing');
+            } else {
+                player.playVideo();
+                player.setVolume(15);
+                isPlaying = true;
+                audioBtn.classList.add('playing');
+            }
         });
     </script>
 
