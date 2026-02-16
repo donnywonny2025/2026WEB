@@ -1029,17 +1029,18 @@ video {
 .about {
     background: var(--cream);
     color: var(--text-dark);
-    padding: 140px 48px;
+    padding: 120px 48px;
 }
 
 .about-inner {
-    max-width: 1000px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .about-content {
     display: flex;
-    gap: 64px;
-    align-items: flex-start;
+    gap: 80px;
+    align-items: center;
 }
 
 .about-text-col {
@@ -1048,9 +1049,9 @@ video {
 }
 
 .about-photo {
-    flex: 0 0 320px;
+    flex: 0 0 420px;
     position: relative;
-    margin-top: 120px;
+    margin-top: 0;
     overflow: hidden;
     border-radius: 6px;
 }
@@ -1124,7 +1125,11 @@ video {
     line-height: 1.8;
     color: var(--text-muted-light);
     max-width: 600px;
-    margin-bottom: 64px;
+    margin-bottom: 32px;
+}
+
+.about-text:last-child {
+    margin-bottom: 0;
 }
 
 /* ─── Premium word-reveal ─── */
@@ -1152,7 +1157,8 @@ video {
 .about-stats {
     display: flex;
     gap: 64px;
-    padding-top: 48px;
+    margin-top: 56px;
+    padding-top: 40px;
     border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
 
