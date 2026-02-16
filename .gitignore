@@ -22,3 +22,6 @@ archive/
 PLAYGROUND.md
 PLAYGROUND_V2_HANDOFF.md
 DEPLOY_PLAN.md
+
+# API keys — NEVER commit
+foxy-config.js

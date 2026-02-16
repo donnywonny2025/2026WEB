@@ -10,8 +10,8 @@
 
     /* ─── GEMINI CONFIG ─── */
 
-    const GEMINI_KEY = 'AIzaSyAuv6bFLIj5zQkcbmSl_s1nMMZZfKWq8QI';
-    const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
+    const GEMINI_KEY = (window.FOXY_CONFIG && window.FOXY_CONFIG.GEMINI_KEY) || '';
+    const GEMINI_URL = GEMINI_KEY ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}` : '';
     const GEMINI_COOLDOWN = 12000; // 12 seconds between main brain calls
 
     /* ─── HARD RATE LIMITER — 10 requests/min rolling window ─── */
