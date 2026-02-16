@@ -225,7 +225,7 @@
         tick: 0,
         x: window.innerWidth / 2 - 50,
         y: window.innerHeight - 140,
-        baseY: window.innerHeight - 140,
+        baseY: window.innerHeight * 0.55,
         facingRight: true,
         actionTimer: null,
         jumpPhase: 0,
@@ -367,10 +367,10 @@
         if (state.baseY < minY) { state.baseY = minY; state.y = minY; state.aiTargetY = null; }
         if (state.baseY > maxY) { state.baseY = maxY; state.y = maxY; state.aiTargetY = null; }
 
-        // Gentle gravity — if no Y target and Foxy is above default ground, slowly drift down
-        var defaultGround = H - 120;
-        if (state.aiTargetY == null && !state.isDragging && !state.isFalling && state.baseY < defaultGround - 50) {
-            state.baseY += 0.3; // slow drift back to ground
+        // Gentle gravity — if no Y target and Foxy is way above default ground, nudge gently
+        var defaultGround = H * 0.65;
+        if (state.aiTargetY == null && !state.isDragging && !state.isFalling && state.baseY < defaultGround - 200) {
+            state.baseY += 0.1; // very slow drift, only if very far up
             state.y = state.baseY;
         }
         return null;

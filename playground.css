@@ -1188,6 +1188,16 @@ body::before {
     animation: fadeUp 1s ease forwards 1.2s;
 }
 
+#vfxCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 49;
+    pointer-events: none;
+}
+
 
 /* ═══════════════════════════════════════════
    AI STATUS — top right, under monogram
@@ -1909,13 +1919,44 @@ body::before {
     border-radius: 1px;
 }
 
-/* Ball kicked state */
+/* Ball kicked state — bounce arc */
 .foxy-item.toy-ball.kicked {
-    transition: left 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+    transition: left 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .foxy-item.toy-ball.kicked .ball-sprite {
-    animation: ballRoll 0.3s linear 3;
+    animation: ballBounce 0.8s cubic-bezier(0.36, 0, 0.66, -0.56) 1,
+        ballRoll 0.3s linear 3;
+}
+
+@keyframes ballBounce {
+    0% {
+        transform: translateY(0) scale(1, 1);
+    }
+
+    15% {
+        transform: translateY(-60px) scale(0.9, 1.1);
+    }
+
+    30% {
+        transform: translateY(0) scale(1.2, 0.8);
+    }
+
+    45% {
+        transform: translateY(-25px) scale(0.95, 1.05);
+    }
+
+    60% {
+        transform: translateY(0) scale(1.1, 0.9);
+    }
+
+    75% {
+        transform: translateY(-8px) scale(1, 1);
+    }
+
+    100% {
+        transform: translateY(0) scale(1, 1);
+    }
 }
 
 @keyframes ballRoll {
@@ -1925,5 +1966,59 @@ body::before {
 
     100% {
         transform: rotate(360deg);
+    }
+}
+
+/* Item eating jiggle */
+.foxy-item.eating {
+    animation: itemEatJiggle 0.4s ease 3;
+}
+
+@keyframes itemEatJiggle {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+
+    25% {
+        transform: rotate(-5deg) scale(1.05);
+    }
+
+    50% {
+        transform: rotate(3deg) scale(0.95);
+    }
+
+    75% {
+        transform: rotate(-2deg) scale(1.02);
+    }
+
+    100% {
+        transform: rotate(0deg) scale(1);
+    }
+}
+
+/* Item drinking ripple */
+.foxy-item.drinking {
+    animation: itemDrinkRipple 0.6s ease 2;
+}
+
+@keyframes itemDrinkRipple {
+    0% {
+        transform: scaleX(1) scaleY(1);
+    }
+
+    25% {
+        transform: scaleX(1.08) scaleY(0.95);
+    }
+
+    50% {
+        transform: scaleX(0.96) scaleY(1.04);
+    }
+
+    75% {
+        transform: scaleX(1.04) scaleY(0.98);
+    }
+
+    100% {
+        transform: scaleX(1) scaleY(1);
     }
 }

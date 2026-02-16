@@ -462,39 +462,48 @@
                     name: 'snack_time',
                     weight: 2.0 + (100 - (hungry ? needs.hunger : needs.thirst)) / 10,
                     steps: [
-                        { anim: 'run', duration: 2000, target_x: item.centerX, thought: hungry ? 'lunch time!' : 'staying hydrated' },
+                        { anim: 'run', duration: 1500, target_x: item.centerX, thought: hungry ? 'lunch time!' : 'staying hydrated' },
                         {
-                            anim: 'sniff', duration: 1500,
+                            anim: 'sniff', duration: 1200,
                             thought: hungry ? '*crunch crunch*' : '*lap lap lap*',
                             onStart: () => {
-                                if (hungry) F.fulfillNeed('hunger', 40);
-                                if (thirsty) F.fulfillNeed('thirst', 40);
+                                var el = document.querySelector('.foxy-item[data-type="' + targetType + '"]');
+                                if (el) {
+                                    el.classList.add(hungry ? 'eating' : 'drinking');
+                                    setTimeout(() => el.classList.remove('eating', 'drinking'), 1500);
+                                }
+                                if (F.vfx) {
+                                    var pos = F.body.getPosition();
+                                    if (hungry) F.vfx.eat(item.centerX, pos.y);
+                                    else F.vfx.drink(item.centerX, pos.y);
+                                }
+                                if (hungry) { F.fulfillNeed('hunger', 40); needs.thirst -= 15; }
+                                if (thirsty) { F.fulfillNeed('thirst', 40); needs.hunger -= 15; }
                                 setMood('happy');
                             }
                         },
-                        { anim: 'idle', duration: 1000, thought: 'much better' },
+                        { anim: 'idle', duration: 600, thought: 'much better' },
                     ]
                 });
             }
         }
 
-        // NAP — rest when tired (triggers earlier now)
+        // NAP — rest when tired (trigger earlier now)
         if (needs.energy < 70) {
-            var napWeight = traits.laziness * 2.0 + (100 - needs.energy) / 15; // much higher weight when tired
+            var napWeight = traits.laziness * 2.0 + (100 - needs.energy) / 15;
             behaviors.push({
                 name: 'nap',
                 weight: napWeight,
                 steps: [
-                    { anim: 'idle', duration: 1200, thought: 'running on 2% battery...', onStart: () => setMood('sleepy') },
-                    { anim: 'sit', duration: 1500, thought: '*yawns so wide jaw cracks*' },
-                    { anim: 'sleep', duration: 4000, thought: 'zzz...' },
-                    { anim: 'sleep', duration: 4000, thought: '*dreaming of pixels*' },
-                    { anim: 'sleep', duration: 3000, thought: '💤' },
+                    { anim: 'idle', duration: 800, thought: 'running on 2% battery...', onStart: () => setMood('sleepy') },
+                    { anim: 'sit', duration: 1000, thought: '*yawns so wide jaw cracks*' },
+                    { anim: 'sleep', duration: 2000, thought: 'zzz...' },
+                    { anim: 'sleep', duration: 2000, thought: '*dreaming of pixels*' },
                     {
-                        anim: 'idle', duration: 1500, thought: '*blinks* how long was I out?',
+                        anim: 'idle', duration: 800, thought: '*blinks* how long was I out?',
                         onStart: () => { F.fulfillNeed('energy', 45); setMood('happy'); }
                     },
-                    { anim: 'idle', duration: 1000, thought: 'okay I\'m recharged let\'s GO' },
+                    { anim: 'idle', duration: 500, thought: 'okay I\'m recharged let\'s GO' },
                 ]
             });
         }
@@ -505,11 +514,10 @@
                 name: 'bored',
                 weight: 1.5 + (40 - needs.fun) / 15,
                 steps: [
-                    { anim: 'sit', duration: 2000, thought: '*dramatic sigh*', onStart: () => setMood('bored') },
-                    { anim: 'idle', duration: 2000, thought: 'boredom level: critical' },
-                    { anim: 'look_around', duration: 1500, thought: 'someone entertain me plz' },
-                    { anim: 'sit', duration: 2500, thought: '...' },
-                    { anim: 'idle', duration: 1000, thought: 'fine I\'ll entertain myself', onStart: () => { setMood('mischievous'); F.fulfillNeed('fun', 10); } },
+                    { anim: 'sit', duration: 1200, thought: '*dramatic sigh*', onStart: () => setMood('bored') },
+                    { anim: 'idle', duration: 1000, thought: 'boredom level: critical' },
+                    { anim: 'look_around', duration: 800, thought: 'someone entertain me plz' },
+                    { anim: 'idle', duration: 600, thought: 'fine I\'ll entertain myself', onStart: () => { setMood('mischievous'); F.fulfillNeed('fun', 10); } },
                 ]
             });
         }
@@ -519,19 +527,18 @@
         const isNight = hour >= 23 || hour <= 6;
 
         if (needs.energy < 25 || (isNight && needs.energy < 80)) {
-            var sleepWeight = (isNight) ? 10.0 : 5.0; // very high weight at night
+            var sleepWeight = (isNight) ? 10.0 : 5.0;
             behaviors.push({
                 name: 'deep_sleep',
                 weight: sleepWeight,
                 steps: [
-                    { anim: 'idle', duration: 800, thought: isNight ? '*half asleep*' : 'can\'t... keep... eyes...' },
-                    { anim: 'hurt', duration: 600, thought: '*collapses*' },
-                    { anim: 'sleep', duration: 8000, thought: 'zzz...' },
-                    { anim: 'sleep', duration: 8000, thought: isNight ? '🌙' : '*snoring loudly*' },
-                    { anim: 'sleep', duration: 6000, thought: '*mumbles about pixels*' },
-                    { anim: 'sleep', duration: 4000, thought: '💤💤💤' },
+                    { anim: 'idle', duration: 600, thought: isNight ? '*half asleep*' : 'can\'t... keep... eyes...' },
+                    { anim: 'hurt', duration: 500, thought: '*collapses*' },
+                    { anim: 'sleep', duration: 4000, thought: 'zzz...' },
+                    { anim: 'sleep', duration: 3000, thought: isNight ? '🌙' : '*snoring loudly*' },
+                    { anim: 'sleep', duration: 2000, thought: '💤💤💤' },
                     {
-                        anim: 'idle', duration: 2000, thought: '*wakes up confused* what year is it?',
+                        anim: 'idle', duration: 1000, thought: '*wakes up confused* what year is it?',
                         onStart: () => { F.fulfillNeed('energy', 60); setMood('happy'); }
                     },
                 ]
@@ -580,14 +587,27 @@
                 name: 'eat',
                 weight: 2.5 + (100 - needs.hunger) / 15,
                 steps: [
-                    { anim: 'look_around', duration: 800, thought: 'so hungry...' },
-                    { anim: 'run', duration: 2000, target_x: foodX, thought: 'ooh cherries!' },
-                    { anim: 'sniff', duration: 1000, thought: '*sniff sniff*' },
+                    { anim: 'look_around', duration: 500, thought: 'so hungry...' },
+                    { anim: 'run', duration: 1500, target_x: foodX, thought: 'ooh cherries!' },
+                    { anim: 'sniff', duration: 600, thought: '*sniff sniff*' },
                     {
-                        anim: 'crouch', duration: 1500, thought: '*crunch crunch*',
-                        onStart: function () { F.fulfillNeed('hunger', 35); setMood('happy'); }
+                        anim: 'crouch', duration: 1200, thought: '*crunch crunch*',
+                        onStart: function () {
+                            var el = document.querySelector('.foxy-item[data-type="food"]');
+                            if (el) {
+                                el.classList.add('eating');
+                                setTimeout(function () { el.classList.remove('eating'); }, 1500);
+                            }
+                            if (F.vfx) {
+                                var pos = F.body.getPosition();
+                                F.vfx.eat(foodX, pos.y);
+                            }
+                            F.fulfillNeed('hunger', 35);
+                            needs.thirst -= 10;
+                            setMood('happy');
+                        }
                     },
-                    { anim: 'idle', duration: 1200, thought: 'yum! that hit the spot' },
+                    { anim: 'idle', duration: 600, thought: 'yum! that hit the spot' },
                 ]
             });
         }
@@ -600,13 +620,26 @@
                 name: 'drink',
                 weight: 2.5 + (100 - needs.thirst) / 15,
                 steps: [
-                    { anim: 'idle', duration: 600, thought: 'parched...' },
-                    { anim: 'run', duration: 2000, target_x: waterX, thought: 'water!' },
+                    { anim: 'idle', duration: 400, thought: 'parched...' },
+                    { anim: 'run', duration: 1500, target_x: waterX, thought: 'water!' },
                     {
-                        anim: 'crouch', duration: 2000, thought: '*lap lap lap*',
-                        onStart: function () { F.fulfillNeed('thirst', 40); setMood('happy'); }
+                        anim: 'crouch', duration: 1500, thought: '*lap lap lap*',
+                        onStart: function () {
+                            var el = document.querySelector('.foxy-item[data-type="water"]');
+                            if (el) {
+                                el.classList.add('drinking');
+                                setTimeout(function () { el.classList.remove('drinking'); }, 1500);
+                            }
+                            if (F.vfx) {
+                                var pos = F.body.getPosition();
+                                F.vfx.drink(waterX, pos.y);
+                            }
+                            F.fulfillNeed('thirst', 40);
+                            needs.hunger -= 10;
+                            setMood('happy');
+                        }
                     },
-                    { anim: 'idle', duration: 1000, thought: 'ahhhh refreshing' },
+                    { anim: 'idle', duration: 500, thought: 'ahhhh refreshing' },
                 ]
             });
         }
@@ -622,38 +655,44 @@
                     name: 'chase_ball',
                     weight: 2.0 + (60 - needs.fun) / 12 + traits.playfulness * 2.0,
                     steps: [
-                        { anim: 'look_around', duration: 600, thought: 'ball!' },
-                        { anim: 'run', duration: 1800, target_x: ballItem.centerX, thought: 'gonna get it!' },
+                        { anim: 'look_around', duration: 400, thought: 'ball!' },
+                        { anim: 'run', duration: 1400, target_x: ballItem.centerX, thought: 'gonna get it!' },
                         {
-                            anim: 'pounce', duration: 800, thought: '*POUNCE!*',
+                            anim: 'pounce', duration: 700, thought: '*POUNCE!*',
                             onStart: function () {
                                 if (ballEl) {
                                     ballEl.classList.add('kicked');
                                     ballEl.style.left = kickTarget + '%';
                                     setTimeout(function () { ballEl.classList.remove('kicked'); }, 1200);
                                 }
+                                if (F.vfx) {
+                                    F.vfx.ballKick(ballItem.centerX, F.body.getPosition().y + 20);
+                                }
                                 setMood('playful');
                             }
                         },
-                        { anim: 'run', duration: 1500, target_x: kickTarget / 100 * W, thought: 'AGAIN!' },
+                        { anim: 'run', duration: 1200, target_x: kickTarget / 100 * W, thought: 'AGAIN!' },
                         {
-                            anim: 'pounce', duration: 800, thought: '*got it!*',
-                            onStart: function () { F.fulfillNeed('fun', 30); }
+                            anim: 'pounce', duration: 700, thought: '*got it!*',
+                            onStart: function () {
+                                F.fulfillNeed('fun', 30);
+                                if (F.vfx) F.vfx.dust(kickTarget / 100 * W, F.body.getPosition().y + 20, 4);
+                            }
                         },
-                        { anim: 'idle', duration: 1200, thought: 'best game ever' },
+                        { anim: 'idle', duration: 600, thought: 'best game ever' },
                     ]
                 });
             }
         }
 
-        // SIT QUIETLY — just be a normal fox (but less often now there's stuff to do)
+        // SIT QUIETLY — just be a normal fox (quick break)
         behaviors.push({
             name: 'sit_quietly',
-            weight: 0.8 + traits.laziness * 1.2,
+            weight: 0.5 + traits.laziness * 0.8,
             steps: [
-                { anim: 'sit', duration: 3000 },
-                { anim: 'look_around', duration: 2500 },
-                { anim: 'idle', duration: 2000 },
+                { anim: 'sit', duration: 1500 },
+                { anim: 'look_around', duration: 1200 },
+                { anim: 'idle', duration: 800 },
             ]
         });
 
@@ -663,13 +702,38 @@
             name: 'explore',
             weight: traits.curiosity * 1.8 + 0.5,
             steps: [
-                { anim: 'look_around', duration: 1500, thought: 'what\'s over there?' },
-                { anim: 'run', duration: 2000, target_x: exploreTarget, thought: 'investigating' },
-                { anim: 'sniff', duration: 1800, thought: 'sniff sniff' },
-                { anim: 'climb', duration: 1500, thought: 'lemme get a better view' },
-                { anim: 'idle', duration: 1500, thought: F.generateThought() },
+                { anim: 'look_around', duration: 800, thought: 'what\'s over there?' },
+                { anim: 'run', duration: 1500, target_x: exploreTarget, thought: 'investigating' },
+                { anim: 'sniff', duration: 1000, thought: 'sniff sniff' },
+                { anim: 'climb', duration: 1000, thought: 'lemme get a better view' },
+                { anim: 'idle', duration: 800, thought: F.generateThought() },
             ]
         });
+
+        // ZOOMIES — burst of energy, run back and forth fast
+        if (needs.energy > 50) {
+            var zoomLeft = (5 + Math.random() * 20) / 100 * W;
+            var zoomRight = (70 + Math.random() * 25) / 100 * W;
+            behaviors.push({
+                name: 'zoomies',
+                weight: 0.8 + traits.playfulness * 1.5,
+                steps: [
+                    { anim: 'idle', duration: 300, thought: '*eyes go wide*', onStart: () => setMood('playful') },
+                    { anim: 'run', duration: 800, target_x: zoomRight, thought: 'ZOOOOM!' },
+                    { anim: 'run', duration: 800, target_x: zoomLeft, thought: 'WHEEEEE!' },
+                    { anim: 'run', duration: 700, target_x: zoomRight * 0.7, thought: 'CAN\'T STOP!' },
+                    { anim: 'pounce', duration: 500, thought: '*SKID*' },
+                    {
+                        anim: 'idle', duration: 600, thought: '*panting* that was fun',
+                        onStart: () => {
+                            F.fulfillNeed('fun', 20);
+                            needs.energy -= 10;
+                            if (F.vfx) F.vfx.dust(F.body.getPosition().x, F.body.getPosition().y + 20, 6);
+                        }
+                    },
+                ]
+            });
+        }
 
         // CLIMB ANYTHING — Foxy just climbs wherever he is
         behaviors.push({
@@ -1051,10 +1115,7 @@
             return;
         }
 
-        // CHILL MODE: 15% chance to skip this decision cycle
-        if (Math.random() < 0.15) {
-            return;
-        }
+        // Decision cycle — always active (no more chill skip)
 
         // Get all available behaviors weighted by personality + needs
         var behaviors = getBehaviors();
@@ -1777,7 +1838,7 @@
             if (thoughtQueue.length <= 1 && aiEnabled) {
                 callGemini();
             }
-        }, 12000 + Math.random() * 13000); // Slowed from 4-7s to 12-25s (CHILL MODE)
+        }, 5000 + Math.random() * 5000); // Active decision cycle: 5-10s
     }
 
     /* ─── INIT ─── */
