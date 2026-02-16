@@ -1760,115 +1760,139 @@ body::before {
 
 .foxy-item {
     position: fixed;
-    bottom: 28px;
+    bottom: 68px;
     z-index: 85;
     pointer-events: none;
     opacity: 0;
-    animation: fadeUp 1s ease forwards 2s;
+    animation: fadeUp 1.2s ease forwards 2.5s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Ground shadow under each item */
+.foxy-item::before {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    width: 80%;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 50%;
+    filter: blur(2px);
+}
+
+/* Label below item */
+.foxy-item .item-label {
+    font-family: var(--font-body);
+    font-size: 7px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.0);
+    margin-top: 6px;
+    transition: color 0.4s ease;
+    white-space: nowrap;
 }
 
 .foxy-item .item-sprite {
     image-rendering: pixelated;
+    transition: transform 0.3s ease;
 }
 
 /* ─── Water bowl ─── */
 .foxy-item.water-bowl {
-    left: 18%;
+    left: 15%;
 }
 
 .water-sprite {
-    width: 28px;
-    height: 16px;
-    background: linear-gradient(180deg, #5bc0de 0%, #3a8fd4 60%, #2e6da4 100%);
-    border-radius: 2px 2px 6px 6px;
-    box-shadow:
-        inset 0 -2px 0 rgba(0, 0, 0, 0.2),
-        inset 0 2px 4px rgba(255, 255, 255, 0.3),
-        0 1px 3px rgba(0, 0, 0, 0.4);
+    width: 48px;
+    height: 28px;
     position: relative;
+    /* Pixel art bowl using box-shadow technique */
+    background: transparent;
 }
 
+/* Pixel-art water bowl built from layered divs */
 .water-sprite::before {
     content: '';
     position: absolute;
-    top: 3px;
-    left: 4px;
-    width: 8px;
-    height: 2px;
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 1px;
-    animation: waterRipple 3s ease-in-out infinite;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 48px;
+    height: 20px;
+    background: #6b4c3b;
+    border-radius: 0 0 8px 8px;
+    box-shadow:
+        inset 0 -4px 0 #4a3228,
+        inset 0 4px 0 #8b6b5a;
 }
 
-@keyframes waterRipple {
+.water-sprite::after {
+    content: '';
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 36px;
+    height: 10px;
+    background: linear-gradient(180deg, #7ec8e3 0%, #4a9ebe 100%);
+    border-radius: 0 0 4px 4px;
+    animation: waterShimmer 3s ease-in-out infinite;
+}
+
+@keyframes waterShimmer {
 
     0%,
     100% {
-        transform: translateX(0);
-        opacity: 0.5;
+        opacity: 0.9;
     }
 
     50% {
-        transform: translateX(6px);
-        opacity: 0.8;
+        opacity: 1;
+        background: linear-gradient(180deg, #8dd4ef 0%, #5aadcd 100%);
     }
 }
 
 /* ─── Food dish (cherry sprite) ─── */
 .foxy-item.food-dish {
-    left: 75%;
+    left: 72%;
 }
 
 .food-dish .item-sprite {
-    width: 28px;
-    height: 28px;
-    animation: gentleBob 4s ease-in-out infinite;
-}
-
-@keyframes gentleBob {
-
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-2px);
-    }
+    width: 48px;
+    height: 48px;
 }
 
 /* ─── Tennis ball ─── */
 .foxy-item.toy-ball {
-    left: 45%;
+    left: 42%;
     transition: left 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .ball-sprite {
-    width: 18px;
-    height: 18px;
-    background: radial-gradient(circle at 35% 35%, #c8e64e, #8cc63f 50%, #5a9e2f 100%);
-    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    background: #c8e64e;
+    border-radius: 4px;
+    image-rendering: pixelated;
+    position: relative;
     box-shadow:
-        inset -2px -2px 0 rgba(0, 0, 0, 0.15),
-        inset 2px 2px 0 rgba(255, 255, 255, 0.25),
-        0 1px 3px rgba(0, 0, 0, 0.4);
-    animation: ballIdle 5s ease-in-out infinite;
+        inset -4px -4px 0 #8cc63f,
+        inset 4px 4px 0 #e2f77a,
+        0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-@keyframes ballIdle {
-
-    0%,
-    100% {
-        transform: rotate(0deg);
-    }
-
-    25% {
-        transform: rotate(3deg);
-    }
-
-    75% {
-        transform: rotate(-3deg);
-    }
+/* Pixel stripe on ball */
+.ball-sprite::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 2px;
+    width: 20px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: 1px;
 }
 
 /* Ball kicked state */
