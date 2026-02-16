@@ -1892,6 +1892,22 @@ body::before {
 .foxy-item.toy-ball {
     left: 42%;
     transition: left 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    pointer-events: auto !important;
+    cursor: grab;
+}
+
+.foxy-item.toy-ball:hover .ball-sprite {
+    box-shadow:
+        inset -3px -3px 0 #6aa52e,
+        inset 3px 3px 0 #e2f77a,
+        0 3px 8px rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(200, 230, 78, 0.6),
+        0 0 40px rgba(200, 230, 78, 0.2);
+    transform: scale(1.15);
+}
+
+.foxy-item.toy-ball:active {
+    cursor: grabbing;
 }
 
 .ball-sprite {

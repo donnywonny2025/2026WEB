@@ -1843,6 +1843,55 @@
 
     /* ─── INIT ─── */
 
+    /* ─── BALL CLICK-TO-THROW ─── */
+    (function initBallInteraction() {
+        var ballEl = document.getElementById('itemBall');
+        if (!ballEl) return;
+
+        ballEl.addEventListener('click', function (e) {
+            e.stopPropagation();
+
+            // Pick a random landing spot (10-90% of screen width)
+            var targetPct = 10 + Math.random() * 80;
+            ballEl.style.left = targetPct + '%';
+
+            // Trigger bounce animation + VFX
+            ballEl.classList.add('kicked');
+            setTimeout(function () { ballEl.classList.remove('kicked'); }, 1200);
+
+            if (F.vfx) {
+                var ballRect = ballEl.getBoundingClientRect();
+                F.vfx.ballKick(ballRect.left + ballRect.width / 2, ballRect.top);
+            }
+
+            // Force Foxy to chase the ball immediately
+            showThought('BALL!! THROW!!');
+            setMood('playful');
+
+            var W = window.innerWidth;
+            var targetX = targetPct / 100 * W;
+
+            // Run fetch sequence directly through Foxy's body
+            if (F.body && F.body.runSequence) {
+                F.body.runSequence([
+                    { anim: 'look_around', duration: 300, thought: 'BALL!!' },
+                    { anim: 'run', duration: 1200, target_x: targetX, thought: 'I GOT IT I GOT IT' },
+                    {
+                        anim: 'pounce', duration: 600, thought: '*POUNCE!*',
+                        onStart: function () {
+                            F.fulfillNeed('fun', 35);
+                            if (F.vfx) {
+                                var pos = F.body.getPosition();
+                                F.vfx.dust(targetX, pos.y + 20, 5);
+                            }
+                        }
+                    },
+                    { anim: 'idle', duration: 800, thought: 'again! throw it again!' },
+                ]);
+            }
+        });
+    })();
+
     function startBrain() {
         // Return visit greeting
         if (F.returnGreeting) {
