@@ -452,8 +452,8 @@
         }
 
         // SNACK TIME — find food/water when needed
-        const hungry = needs.hunger < 50;
-        const thirsty = needs.thirst < 50;
+        const hungry = needs.hunger < 65;
+        const thirsty = needs.thirst < 65;
         if (hungry || thirsty) {
             const targetType = hungry ? 'food' : 'water';
             const item = w.items.find(i => i.type === targetType);
@@ -573,7 +573,7 @@
         }
 
         // EAT — walk to the food dish when hungry
-        if (needs.hunger < 40) {
+        if (needs.hunger < 65) {
             var foodItem = w.items.find(function (i) { return i.type === 'food'; });
             var foodX = foodItem ? foodItem.centerX : W * 0.75;
             behaviors.push({
@@ -593,7 +593,7 @@
         }
 
         // DRINK — walk to the water bowl when thirsty
-        if (needs.thirst < 40) {
+        if (needs.thirst < 65) {
             var waterItem = w.items.find(function (i) { return i.type === 'water'; });
             var waterX = waterItem ? waterItem.centerX : W * 0.18;
             behaviors.push({
@@ -612,7 +612,7 @@
         }
 
         // CHASE BALL — run to ball, kick it, chase it!
-        if (needs.fun < 60) {
+        if (needs.fun < 80) {
             var ballItem = w.items.find(function (i) { return i.type === 'ball'; });
             if (ballItem) {
                 var ballEl = document.getElementById('itemBall');
@@ -1051,9 +1051,8 @@
             return;
         }
 
-        // CHILL MODE: 40% chance to just skip this decision cycle and stay idle
-        if (Math.random() < 0.4) {
-            console.log('[Foxy] Chill Mode: Skipping decision cycle');
+        // CHILL MODE: 15% chance to skip this decision cycle
+        if (Math.random() < 0.15) {
             return;
         }
 
@@ -1079,12 +1078,20 @@
             }
         }
 
-        // Execute the compound behavior (with chance to ignore thoughts if talking too much)
-        var steps = JSON.parse(JSON.stringify(chosen.steps));
-        var suppressesThoughts = Math.random() < 0.5; // 50% chance to run behavior silently
+        // Clone steps preserving onStart functions (JSON.stringify strips functions!)
+        var steps = chosen.steps.map(function (s) {
+            var clone = {};
+            for (var key in s) {
+                clone[key] = s[key];
+            }
+            return clone;
+        });
 
-        if (suppressesThoughts && chosen.name !== 'think') {
-            steps.forEach(s => delete s.thought);
+        // Only suppress thoughts on ambient behaviors (never on item interactions)
+        var interactiveBehaviors = ['eat', 'drink', 'chase_ball', 'snack_time'];
+        var isInteractive = interactiveBehaviors.indexOf(chosen.name) !== -1;
+        if (!isInteractive && Math.random() < 0.2) {
+            steps.forEach(function (s) { delete s.thought; });
         }
 
         F.body.runSequence(steps);

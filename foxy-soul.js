@@ -69,10 +69,10 @@
 
         // Needs (0 = empty, 100 = full) — decay over time
         needs: {
-            hunger: 80,
-            thirst: 85,
-            fun: 70,
-            energy: 90,
+            hunger: 55,
+            thirst: 50,
+            fun: 45,
+            energy: 75,
         },
 
         // Experience journal — structured memory of what happened
@@ -118,6 +118,18 @@
     soul.visits++;
     const previousVisitTime = soul.lastVisit;
     soul.lastVisit = Date.now();
+
+    // Time-away decay: Foxy gets hungry/thirsty/bored while you're gone
+    if (previousVisitTime) {
+        var hoursAway = (Date.now() - previousVisitTime) / (1000 * 60 * 60);
+        if (hoursAway > 0.01) { // more than ~36 seconds away
+            var decay = Math.min(hoursAway * 10, 50); // ~10 per hour, capped at 50
+            soul.needs.hunger = Math.max(15, soul.needs.hunger - decay);
+            soul.needs.thirst = Math.max(15, soul.needs.thirst - decay);
+            soul.needs.fun = Math.max(10, soul.needs.fun - decay * 0.8);
+            soul.needs.energy = Math.max(20, soul.needs.energy - decay * 0.3);
+        }
+    }
     saveSoul();
 
     /* ─── PERSONALITY EVOLUTION ─── */
