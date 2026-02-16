@@ -1182,6 +1182,8 @@ body::before {
     image-rendering: pixelated;
     z-index: 50;
     cursor: grab;
+    touch-action: none;
+    /* prevent scroll/zoom when grabbing Foxy on mobile */
     opacity: 0;
     animation: fadeUp 1s ease forwards 1.2s;
 }

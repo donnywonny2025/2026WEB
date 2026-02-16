@@ -802,6 +802,149 @@
             }
         });
 
+        // ── TOUCH SUPPORT (mobile grab & throw) ──
+
+        function handleDragStart(clientX, clientY) {
+            state.isDragging = true;
+            state.isFalling = false;
+            state.fallVelocity = 0;
+            state.throwVelX = 0;
+            state.throwVelY = 0;
+            dragMoved = false;
+            dragStartTime = Date.now();
+            dragHistory = [{ x: clientX, y: clientY, t: Date.now() }];
+
+            const rect = canvas.getBoundingClientRect();
+            state.dragOffsetX = clientX - rect.left;
+            state.dragOffsetY = clientY - rect.top;
+
+            state.aiMoving = false;
+            state.aiTargetX = null;
+            stopMoving();
+            if (F.brain) F.brain.playerTakeover();
+
+            setAnim('hurt');
+            if (F.brain) F.brain.showThought('whoa!');
+            canvas.style.zIndex = '999';
+        }
+
+        function handleDragMove(clientX, clientY) {
+            if (!state.isDragging) return;
+            dragMoved = true;
+            state.x = clientX - state.dragOffsetX;
+            state.y = clientY - state.dragOffsetY;
+            canvas.style.left = state.x + 'px';
+            canvas.style.top = state.y + 'px';
+
+            dragHistory.push({ x: clientX, y: clientY, t: Date.now() });
+            if (dragHistory.length > 5) dragHistory.shift();
+        }
+
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            handleDragStart(touch.clientX, touch.clientY);
+        }, { passive: false });
+
+        document.addEventListener('touchmove', (e) => {
+            if (!state.isDragging) return;
+            e.preventDefault();
+            const touch = e.touches[0];
+            handleDragMove(touch.clientX, touch.clientY);
+        }, { passive: false });
+
+        document.addEventListener('touchend', (e) => {
+            if (!state.isDragging) return;
+            // touchend has no touches, use changedTouches
+            // Reuse the mouseup release logic by dispatching to same flow
+            state.isDragging = false;
+
+            // If they didn't drag (just tapped), treat as poke
+            if (!dragMoved || Date.now() - dragStartTime < 150) {
+                playAction('hurt');
+                if (F.brain) F.brain.showThought('hey!');
+                if (F.brain) {
+                    F.brain._quickThink('The human just poked you! React — annoyed? Curious? Happy?', 1500);
+                }
+                state.isFalling = true;
+                state.fallVelocity = 0;
+                state.throwVelX = 0;
+                return;
+            }
+
+            // Calculate throw velocity from drag history
+            let velX = 0, velY = 0;
+            if (dragHistory.length >= 2) {
+                const recent = dragHistory[dragHistory.length - 1];
+                const old = dragHistory[0];
+                const dt = Math.max(recent.t - old.t, 16);
+                velX = (recent.x - old.x) / dt * 16;
+                velY = (recent.y - old.y) / dt * 16;
+            }
+
+            const maxVel = 30;
+            velX = Math.max(-maxVel, Math.min(maxVel, velX));
+            velY = Math.max(-maxVel, Math.min(maxVel, velY));
+
+            const throwForce = Math.sqrt(velX * velX + velY * velY);
+
+            // Gentle placement
+            if (throwForce < 3) {
+                state.baseY = state.y;
+                state.isFalling = false;
+                state.throwVelX = 0;
+                state.fallVelocity = 0;
+                setAnim('idle');
+                canvas.style.zIndex = '';
+                canvas.style.left = state.x + 'px';
+                canvas.style.top = state.y + 'px';
+
+                var touchPlaceReacts = ['*sits down*', 'nice spot!', 'I live here now', 'cozy!'];
+                if (F.brain) F.brain.showThought(touchPlaceReacts[Math.floor(Math.random() * touchPlaceReacts.length)]);
+                if (F.logExperience) {
+                    F.logExperience({
+                        behavior: 'placed_by_human',
+                        location: Math.round((state.x / window.innerWidth) * 100),
+                        outcome: 'cozy',
+                        mood: 'happy',
+                        details: 'touch placed at y=' + Math.round(state.y),
+                    });
+                }
+                return;
+            }
+
+            // Thrown!
+            state.isFalling = true;
+            state.throwVelX = velX;
+            state.fallVelocity = velY;
+
+            if (throwForce > 15) {
+                setAnim('fall');
+                if (F.brain) F.brain.showThought('YEET!');
+                state.facingRight = velX >= 0;
+            } else if (throwForce > 5) {
+                setAnim('fall');
+                if (F.brain) F.brain.showThought('WHEE!');
+            } else {
+                setAnim('fall');
+                if (F.brain) F.brain.showThought('hey!');
+            }
+
+            if (F.brain) {
+                var forceWord = throwForce > 15 ? 'HURLED' : throwForce > 5 ? 'tossed' : 'dropped';
+                F.brain._quickThink('The human just ' + forceWord + ' you through the air! You\'re flying! React to being thrown!', 1500);
+            }
+            if (F.logExperience) {
+                F.logExperience({
+                    behavior: 'thrown_by_human',
+                    location: Math.round((state.x / window.innerWidth) * 100),
+                    outcome: 'flying',
+                    mood: throwForce > 10 ? 'scared' : 'excited',
+                    details: 'touch thrown with force ' + Math.round(throwForce),
+                });
+            }
+        });
+
         requestAnimationFrame(loop);
     }
 
