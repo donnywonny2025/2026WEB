@@ -1891,24 +1891,36 @@ body::before {
 /* ─── Tennis ball ─── */
 .foxy-item.toy-ball {
     left: 42%;
-    transition: left 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: left 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        bottom 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     pointer-events: auto !important;
     cursor: grab;
     z-index: 1100 !important;
+    touch-action: none;
+    /* prevent scroll on mobile drag */
+    -webkit-user-select: none;
+    user-select: none;
 }
 
-.foxy-item.toy-ball:hover .ball-sprite {
+/* When being dragged — no transitions, ball follows cursor/finger */
+.foxy-item.toy-ball.dragging {
+    transition: none !important;
+    cursor: grabbing;
+}
+
+.foxy-item.toy-ball.dragging .ball-sprite {
+    transform: scale(1.25);
     box-shadow:
         inset -3px -3px 0 #6aa52e,
         inset 3px 3px 0 #e2f77a,
-        0 3px 8px rgba(0, 0, 0, 0.5),
-        0 0 20px rgba(200, 230, 78, 0.6),
-        0 0 40px rgba(200, 230, 78, 0.2);
-    transform: scale(1.15);
+        0 8px 20px rgba(0, 0, 0, 0.6),
+        0 0 30px rgba(200, 230, 78, 0.5);
 }
 
-.foxy-item.toy-ball:active {
-    cursor: grabbing;
+/* Thrown state — smooth landing arc */
+.foxy-item.toy-ball.thrown {
+    transition: left 0.5s cubic-bezier(0.22, 0.61, 0.36, 1),
+        bottom 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .ball-sprite {

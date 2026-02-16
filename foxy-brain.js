@@ -1843,54 +1843,141 @@
 
     /* ─── INIT ─── */
 
-    /* ─── BALL CLICK-TO-THROW ─── */
+    /* ─── BALL DRAG-TO-THROW (mouse + touch) ─── */
     (function initBallInteraction() {
         var ballEl = document.getElementById('itemBall');
         if (!ballEl) return;
 
-        ballEl.addEventListener('click', function (e) {
+        var isDragging = false;
+        var startX = 0, startY = 0;
+        var lastX = 0, lastY = 0;
+        var velX = 0, velY = 0;
+        var lastTime = 0;
+        var W = window.innerWidth;
+        var H = window.innerHeight;
+
+        function getXY(e) {
+            if (e.touches && e.touches.length > 0) return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            if (e.changedTouches && e.changedTouches.length > 0) return { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY };
+            return { x: e.clientX, y: e.clientY };
+        }
+
+        function onGrab(e) {
+            e.preventDefault();
             e.stopPropagation();
-            console.log('[BALL] Clicked! Throwing...');
+            var pt = getXY(e);
+            isDragging = true;
+            startX = pt.x; startY = pt.y;
+            lastX = pt.x; lastY = pt.y;
+            velX = 0; velY = 0;
+            lastTime = Date.now();
+            W = window.innerWidth;
+            H = window.innerHeight;
 
-            // Pick a random landing spot (10-90% of screen width)
-            var targetPct = 10 + Math.random() * 80;
-            ballEl.style.left = targetPct + '%';
+            ballEl.classList.add('dragging');
+            ballEl.classList.remove('thrown', 'kicked');
 
-            // Trigger bounce animation + VFX
+            // Foxy watches
+            showThought('ooh! the ball!');
+            setMood('playful');
+            console.log('[BALL] Grabbed!');
+        }
+
+        function onDrag(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            var pt = getXY(e);
+            var now = Date.now();
+            var dt = Math.max(now - lastTime, 1);
+
+            // Track velocity (pixels per ms, scaled up)
+            velX = (pt.x - lastX) / dt * 16;
+            velY = (pt.y - lastY) / dt * 16;
+            lastX = pt.x; lastY = pt.y;
+            lastTime = now;
+
+            // Move ball to cursor/finger position
+            var pctX = (pt.x / W) * 100;
+            var bottomPx = H - pt.y;
+            ballEl.style.left = pctX + '%';
+            ballEl.style.bottom = bottomPx + 'px';
+        }
+
+        function onRelease(e) {
+            if (!isDragging) return;
+            isDragging = false;
+            e.preventDefault();
+            var pt = getXY(e);
+
+            ballEl.classList.remove('dragging');
+
+            // Calculate throw distance from velocity
+            var throwX = pt.x + velX * 12;
+            var throwY = pt.y + velY * 12;
+
+            // Clamp to screen bounds
+            throwX = Math.max(40, Math.min(W - 40, throwX));
+            var throwBottom = Math.max(60, Math.min(H * 0.6, H - throwY));
+
+            // The ball always lands on the ground (bottom: 68px)
+            throwBottom = 68;
+
+            var throwPctX = (throwX / W) * 100;
+
+            // Apply throw with CSS transition
+            ballEl.classList.add('thrown');
+            ballEl.style.left = throwPctX + '%';
+            ballEl.style.bottom = throwBottom + 'px';
+
+            // Bounce VFX at throw origin
             ballEl.classList.add('kicked');
-            setTimeout(function () { ballEl.classList.remove('kicked'); }, 1200);
+            setTimeout(function () {
+                ballEl.classList.remove('kicked', 'thrown');
+            }, 1200);
 
             if (F.vfx) {
-                var ballRect = ballEl.getBoundingClientRect();
-                F.vfx.ballKick(ballRect.left + ballRect.width / 2, ballRect.top);
+                F.vfx.ballKick(pt.x, pt.y);
             }
 
-            // Force Foxy to chase the ball immediately
-            showThought('BALL!! THROW!!');
+            // Calculate throw power for Foxy's reaction
+            var throwDist = Math.sqrt(velX * velX + velY * velY);
+            var isBigThrow = throwDist > 3;
+            console.log('[BALL] Thrown! vel=' + throwDist.toFixed(1) + ' landing=' + throwPctX.toFixed(0) + '%');
+
+            // Foxy chases!
+            showThought(isBigThrow ? 'BALL!! BIG THROW!!' : 'ball! I see it!');
             setMood('playful');
 
-            var W = window.innerWidth;
-            var targetX = targetPct / 100 * W;
+            var targetX = throwPctX / 100 * W;
 
-            // Run fetch sequence directly through Foxy's body
             if (F.body && F.body.runSequence) {
                 F.body.runSequence([
-                    { anim: 'look_around', duration: 300, thought: 'BALL!!' },
-                    { anim: 'run', duration: 1200, target_x: targetX, thought: 'I GOT IT I GOT IT' },
+                    { anim: 'look_around', duration: isBigThrow ? 200 : 400, thought: isBigThrow ? 'GOTTA GO FAST' : 'ooh where did it go' },
+                    { anim: 'run', duration: isBigThrow ? 800 : 1400, target_x: targetX, thought: isBigThrow ? 'I GOT IT I GOT IT' : 'coming coming!' },
                     {
                         anim: 'pounce', duration: 600, thought: '*POUNCE!*',
                         onStart: function () {
-                            F.fulfillNeed('fun', 35);
+                            F.fulfillNeed('fun', isBigThrow ? 40 : 25);
                             if (F.vfx) {
                                 var pos = F.body.getPosition();
-                                F.vfx.dust(targetX, pos.y + 20, 5);
+                                F.vfx.dust(targetX, pos.y + 20, isBigThrow ? 8 : 4);
                             }
                         }
                     },
-                    { anim: 'idle', duration: 800, thought: 'again! throw it again!' },
+                    { anim: 'idle', duration: 800, thought: isBigThrow ? 'AGAIN!! DO IT AGAIN!!' : 'hehe that was fun' },
                 ]);
             }
-        });
+        }
+
+        // Mouse events
+        ballEl.addEventListener('mousedown', onGrab);
+        document.addEventListener('mousemove', onDrag);
+        document.addEventListener('mouseup', onRelease);
+
+        // Touch events
+        ballEl.addEventListener('touchstart', onGrab, { passive: false });
+        document.addEventListener('touchmove', onDrag, { passive: false });
+        document.addEventListener('touchend', onRelease, { passive: false });
     })();
 
     function startBrain() {
