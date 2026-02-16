@@ -112,10 +112,10 @@
 
     <script>
         // ─── Context-aware back routing ───
-        (function() {
+        (function () {
             const params = new URLSearchParams(window.location.search);
             const fromPolitical = params.get('from') === 'political' ||
-                                  document.referrer.includes('site-political');
+                document.referrer.includes('site-political');
             if (fromPolitical) {
                 const backUrl = '/site-political/';
                 document.getElementById('backLink').href = backUrl;
@@ -140,14 +140,14 @@
         // ─── Ambient Jazz (YouTube IFrame API) ───
         var ytReady = false;
         var player = null;
-        var isPlaying = false;
+        var isUnmuted = false;
         var audioBtn = document.getElementById('audioToggle');
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('ytPlayer', {
                 videoId: 'ziOus5-1kXw',
                 playerVars: {
-                    autoplay: 0,
+                    autoplay: 1,
                     controls: 0,
                     disablekb: 1,
                     fs: 0,
@@ -158,31 +158,40 @@
                     playlist: 'ziOus5-1kXw'
                 },
                 events: {
-                    onReady: function(e) {
+                    onReady: function (e) {
                         ytReady = true;
+                        e.target.mute();
                         e.target.setVolume(15);
+                        e.target.playVideo();
+                        // Bars animate immediately in muted/dim state
+                        audioBtn.classList.add('animating');
                     },
-                    onStateChange: function(e) {
-                        // If video ends, loop it
+                    onStateChange: function (e) {
                         if (e.data === YT.PlayerState.ENDED) {
                             player.seekTo(0);
                             player.playVideo();
+                        }
+                        // Ensure animation starts when playback begins
+                        if (e.data === YT.PlayerState.PLAYING && !audioBtn.classList.contains('animating')) {
+                            audioBtn.classList.add('animating');
                         }
                     }
                 }
             });
         }
 
-        audioBtn.addEventListener('click', function() {
+        audioBtn.addEventListener('click', function () {
             if (!ytReady || !player) return;
-            if (isPlaying) {
-                player.pauseVideo();
-                isPlaying = false;
+            if (isUnmuted) {
+                // Mute — bars keep bouncing but go dim
+                player.mute();
+                isUnmuted = false;
                 audioBtn.classList.remove('playing');
             } else {
-                player.playVideo();
+                // Unmute — bars light up accent orange
+                player.unMute();
                 player.setVolume(15);
-                isPlaying = true;
+                isUnmuted = true;
                 audioBtn.classList.add('playing');
             }
         });

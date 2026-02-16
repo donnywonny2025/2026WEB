@@ -213,30 +213,34 @@ body::before {
     height: 8px;
 }
 
-/* Animated when playing */
-.audio-toggle.playing .eq-bar {
-    background: var(--accent);
+/* Animated when audio is playing (muted or unmuted) */
+.audio-toggle.animating .eq-bar {
     animation: eqBounce 0.8s ease-in-out infinite alternate;
 }
 
-.audio-toggle.playing .eq-bar:nth-child(1) {
+.audio-toggle.animating .eq-bar:nth-child(1) {
     animation-duration: 0.6s;
     animation-delay: 0s;
 }
 
-.audio-toggle.playing .eq-bar:nth-child(2) {
+.audio-toggle.animating .eq-bar:nth-child(2) {
     animation-duration: 0.7s;
     animation-delay: 0.15s;
 }
 
-.audio-toggle.playing .eq-bar:nth-child(3) {
+.audio-toggle.animating .eq-bar:nth-child(3) {
     animation-duration: 0.5s;
     animation-delay: 0.08s;
 }
 
-.audio-toggle.playing .eq-bar:nth-child(4) {
+.audio-toggle.animating .eq-bar:nth-child(4) {
     animation-duration: 0.65s;
     animation-delay: 0.2s;
+}
+
+/* Unmuted — bars light up accent orange */
+.audio-toggle.playing .eq-bar {
+    background: var(--accent);
 }
 
 @keyframes eqBounce {
