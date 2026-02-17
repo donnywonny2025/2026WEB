@@ -184,13 +184,21 @@
 
                 console.log('[BALL] Settled at ' + pctX.toFixed(0) + '% after ' + bounceCount + ' bounces');
 
-                // ── Foxy chases to the settled ball ──
-                if (F.brain) F.brain.playerTakeover(); // keep AI paused during chase
+                // ── Foxy FETCHES the ball: run to it → pick up → carry back → drop ──
+                if (F.brain) F.brain.playerTakeover(); // keep AI paused during fetch
                 var targetX = ballX;
+                var centerX = W * 0.5; // return destination
+                var carryInterval = null;
+
                 if (F.body && F.body.runSequence) {
                     F.body.runSequence([
+                        // 1. Spot the ball
                         { anim: 'look_around', duration: isBigThrow ? 200 : 400, thought: isBigThrow ? 'GOTTA GO FAST' : 'ooh where did it go' },
+
+                        // 2. Run TO the ball
                         { anim: 'run', duration: isBigThrow ? 800 : 1400, target_x: targetX, thought: isBigThrow ? 'I GOT IT I GOT IT' : 'coming coming!' },
+
+                        // 3. Pounce and "pick up" — attach ball to Foxy
                         {
                             anim: 'pounce', duration: 600, thought: '*POUNCE!*',
                             onStart: function () {
@@ -199,9 +207,48 @@
                                     var pos = F.body.getPosition();
                                     F.vfx.dust(targetX, pos.y + 20, isBigThrow ? 8 : 4);
                                 }
+                                // Snap ball to Foxy and start carrying
+                                carryInterval = setInterval(function () {
+                                    var foxyPos = F.body.getPosition();
+                                    if (foxyPos) {
+                                        var pct = (foxyPos.x / W) * 100;
+                                        ballEl.style.left = pct + '%';
+                                        ballEl.style.bottom = '78px'; // slightly above ground, in Foxy's mouth
+                                    }
+                                }, 16);
                             }
                         },
-                        { anim: 'idle', duration: 800, thought: isBigThrow ? 'AGAIN!! DO IT AGAIN!!' : 'hehe that was fun' },
+
+                        // 4. Pause with ball in mouth
+                        { anim: 'idle', duration: 500, thought: 'got it! 🎾' },
+
+                        // 5. Carry ball back to center
+                        {
+                            anim: 'run', duration: 1200, target_x: centerX, thought: isBigThrow ? 'bringing it back!!' : '*prances back*',
+                            onStart: function () {
+                                if (F.brain) F.brain.playerTakeover(); // extend override for return trip
+                            }
+                        },
+
+                        // 6. Drop the ball at center
+                        {
+                            anim: 'idle', duration: 800, thought: isBigThrow ? 'AGAIN!! THROW IT AGAIN!!' : 'hehe fetch! 🐕',
+                            onStart: function () {
+                                // Stop carrying — drop ball at current position
+                                if (carryInterval) {
+                                    clearInterval(carryInterval);
+                                    carryInterval = null;
+                                }
+                                // Place ball neatly at center ground
+                                var dropPct = (centerX / W) * 100;
+                                ballEl.style.left = dropPct + '%';
+                                ballEl.style.bottom = '68px';
+                                if (F.vfx) {
+                                    F.vfx.dust(centerX, H - 68, 3);
+                                }
+                                console.log('[BALL] Fetched and returned to center!');
+                            }
+                        },
                     ]);
                 }
             }
