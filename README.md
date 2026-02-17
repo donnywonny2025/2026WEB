@@ -1,6 +1,6 @@
 # Jeff Kerr Portfolio — "The Editorial"
 
-> **Last updated:** Feb 15, 2026 · **Status:** V4 "The Editorial" — **PRODUCTION SITE**
+> **Last updated:** Feb 16, 2026 · **Status:** V4 "The Editorial" — **PRODUCTION SITE**
 
 ## All Project Files
 
@@ -26,10 +26,16 @@
 | `playground.css` | Playground styles (world, need icons, care popups) |
 | `foxy-soul.js` | Persistent memory, needs (hunger/thirst/fun/energy), personality traits |
 | `foxy-body.js` | Canvas renderer, sprite animations, physics, motion blur |
-| `foxy-brain.js` | AI decision engine (Gemini 2.0 Flash), rate limiter, chat, care icons |
+| `foxy-brain.js` | AI decision engine (Gemini 2.0 Flash), rate limiter, moods, need icons |
+| `foxy-behaviors.js` | 40+ behavior definitions (zoomies, parkour, eat, drink, sleep, etc.) |
+| `foxy-ball.js` | Ball drag-to-throw physics, fetch-and-return sequence |
+| `foxy-chat.js` | Chat system, command detection, Gemini conversation |
+| `foxy-input.js` | Keyboard, mouse click, and button input handling |
+| `foxy-config.js` | API keys and configuration |
+| `foxy-vfx.js` | Particle effects (dust, sparkles, ball kicks) |
 | `foxy-world.js` | Environment — time of day, weather, world state |
 | `foxy-buddy.js` | Opossum buddy NPC |
-| `forest-gen.js` | Procedural forest background generator |
+| `forest-gen.js` | Procedural scene generator (ground tiles, trees, props, fireflies) |
 
 ### Foxy Worlds
 | File | Purpose |
@@ -74,18 +80,23 @@ An interactive pixel fox powered by Gemini 2.0 Flash. Foxy lives on `playground.
 
 | File | Purpose |
 |---|---|
-| `foxy-soul.js` | Persistent memory, needs system (hunger/thirst/fun/energy), personality traits, session tracking |
-| `foxy-body.js` | Canvas renderer, sprite animations (idle/run/jump/crouch/climb/hurt/sleep), physics, motion blur |
-| `foxy-brain.js` | AI decision engine (Gemini 2.0 Flash), rate limiter, chat, moods, need icons, click handling |
+| `foxy-soul.js` | Persistent memory, needs system, personality traits, session tracking |
+| `foxy-body.js` | Canvas renderer, sprite animations, physics, motion blur |
+| `foxy-brain.js` | AI decision engine (Gemini 2.0 Flash), rate limiter, moods, need icons |
+| `foxy-behaviors.js` | 40+ behavior definitions (extracted from brain) |
+| `foxy-ball.js` | Ball physics — drag-to-throw, bounce, fetch-and-return |
+| `foxy-chat.js` | Chat system — user messages, commands, Gemini conversation |
+| `foxy-input.js` | Input handling — keyboard, mouse, buttons |
+| `foxy-vfx.js` | Particle effects system |
 | `foxy-world.js` | Environment — time of day, weather, world state |
 | `foxy-buddy.js` | Opossum buddy NPC |
-| `forest-gen.js` | Procedural forest background generator |
+| `forest-gen.js` | Procedural scene generator (ground, trees, props, fireflies) |
 
 ### How It Works
 
 All files share state through `window.Foxy` namespace. No build step — just `<script>` tags in order.
 
-**Load order:** soul → body → world → brain → buddy
+**Load order:** soul → body → world → vfx → config → behaviors → brain → chat → ball → input → buddy
 
 ### Key Systems
 
@@ -186,6 +197,16 @@ The site is a set of static files deployed via **Netlify** (auto-deploys on push
 - **Category:** Arts & Entertainment
 
 ## Changelog
+
+### Feb 16, 2026
+- **Brain Refactoring:** Broke `foxy-brain.js` (2,199 lines) into 5 focused modules:
+  - `foxy-behaviors.js` (793 lines) — all behavior definitions
+  - `foxy-ball.js` (233 lines) — ball drag-to-throw physics + fetch-and-return
+  - `foxy-chat.js` (200 lines) — chat system + command detection
+  - `foxy-input.js` (157 lines) — keyboard, mouse, button controls
+  - `foxy-brain.js` (894 lines) — AI decisions, Gemini, UI only
+- **Ground Generation:** Added procedural pixel art ground (grass + dirt) via canvas in `forest-gen.js`
+- **Ball Fetch:** Foxy now runs to thrown ball, picks it up, carries it back to center
 
 ### Feb 15, 2026
 - **Foxy AI Responsiveness:** Reduced main brain loop from 30s → 12s, smart thoughts from 8s → 4s
