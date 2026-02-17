@@ -1911,30 +1911,7 @@
 
             ballEl.classList.remove('dragging');
 
-            // Calculate throw distance from velocity
-            var throwX = pt.x + velX * 12;
-            var throwY = pt.y + velY * 12;
-
-            // Clamp to screen bounds
-            throwX = Math.max(40, Math.min(W - 40, throwX));
-            var throwBottom = Math.max(60, Math.min(H * 0.6, H - throwY));
-
-            // The ball always lands on the ground (bottom: 68px)
-            throwBottom = 68;
-
-            var throwPctX = (throwX / W) * 100;
-
-            // Apply throw with CSS transition
-            ballEl.classList.add('thrown');
-            ballEl.style.left = throwPctX + '%';
-            ballEl.style.bottom = throwBottom + 'px';
-
-            // Bounce VFX at throw origin
-            ballEl.classList.add('kicked');
-            setTimeout(function () {
-                ballEl.classList.remove('kicked', 'thrown');
-            }, 1200);
-
+            // VFX at throw origin
             if (F.vfx) {
                 F.vfx.ballKick(pt.x, pt.y);
             }
@@ -1942,31 +1919,125 @@
             // Calculate throw power for Foxy's reaction
             var throwDist = Math.sqrt(velX * velX + velY * velY);
             var isBigThrow = throwDist > 3;
-            console.log('[BALL] Thrown! vel=' + throwDist.toFixed(1) + ' landing=' + throwPctX.toFixed(0) + '%');
+            console.log('[BALL] Thrown! vel=' + throwDist.toFixed(1));
 
-            // Foxy chases!
             showThought(isBigThrow ? 'BALL!! BIG THROW!!' : 'ball! I see it!');
             setMood('playful');
 
-            var targetX = throwPctX / 100 * W;
+            // ─── PHYSICS SIMULATION ───
+            var GRAVITY = 0.6;          // px per frame²
+            var BOUNCE_DAMPING = 0.55;  // energy kept per bounce
+            var FRICTION = 0.985;       // horizontal drag
+            var GROUND = 68;            // ground level in px from bottom
+            var MIN_VEL = 0.3;          // stop threshold
+            var MAX_BOUNCES = 6;
 
-            if (F.body && F.body.runSequence) {
-                F.body.runSequence([
-                    { anim: 'look_around', duration: isBigThrow ? 200 : 400, thought: isBigThrow ? 'GOTTA GO FAST' : 'ooh where did it go' },
-                    { anim: 'run', duration: isBigThrow ? 800 : 1400, target_x: targetX, thought: isBigThrow ? 'I GOT IT I GOT IT' : 'coming coming!' },
-                    {
-                        anim: 'pounce', duration: 600, thought: '*POUNCE!*',
-                        onStart: function () {
-                            F.fulfillNeed('fun', isBigThrow ? 40 : 25);
-                            if (F.vfx) {
-                                var pos = F.body.getPosition();
-                                F.vfx.dust(targetX, pos.y + 20, isBigThrow ? 8 : 4);
-                            }
-                        }
-                    },
-                    { anim: 'idle', duration: 800, thought: isBigThrow ? 'AGAIN!! DO IT AGAIN!!' : 'hehe that was fun' },
-                ]);
+            // Ball position in pixels (x from left, y from bottom)
+            var ballX = pt.x;
+            var ballY = H - pt.y;
+
+            // Throw velocity — scale up for satisfying feel
+            var physVX = velX * 1.8;
+            var physVY = velY * -1.8; // flip because velY is screen-space (down = positive)
+
+            // Give upward impulse if throwing mostly horizontal
+            if (physVY < 2) physVY = Math.max(physVY, 4 + Math.abs(physVX) * 0.3);
+
+            var bounceCount = 0;
+            var settled = false;
+
+            // Remove CSS transitions — we're driving position manually
+            ballEl.style.transition = 'none';
+
+            function physicsTick() {
+                if (isDragging || settled) return;
+
+                // Apply gravity (pulls down = reduces bottom)
+                physVY -= GRAVITY;
+
+                // Apply friction to horizontal
+                physVX *= FRICTION;
+
+                // Update position
+                ballX += physVX;
+                ballY += physVY;
+
+                // ── Wall bounces ──
+                if (ballX < 30) {
+                    ballX = 30;
+                    physVX = Math.abs(physVX) * BOUNCE_DAMPING;
+                }
+                if (ballX > W - 30) {
+                    ballX = W - 30;
+                    physVX = -Math.abs(physVX) * BOUNCE_DAMPING;
+                }
+
+                // ── Ground bounce ──
+                if (ballY <= GROUND) {
+                    ballY = GROUND;
+                    bounceCount++;
+
+                    // Bounce back up with damping
+                    physVY = Math.abs(physVY) * BOUNCE_DAMPING;
+                    physVX *= 0.9; // lose some horizontal on bounce
+
+                    // Dust VFX on bounce
+                    if (F.vfx && physVY > 1.5) {
+                        F.vfx.dust(ballX, H - GROUND, Math.min(6, Math.ceil(physVY)));
+                    }
+
+                    // Settle if barely bouncing
+                    if (physVY < MIN_VEL || bounceCount >= MAX_BOUNCES) {
+                        ballY = GROUND;
+                        settled = true;
+                    }
+                }
+
+                // ── Ceiling clamp ──
+                if (ballY > H - 30) {
+                    ballY = H - 30;
+                    physVY = -Math.abs(physVY) * 0.3;
+                }
+
+                // ── Apply position to DOM ──
+                var pctX = (ballX / W) * 100;
+                ballEl.style.left = pctX + '%';
+                ballEl.style.bottom = ballY + 'px';
+
+                if (!settled) {
+                    requestAnimationFrame(physicsTick);
+                } else {
+                    // Ball has settled — restore default transition
+                    ballEl.style.transition = '';
+                    ballEl.classList.remove('kicked', 'thrown');
+
+                    console.log('[BALL] Settled at ' + pctX.toFixed(0) + '% after ' + bounceCount + ' bounces');
+
+                    // ── Foxy chases to the settled ball ──
+                    var targetX = ballX;
+                    if (F.body && F.body.runSequence) {
+                        F.body.runSequence([
+                            { anim: 'look_around', duration: isBigThrow ? 200 : 400, thought: isBigThrow ? 'GOTTA GO FAST' : 'ooh where did it go' },
+                            { anim: 'run', duration: isBigThrow ? 800 : 1400, target_x: targetX, thought: isBigThrow ? 'I GOT IT I GOT IT' : 'coming coming!' },
+                            {
+                                anim: 'pounce', duration: 600, thought: '*POUNCE!*',
+                                onStart: function () {
+                                    F.fulfillNeed('fun', isBigThrow ? 40 : 25);
+                                    if (F.vfx) {
+                                        var pos = F.body.getPosition();
+                                        F.vfx.dust(targetX, pos.y + 20, isBigThrow ? 8 : 4);
+                                    }
+                                }
+                            },
+                            { anim: 'idle', duration: 800, thought: isBigThrow ? 'AGAIN!! DO IT AGAIN!!' : 'hehe that was fun' },
+                        ]);
+                    }
+                }
             }
+
+            // Kick off physics
+            ballEl.classList.add('thrown');
+            requestAnimationFrame(physicsTick);
         }
 
         // Mouse events
