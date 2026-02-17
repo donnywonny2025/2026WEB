@@ -1,12 +1,93 @@
 /* ═══════════════════════════════════════════
-   FOREST-GEN.JS — Pixel art tree silhouettes
-   Generates layered forest background + fireflies
+   FOREST-GEN.JS — Pixel art scene generator
+   Ground tiles, layered forest, props, and fireflies
    ═══════════════════════════════════════════ */
 (function () {
     'use strict';
 
     var forest = document.getElementById('forestLayer');
     if (!forest) return;
+
+    /* ─── PIXEL ART GROUND ─── */
+    (function buildGround() {
+        var SCALE = 4;          // render scale (pixel art crisp)
+        var GROUND_H = 192;     // total ground height in px (3 rows of 64)
+
+        var groundCanvas = document.createElement('canvas');
+        groundCanvas.id = 'groundCanvas';
+        groundCanvas.style.cssText =
+            'position:fixed;bottom:0;left:0;width:100%;' +
+            'height:' + GROUND_H + 'px;' +
+            'z-index:3;pointer-events:none;image-rendering:pixelated;';
+        document.body.appendChild(groundCanvas);
+
+        var tileset = new Image();
+        tileset.src = 'assets/sunny-land/environment/tileset/tileset-sliced.png';
+        tileset.onload = function () {
+            var W = window.innerWidth;
+            groundCanvas.width = W;
+            groundCanvas.height = GROUND_H;
+            var ctx = groundCanvas.getContext('2d');
+            ctx.imageSmoothingEnabled = false;
+
+            // The Sunny Land tileset has grass-top ground tiles in the upper-right:
+            // Full grass-top tile with dirt: approx (288, 0, 32, 32) — bright green grass over brown dirt
+            // Dirt fill tile: approx (288, 32, 32, 32) — solid brown
+            // These are 32x32 source tiles → rendered at 32*SCALE = 128px? Too big.
+            // Instead use smaller tiles: Row 0 has 16x16 tiles.
+            // Top-left corner piece at (0,0,16,16) — has grass on top-left corner
+            // Flat grass middle at roughly (16,0,16,16) — grass top edge
+            // Let's use the visible grass blocks from the right side:
+            // Green-topped blocks at approximately: (272,0) and (304,0) at 32x32 size
+
+            // Actually, let's draw a stylized ground using solid colors from the tileset palette
+            var TILE_W = 64; // rendered tile width
+            var cols = Math.ceil(W / TILE_W) + 1;
+
+            // Draw grass-top row
+            for (var col = 0; col < cols; col++) {
+                var x = col * TILE_W;
+
+                // Grass top (green strip)
+                ctx.fillStyle = '#4a7a2e'; // dark grass green
+                ctx.fillRect(x, 0, TILE_W, 16);
+                ctx.fillStyle = '#6ab040'; // bright grass green
+                ctx.fillRect(x, 0, TILE_W, 10);
+                // Add grass blade variation
+                ctx.fillStyle = '#7ec850';
+                for (var g = 0; g < 4; g++) {
+                    var gx = x + Math.floor(Math.random() * TILE_W);
+                    ctx.fillRect(gx, 0, 2, 6 + Math.floor(Math.random() * 6));
+                }
+
+                // Dirt fill below grass
+                ctx.fillStyle = '#8b5e3c'; // brown dirt
+                ctx.fillRect(x, 16, TILE_W, GROUND_H - 16);
+
+                // Dirt texture variation
+                ctx.fillStyle = '#7a4e2c';
+                for (var d = 0; d < 6; d++) {
+                    var dx = x + Math.floor(Math.random() * TILE_W);
+                    var dy = 20 + Math.floor(Math.random() * (GROUND_H - 30));
+                    ctx.fillRect(dx, dy, 4 + Math.floor(Math.random() * 8), 2 + Math.floor(Math.random() * 4));
+                }
+
+                // Small rocks
+                ctx.fillStyle = '#6b4626';
+                if (Math.random() > 0.7) {
+                    var rx = x + Math.floor(Math.random() * (TILE_W - 8));
+                    ctx.fillRect(rx, 22 + Math.floor(Math.random() * 20), 6, 4);
+                }
+            }
+
+            console.log('[SCENE] Pixel art ground rendered (' + cols + ' tiles across ' + W + 'px)');
+        };
+
+        // Re-render on resize
+        window.addEventListener('resize', function () {
+            if (tileset.complete) tileset.onload();
+        });
+    })();
 
     var treeSources = [
         'assets/sunny-land/environment/props/tree.png',
