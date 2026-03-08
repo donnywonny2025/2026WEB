@@ -328,8 +328,31 @@ const projectData = [
             ['Platform', 'YouTube'],
             ['Host', 'Dan Egan'],
             ['Role', 'Channel Creator / Lead Editor'],
-            ['Channel', 'Danny Was Here TV'],
-            ['Published', 'September 2025']
+            ['Channel', 'Danny Was Here TV']
+        ]
+    },
+    {
+        title: 'Biogen — NeuroPioneers',
+        embed: 'vimeo',
+        videoId: '641580248',
+        description: 'BioGen Neuro Pioneers initiative highlights the importance of research and development in neurology.',
+        credits: [
+            ['Client', 'Biogen'],
+            ['Role', 'Producer / Director / Editor'],
+            ['Uploader', 'The Kerr Media Group'],
+            ['Context', 'Biogen NeuroPioneers initiative']
+        ]
+    },
+    {
+        title: 'AISC Steel Promo',
+        embed: 'vimeo',
+        videoId: '641524314',
+        description: 'A promotional spotlight for the American Institute of Steel Construction, highlighting the structural beauty, engineering excellence, and sustainable future of structural steel in modern architecture.',
+        credits: [
+            ['Client', 'AISC'],
+            ['Role', 'Director / Creative Producer'],
+            ['Industry', 'Steel Construction'],
+            ['Focus', 'Engineering Excellence']
         ]
     },
     {
