@@ -1,3 +1,13 @@
+// ─── Analytics Helpers ───
+function trackEvent(category, action, label) {
+    if (typeof gtag === 'function') {
+        gtag('event', action, {
+            'event_category': category,
+            'event_label': label
+        });
+    }
+}
+
 // ─── Splash Screen ───
 (function () {
     const splash = document.getElementById('splash');
@@ -497,6 +507,13 @@ function openProject(index) {
 
     // Phase 1: Slide panel up to cover screen
     transitionPanel.style.transform = 'translateY(0%)';
+
+    // Analytics: Track project open
+    const projectEl = document.querySelectorAll('.project')[index];
+    if (projectEl) {
+        const projectName = projectEl.getAttribute('data-project') || projectData[index].title;
+        trackEvent('Engagement', 'View Project', projectName);
+    }
 
     setTimeout(() => {
         // Panel is fully covering — swap content behind it
