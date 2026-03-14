@@ -330,6 +330,18 @@ const projectData = [
         ]
     },
     {
+        title: 'Restaurant Innovation Summit',
+        embed: 'vimeo',
+        videoId: '1173459062',
+        description: 'A deep dive into the future of food and technology at the Restaurant Innovation Summit.',
+        credits: [
+            ['Client', 'RIS'],
+            ['Role', 'Editor'],
+            ['Industry', 'Food Tech / Innovation'],
+            ['Year', '2026']
+        ]
+    },
+    {
         title: 'Danny Was Here TV',
         embed: 'youtube',
         videoId: 'I6U5zDpzLq8',
@@ -337,7 +349,7 @@ const projectData = [
         credits: [
             ['Platform', 'YouTube'],
             ['Host', 'Dan Egan'],
-            ['Role', 'Channel Creator / Lead Editor'],
+            ['Role', 'Editor'],
             ['Channel', 'Danny Was Here TV']
         ]
     },
