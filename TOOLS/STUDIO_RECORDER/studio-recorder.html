@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio One — Professional Master Capture</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --accent: #ff3e00; 
+            --text: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.4);
+            --glass: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.07);
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(circle at 50% 120%, rgba(255, 62, 0, 0.08) 0%, transparent 50%),
+                linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);
+            background-size: 100% 100%, 60px 60px, 60px 60px;
+            color: var(--text);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .recorder-vessel {
+            width: 460px;
+            padding: 48px;
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid var(--glass-border);
+            border-radius: 48px;
+            backdrop-filter: blur(60px);
+            text-align: center;
+            box-shadow: 0 60px 120px rgba(0,0,0,0.9);
+            position: relative;
+        }
+
+        .header { margin-bottom: 40px; }
+        .title { font-size: 10px; font-weight: 800; letter-spacing: 8px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 12px; }
+
+        .status-badge {
+            display: inline-flex; height: 28px; align-items: center; padding: 0 16px;
+            background: rgba(255,255,255,0.03); border-radius: 100px; border: 1px solid var(--glass-border);
+            font-size: 9px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700;
+        }
+
+        .status-dot { width: 6px; height: 6px; background: var(--text-dim); border-radius: 50%; margin-right: 12px; transition: all 0.4s var(--ease); }
+        .status-dot.active { background: white; box-shadow: 0 0 20px white; }
+        .status-dot.recording { background: #ff3e00; box-shadow: 0 0 20px #ff3e00; animation: pulse-recording 1.2s infinite; }
+
+        @keyframes pulse-recording {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.6); opacity: 0.4; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .visualizer-container {
+            height: 140px; width: 100%; background: rgba(0, 0, 0, 0.4); border-radius: 24px;
+            margin-bottom: 40px; overflow: hidden; border: 1px solid var(--glass-border); position: relative;
+        }
+
+        canvas { width: 100%; height: 100%; }
+
+        .timer { font-size: 72px; font-weight: 200; margin-bottom: 44px; font-variant-numeric: tabular-nums; letter-spacing: -4px; color: var(--text); opacity: 0.9; }
+
+        .controls { display: flex; flex-direction: column; gap: 24px; align-items: center; }
+        button { background: none; border: none; cursor: pointer; transition: all 0.5s var(--ease); font-family: inherit; }
+
+        .btn-setup {
+            padding: 16px 40px; background: var(--text); color: var(--bg); border-radius: 100px;
+            font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+        }
+
+        .main-actions { display: flex; gap: 20px; justify-content: center; }
+        .btn-record {
+            width: 88px; height: 88px; background: var(--text); color: var(--bg); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800;
+            letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.1; pointer-events: none;
+        }
+
+        .btn-record.ready { opacity: 1; pointer-events: auto; }
+        .btn-record.recording { background: #ff3e00; color: white; box-shadow: 0 0 50px rgba(255, 62, 0, 0.4); animation: breathe 2.5s infinite; }
+
+        .btn-stop {
+            width: 88px; height: 88px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border);
+            color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.2; pointer-events: none;
+        }
+
+        .btn-stop.active { opacity: 1; pointer-events: auto; }
+
+        .hint { margin-top: 48px; font-size: 10px; color: var(--text-dim); letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600; }
+        .hint b { color: white; }
+
+        @keyframes breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+    </style>
+</head>
+<body>
+
+    <div class="recorder-vessel">
+        <div class="header">
+            <div class="title">Studio One</div>
+            <div class="status-badge">
+                <span class="status-dot" id="statusDot"></span>
+                <span id="statusTxt">Link Master Signal</span>
+            </div>
+        </div>
+
+        <div class="visualizer-container">
+            <canvas id="visualizer"></canvas>
+        </div>
+
+        <div class="timer" id="timer">00:00</div>
+
+        <div class="controls">
+            <button id="setupBtn" class="btn-setup">Link System Audio</button>
+            <div class="main-actions">
+                <button id="recordBtn" class="btn-record">Record</button>
+                <button id="stopBtn" class="btn-stop">Stop</button>
+            </div>
+        </div>
+
+        <div class="hint">Ensure <b>"Share Audio"</b> is checked</div>
+    </div>
+
+    <script>
+        let mediaStream;
+        let audioContext;
+        let processor;
+        let input;
+        let audioData = [];
+        let isRecording = false;
+        let startTime;
+        let timerInterval;
+        let hueOffset = 0;
+
+        const setupBtn = document.getElementById('setupBtn');
+        const recordBtn = document.getElementById('recordBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const timerDisplay = document.getElementById('timer');
+        const statusDot = document.getElementById('statusDot');
+        const statusTxt = document.getElementById('statusTxt');
+        const canvas = document.getElementById('visualizer');
+        const canvasCtx = canvas.getContext('2d');
+
+        async function initSystemAudio() {
+            try {
+                mediaStream = await navigator.mediaDevices.getDisplayMedia({
+                    video: { width: 1, height: 1 },
+                    audio: {
+                        echoCancellation: false,
+                        noiseSuppression: false,
+                        autoGainControl: false
+                    },
+                    systemAudio: "include"
+                });
+
+                const audioTracks = mediaStream.getAudioTracks();
+                if (audioTracks.length === 0) {
+                    alert("No audio stream detected. Retrying 'Link System Audio' and check 'Share Audio'.");
+                    mediaStream.getTracks().forEach(track => track.stop());
+                    return;
+                }
+
+                setupAudioGraph(mediaStream);
+                
+                setupBtn.style.display = 'none';
+                recordBtn.classList.add('ready');
+                statusTxt.textContent = "Signal Linked";
+                statusDot.classList.add('active');
+
+                audioTracks[0].onended = () => location.reload();
+
+            } catch (err) {
+                console.error("Link failed:", err);
+            }
+        }
+
+        let analyser, dataArray;
+        function setupAudioGraph(stream) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 44100 });
+            input = audioContext.createMediaStreamSource(stream);
+            
+            analyser = audioContext.createAnalyser();
+            analyser.fftSize = 512;
+            input.connect(analyser);
+
+            // ScriptProcessor for reliable RAW capture
+            processor = audioContext.createScriptProcessor(4096, 2, 2);
+            processor.onaudioprocess = (e) => {
+                if (!isRecording) return;
+                // Capture Left and Right channels for stereo
+                const left = e.inputBuffer.getChannelData(0);
+                const right = e.inputBuffer.getChannelData(1);
+                audioData.push(new Float32Array(left));
+                audioData.push(new Float32Array(right));
+            };
+
+            input.connect(processor);
+            processor.connect(audioContext.destination);
+
+            dataArray = new Uint8Array(analyser.frequencyBinCount);
+            draw();
+        }
+
+        function draw() {
+            requestAnimationFrame(draw);
+            analyser.getByteFrequencyData(dataArray);
+            canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const barWidth = (canvas.width / dataArray.length) * 2;
+            let x = 0;
+            hueOffset += 1.25;
+
+            for(let i = 0; i < dataArray.length; i += 2) {
+                const barHeight = (dataArray[i] / 255) * canvas.height * 0.55; 
+                const hue = (hueOffset + (i * 0.8)) % 360;
+                
+                const gradient = canvasCtx.createLinearGradient(0, canvas.height, 0, canvas.height - barHeight);
+                gradient.addColorStop(0, `hsla(${hue}, 85%, 55%, 0.8)`);
+                gradient.addColorStop(1, `hsla(${(hue + 60) % 360}, 90%, 75%, 1)`);
+                canvasCtx.fillStyle = gradient;
+                
+                if (barHeight > 5) {
+                    canvasCtx.shadowBlur = 10;
+                    canvasCtx.shadowColor = `hsla(${hue}, 80%, 60%, 0.3)`;
+                }
+
+                canvasCtx.beginPath();
+                canvasCtx.roundRect ? canvasCtx.roundRect(x, canvas.height - barHeight, barWidth - 2, barHeight, [4, 4, 0, 0]) 
+                                    : canvasCtx.rect(x, canvas.height - barHeight, barWidth - 2, barHeight);
+                canvasCtx.fill();
+                x += barWidth;
+                canvasCtx.shadowBlur = 0;
+            }
+        }
+
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+            statusTxt.textContent = "Browser Not Supported";
+            alert("Your browser does not support system audio capture. Use Chrome or Edge on Mac.");
+        }
+
+        setupBtn.onclick = initSystemAudio;
+
+        recordBtn.onclick = () => {
+            if (!mediaStream) {
+                alert("Please click 'Link System Audio' first.");
+                return;
+            }
+            isRecording = true;
+            audioData = [];
+            recordBtn.textContent = 'Capture';
+            recordBtn.classList.add('recording');
+            stopBtn.classList.add('active');
+            statusDot.classList.add('recording');
+            statusTxt.textContent = "Live Master";
+            startTime = Date.now();
+            timerInterval = setInterval(updateTimer, 1000);
+        };
+
+        stopBtn.onclick = () => {
+            isRecording = false;
+            clearInterval(timerInterval);
+            saveWav();
+            recordBtn.textContent = 'Record';
+            recordBtn.classList.remove('recording');
+            stopBtn.classList.remove('active');
+            statusDot.classList.replace('recording', 'active');
+            statusTxt.textContent = "Processing...";
+        };
+
+        function updateTimer() {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const m = Math.floor(elapsed / 60).toString().padStart(2, '0');
+            const s = (elapsed % 60).toString().padStart(2, '0');
+            timerDisplay.textContent = `${m}:${s}`;
+        }
+
+        function saveWav() {
+            if (audioData.length === 0) return;
+
+            const length = audioData.length / 2 * audioData[0].length;
+            const flattened = new Float32Array(length * 2);
+            let offset = 0;
+            for (let i = 0; i < audioData.length; i += 2) {
+                const left = audioData[i];
+                const right = audioData[i+1];
+                for (let j = 0; j < left.length; j++) {
+                    flattened[offset++] = left[j];
+                    flattened[offset++] = right[j];
+                }
+            }
+
+            const buffer = new ArrayBuffer(44 + flattened.length * 2);
+            const view = new DataView(buffer);
+
+            const writeString = (o, s) => { for (let i = 0; i < s.length; i++) view.setUint8(o + i, s.charCodeAt(i)); };
+            
+            writeString(0, 'RIFF');
+            view.setUint32(4, 36 + flattened.length * 2, true);
+            writeString(8, 'WAVE');
+            writeString(12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true);
+            view.setUint16(22, 2, true);
+            view.setUint32(24, 44100, true);
+            view.setUint32(28, 44100 * 4, true);
+            view.setUint16(32, 4, true);
+            view.setUint16(34, 16, true);
+            writeString(36, 'data');
+            view.setUint32(40, flattened.length * 2, true);
+
+            for (let i = 0; i < flattened.length; i++) {
+                const s = Math.max(-1, Math.min(1, flattened[i]));
+                view.setInt16(44 + i * 2, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+            }
+
+            const blob = new Blob([view], { type: 'audio/wav' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `STUDIO-ONE-MASTER-${new Date().getTime()}.wav`;
+            link.click();
+            statusTxt.textContent = "Master Saved";
+        }
+
+        function resize() {
+            canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+            canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+        }
+        window.onresize = resize; resize();
+
+    </script>
+</body>
+</html>
