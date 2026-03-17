@@ -616,8 +616,8 @@ if ('scrollRestoration' in history) {
     history.scrollRestoration = 'manual';
 }
 
-// Wire up card clicks
-document.querySelectorAll('.project').forEach((card, index) => {
+// Wire up card clicks for main commercial projects
+document.querySelectorAll('.project:not([data-pol-project])').forEach((card, index) => {
     card.addEventListener('click', (e) => {
         // Don't interfere with video hover (already handled by mouseenter/leave)
         history.pushState({ project: index }, '');
