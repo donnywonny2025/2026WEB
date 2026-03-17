@@ -424,12 +424,6 @@ const projectData = [
             ]
     }
 ,
-    {
-        title: 'Gabe Albornoz',
-        embed: 'youtube', videoId: '71xhYlS28oc',
-        description: 'Political campaign advertisement for Gabe Albornoz. Crafted to deliver a clear, compelling message to constituents with high-impact visuals and precise pacing.',
-        credits: [['Type', 'Political'], ['Format', 'Digital campaign']]
-    },
 ];
 
 // DOM refs
