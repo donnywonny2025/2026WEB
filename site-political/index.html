@@ -10,6 +10,7 @@
         gtag('js', new Date());
         gtag('config', 'G-7TS282S7NM');
     </script>
+    <script src="https://player.vimeo.com/api/player.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jeff Kerr — Legal & Political Video Production</title>
@@ -313,7 +314,18 @@
         </div>
     </div>
 
-
+    <!-- ═══════════════════════════════════════════
+         HERO REEL SECTION
+         ═══════════════════════════════════════════ -->
+    <section class="hero-reel reveal" id="heroReel" onclick="playReel()">
+        <video class="hero-reel-video" src="../Videos/REELQuickLoop.mp4" muted loop playsinline autoplay poster="../Videos/Reel_Poster.jpg"></video>
+        <div class="hero-reel-content">
+            <div class="hero-reel-play">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+            </div>
+            <div class="hero-reel-label">Play Showreel</div>
+        </div>
+    </section>
 
     <div class="pol-section-intro" id="political">
         <div class="confidential-badge">
@@ -727,6 +739,7 @@
 
     <section class="political-work">
 
+    <!-- Project Detail Overlay (Full-screen for grid) -->
         <!-- 21 — Legal Proceedings I -->
         <div class="project reveal" data-pol-project="20" data-category="legal">
             <div class="project-number">21</div>
@@ -886,6 +899,7 @@
                     </div>
                 </div>
             </div>
+        </div>
     </section>
 
     <!-- ═══════════════════════════════════════════
@@ -1142,6 +1156,33 @@
             });
         });
     </script>
+    <!-- ═══════════════════════════════════════════
+         REEL MODAL PLAYER
+         ═══════════════════════════════════════════ -->
+    <div id="reelModal">
+        <div class="reel-container">
+            <button class="reel-close" onclick="closeReel()" title="Close Reel">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <!-- Unmute Overlay -->
+            <div id="reelUnmuteOverlay" class="reel-unmute-overlay" onclick="unmuteReel()">
+                <div class="unmute-btn">
+                    <div class="unmute-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M11 5L6 9H2V15H6L11 19V5Z" fill="currentColor"/>
+                            <path d="M19.07 4.93C20.9447 6.80528 21.9979 9.34836 21.9979 12C21.9979 14.6516 20.9447 17.1947 19.07 19.07" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                            <line x1="23" y1="1" x2="1" y2="23" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <span>Tap for Sound</span>
+                </div>
+            </div>
+            <div id="reelPlayer"></div>
+        </div>
+    </div>
 </body>
 
 </html>

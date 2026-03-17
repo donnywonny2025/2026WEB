@@ -418,7 +418,7 @@ function getEmbedUrl(project) {
 }
 
 function populateDetail(index) {
-    const p = projectData[index];
+    const p = (typeof polProjectData !== 'undefined') ? polProjectData[index] : projectData[index];
 
     // Recreate iframe to avoid adding browser history entries
     const container = document.getElementById('detailVideo');
@@ -465,6 +465,61 @@ function unlockScroll() {
     document.body.style.left = '';
     document.body.style.right = '';
 }
+
+// Reel Modal Logic
+const reelModal = document.getElementById('reelModal');
+const reelPlayer = document.getElementById('reelPlayer');
+let reelPlayerInstance = null;
+
+function playReel() {
+    const vimeoId = '1120665473'; // Swapped to correct showreel ID
+    const container = document.getElementById('reelPlayer');
+    const overlay = document.getElementById('reelUnmuteOverlay');
+    
+    // Show modal
+    reelModal.classList.add('visible');
+    
+    // Build iframe with background=1 to hide all Vimeo UI (ensures our custom unmuter is used)
+    container.innerHTML = `<iframe src="https://player.vimeo.com/video/${vimeoId}?autoplay=1&muted=1&background=1&title=0&byline=0&portrait=0" 
+                                  allow="autoplay; fullscreen; picture-in-picture" 
+                                  allowfullscreen></iframe>`;
+    
+    const iframe = container.querySelector('iframe');
+    reelPlayerInstance = new Vimeo.Player(iframe);
+    
+    // Show unmute overlay
+    overlay.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function unmuteReel() {
+    if (reelPlayerInstance) {
+        reelPlayerInstance.setMuted(false);
+        reelPlayerInstance.setVolume(1);
+        document.getElementById('reelUnmuteOverlay').classList.add('hidden');
+    }
+}
+
+function closeReel() {
+    reelModal.classList.remove('visible');
+    setTimeout(() => {
+        reelPlayer.innerHTML = ''; // Kill video
+        reelPlayerInstance = null;
+    }, 600);
+    document.body.style.overflow = '';
+}
+
+// Close on backdrop click
+reelModal.addEventListener('click', (e) => {
+    if (e.target.id === 'reelModal') closeReel();
+});
+
+// Close on ESC
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && reelModal.classList.contains('visible')) {
+        closeReel();
+    }
+});
 
 function openProject(index) {
     if (isTransitioning) return;
