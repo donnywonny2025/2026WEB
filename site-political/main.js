@@ -472,7 +472,7 @@ const reelPlayer = document.getElementById('reelPlayer');
 let reelPlayerInstance = null;
 
 function playReel() {
-    const vimeoId = '1120665473'; // Swapped to correct showreel ID
+    const vimeoId = '641889858'; // Swapped to correct showreel ID from index.html data
     const container = document.getElementById('reelPlayer');
     const overlay = document.getElementById('reelUnmuteOverlay');
     
