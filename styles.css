@@ -1653,33 +1653,18 @@ footer>*:not(.footer-video-bg) {
 }
 
 /* Stagger delays for projects */
-.project:nth-child(1) {
-    transition-delay: 0s;
-}
-
-.project:nth-child(2) {
-    transition-delay: 0.1s;
-}
-
-.project:nth-child(3) {
-    transition-delay: 0.15s;
-}
-
-.project:nth-child(4) {
-    transition-delay: 0.2s;
-}
-
-.project:nth-child(5) {
-    transition-delay: 0.25s;
-}
-
-.project:nth-child(6) {
-    transition-delay: 0.3s;
-}
-
-.project:nth-child(7) {
-    transition-delay: 0.35s;
-}
+.project:nth-child(1) { transition-delay: 0s; }
+.project:nth-child(2) { transition-delay: 0.1s; }
+.project:nth-child(3) { transition-delay: 0.15s; }
+.project:nth-child(4) { transition-delay: 0.2s; }
+.project:nth-child(5) { transition-delay: 0.25s; }
+.project:nth-child(6) { transition-delay: 0.3s; }
+.project:nth-child(7) { transition-delay: 0.35s; }
+.project:nth-child(8) { transition-delay: 0.4s; }
+.project:nth-child(9) { transition-delay: 0.45s; }
+.project:nth-child(10) { transition-delay: 0.5s; }
+.project:nth-child(11) { transition-delay: 0.55s; }
+.project:nth-child(12) { transition-delay: 0.6s; }
 
 /* ═══════════════════════════════════════════
    RESPONSIVE
