@@ -313,8 +313,7 @@ const projectData = [
         description: 'A mix of motion graphics and video projects from the last few years.',
         credits: [
             ['Highlights', 'A series of work from over the years'],
-            ['Published', '2025']
-        ]
+            ]
     },
     {
         title: 'New Balance — Rome',
@@ -325,8 +324,7 @@ const projectData = [
             ['Client', 'New Balance'],
             ['Deliverables', 'Social campaign, BTS, highlights'],
             ['Location', 'Rome, Italy'],
-            ['Published', '2025']
-        ]
+            ]
     },
     {
         title: 'Restaurant Innovation Summit',
@@ -336,8 +334,7 @@ const projectData = [
         credits: [
             ['Client', 'RIS'],
             ['Industry', 'Food Tech / Innovation'],
-            ['Year', '2026']
-        ]
+            ]
     },
     {
         title: 'Danny Was Here TV',
@@ -381,8 +378,7 @@ const projectData = [
             ['Client', 'Council for Responsible Nutrition (CRN)'],
             ['Deliverables', 'Web and social variants'],
             ['Focus', 'Explainer'],
-            ['Published', '2022']
-        ]
+            ]
     },
     {
         title: 'Banco Azteca — Banking Explainer',
@@ -404,8 +400,7 @@ const projectData = [
             ['Client', 'Federal Trade Commission (FTC)'],
             ['Deliverables', 'National TV spots, internet ads, radio, social cutdowns'],
             ['Location', 'United States'],
-            ['Published', '2023']
-        ]
+            ]
     },
     {
         title: 'Justice for Lai Dai Han',
@@ -415,8 +410,7 @@ const projectData = [
         credits: [
             ['Client', 'Justice for Lai Dai Han'],
             ['Format', 'Documentary'],
-            ['Published', '2021']
-        ]
+            ]
     },
     {
         title: 'Apollo 11 — 50th Anniversary',
@@ -427,9 +421,15 @@ const projectData = [
             ['Client', 'NASA'],
             ['Deliverables', '6 video inserts, multiple animations'],
             ['Notes', 'Premiered during the official DC ceremony with additional interactive projections'],
-            ['Published', '2019']
-        ]
+            ]
     }
+,
+    {
+        title: 'Gabe Albornoz',
+        embed: 'youtube', videoId: '71xhYlS28oc',
+        description: 'Political campaign advertisement for Gabe Albornoz. Crafted to deliver a clear, compelling message to constituents with high-impact visuals and precise pacing.',
+        credits: [['Type', 'Political'], ['Format', 'Digital campaign']]
+    },
 ];
 
 // DOM refs
