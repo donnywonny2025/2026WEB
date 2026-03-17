@@ -323,7 +323,6 @@ const projectData = [
         description: 'Run Rome The Marathon for New Balance. Had a great time cutting this one.',
         credits: [
             ['Client', 'New Balance'],
-            ['Role', 'Director / Editor'],
             ['Deliverables', 'Social campaign, BTS, highlights'],
             ['Location', 'Rome, Italy'],
             ['Published', '2025']
@@ -336,7 +335,6 @@ const projectData = [
         description: 'A deep dive into the future of food and technology at the Restaurant Innovation Summit.',
         credits: [
             ['Client', 'RIS'],
-            ['Role', 'Editor'],
             ['Industry', 'Food Tech / Innovation'],
             ['Year', '2026']
         ]
@@ -349,7 +347,6 @@ const projectData = [
         credits: [
             ['Platform', 'YouTube'],
             ['Host', 'Dan Egan'],
-            ['Role', 'Editor'],
             ['Channel', 'Danny Was Here TV']
         ]
     },
@@ -360,7 +357,6 @@ const projectData = [
         description: 'BioGen Neuro Pioneers initiative highlights the importance of research and development in neurology.',
         credits: [
             ['Client', 'Biogen'],
-            ['Role', 'Producer / Director / Editor'],
             ['Uploader', 'The Kerr Media Group'],
             ['Context', 'Biogen NeuroPioneers initiative']
         ]
@@ -372,7 +368,6 @@ const projectData = [
         description: 'A promotional spotlight for the American Institute of Steel Construction, highlighting the structural beauty, engineering excellence, and sustainable future of structural steel in modern architecture.',
         credits: [
             ['Client', 'AISC'],
-            ['Role', 'Director / Creative Producer'],
             ['Industry', 'Steel Construction'],
             ['Focus', 'Engineering Excellence']
         ]
@@ -384,7 +379,6 @@ const projectData = [
         description: 'We loved building this animation-led explainer for the Council for Responsible Nutrition. Clear visuals and a tight script helped turn a complex topic into a simple, engaging story — crafted for a national release across web and social.',
         credits: [
             ['Client', 'Council for Responsible Nutrition (CRN)'],
-            ['Role', 'Director / Animator'],
             ['Deliverables', 'Web and social variants'],
             ['Focus', 'Explainer'],
             ['Published', '2022']
@@ -397,7 +391,6 @@ const projectData = [
         description: 'Animation-driven explainer for Banco Azteca, one of Mexico\'s largest financial institutions. Clean motion graphics breaking down banking services for a broad audience.',
         credits: [
             ['Client', 'Banco Azteca'],
-            ['Role', 'Director / Animator'],
             ['Deliverables', 'Explainer video'],
             ['Focus', 'Motion graphics']
         ]
@@ -409,7 +402,6 @@ const projectData = [
         description: 'National campaign series for the Federal Trade Commission addressing deceptive diet ads. This one-minute-thirty spot was one of several, supported by TV, radio, web, and social cutdowns.',
         credits: [
             ['Client', 'Federal Trade Commission (FTC)'],
-            ['Role', 'Director / Editor'],
             ['Deliverables', 'National TV spots, internet ads, radio, social cutdowns'],
             ['Location', 'United States'],
             ['Published', '2023']
@@ -422,7 +414,6 @@ const projectData = [
         description: 'A powerful documentary shedding light on the sexual violence committed during the Vietnam War and the ongoing fight for justice. This piece required extraordinary sensitivity while maintaining the urgency of the message.',
         credits: [
             ['Client', 'Justice for Lai Dai Han'],
-            ['Role', 'Director / Producer'],
             ['Format', 'Documentary'],
             ['Published', '2021']
         ]
@@ -434,7 +425,6 @@ const projectData = [
         description: 'Produced for NASA\'s 50th Anniversary of Apollo 11 in Washington, D.C. This film served as the central projection during the evening ceremony, accompanied by interactive elements and six supporting videos around the Mall. A special night shared with astronauts, delegates, and guests — an honour to help bring to life.',
         credits: [
             ['Client', 'NASA'],
-            ['Role', 'Producer / Editor'],
             ['Deliverables', '6 video inserts, multiple animations'],
             ['Notes', 'Premiered during the official DC ceremony with additional interactive projections'],
             ['Published', '2019']
