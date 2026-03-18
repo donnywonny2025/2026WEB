@@ -1105,9 +1105,13 @@
         // ─── Political project click handler ───
         // Uses the same openProject/closeProject panel-wipe system from main.js
         document.querySelectorAll('[data-pol-project]').forEach(card => {
-            card.addEventListener('click', () => {
+            card.addEventListener('click', (e) => {
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+
                 const idx = parseInt(card.dataset.polProject);
                 const p = polProjectData[idx];
+                if (!p) return; // skip if no data for this index
 
                 // Temporarily add this political project to the main projectData array
                 // at a known index so openProject() can use it
