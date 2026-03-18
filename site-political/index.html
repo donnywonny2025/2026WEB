@@ -1113,25 +1113,9 @@
                 const p = polProjectData[idx];
                 if (!p) return; // skip if no data for this index
 
-                // Temporarily add this political project to the main projectData array
-                // at a known index so openProject() can use it
-                const tempIndex = projectData.length; // append to end
-                projectData.push({
-                    title: p.title,
-                    embed: p.embed || 'youtube',
-                    videoId: p.videoId,
-                    description: p.description,
-                    credits: p.credits
-                });
-
-                // Use the main transition system
-                history.pushState({ project: tempIndex }, '');
-                openProject(tempIndex);
-
-                // Clean up after the transition finishes (~1s)
-                setTimeout(() => {
-                    projectData.splice(tempIndex, 1);
-                }, 1200);
+                // Use the main transition system directly
+                history.pushState({ project: idx }, '');
+                openProject(idx);
             });
         });
 
