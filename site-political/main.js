@@ -472,21 +472,22 @@ const reelPlayer = document.getElementById('reelPlayer');
 let reelPlayerInstance = null;
 
 function playReel() {
-    const vimeoId = '641889858'; // Swapped to correct showreel ID from index.html data
+    const vimeoId = '641889858'; // Verified working Showreel ID
     const container = document.getElementById('reelPlayer');
     const overlay = document.getElementById('reelUnmuteOverlay');
-    
+
     // Show modal
     reelModal.classList.add('visible');
-    
-    // Build iframe with background=1 to hide all Vimeo UI (ensures our custom unmuter is used)
-    container.innerHTML = `<iframe src="https://player.vimeo.com/video/${vimeoId}?autoplay=1&muted=1&background=1&title=0&byline=0&portrait=0" 
+
+    // Use a cleaner embed without background=1 which can trigger strict security/slowness
+    // background=1 is for loopers, dedicated playModal should use standard controls=0
+    container.innerHTML = `<iframe src="https://player.vimeo.com/video/${vimeoId}?autoplay=1&muted=1&controls=0&title=0&byline=0&portrait=0" 
                                   allow="autoplay; fullscreen; picture-in-picture" 
                                   allowfullscreen></iframe>`;
-    
+
     const iframe = container.querySelector('iframe');
     reelPlayerInstance = new Vimeo.Player(iframe);
-    
+
     // Show unmute overlay
     overlay.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
