@@ -1161,23 +1161,19 @@
          ═══════════════════════════════════════════ -->
     <div id="reelModal">
         <div class="reel-container">
-            <button class="reel-close" onclick="closeReel()" title="Close Reel">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <button class="reel-close" onclick="closeReel()" title="Close">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
             </button>
-            <!-- Unmute Overlay -->
+            <!-- Unmute Pill -->
             <div id="reelUnmuteOverlay" class="reel-unmute-overlay" onclick="unmuteReel()">
                 <div class="unmute-btn">
                     <div class="unmute-icon">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M11 5L6 9H2V15H6L11 19V5Z" fill="currentColor"/>
-                            <path d="M19.07 4.93C20.9447 6.80528 21.9979 9.34836 21.9979 12C21.9979 14.6516 20.9447 17.1947 19.07 19.07" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                            <line x1="23" y1="1" x2="1" y2="23" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
+                        <svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5zM23 9l-6 6M17 9l6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </div>
-                    <span>Tap for Sound</span>
+                    <span>Sound</span>
                 </div>
             </div>
             <div id="reelPlayer"></div>

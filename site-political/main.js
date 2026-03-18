@@ -479,9 +479,8 @@ function playReel() {
     // Show modal
     reelModal.classList.add('visible');
 
-    // Use a cleaner embed without background=1 which can trigger strict security/slowness
-    // background=1 is for loopers, dedicated playModal should use standard controls=0
-    container.innerHTML = `<iframe src="https://player.vimeo.com/video/${vimeoId}?autoplay=1&muted=1&controls=0&title=0&byline=0&portrait=0" 
+    // Embed with controls hidden, looping enabled
+    container.innerHTML = `<iframe src="https://player.vimeo.com/video/${vimeoId}?autoplay=1&muted=1&loop=1&controls=0&title=0&byline=0&portrait=0" 
                                   allow="autoplay; fullscreen; picture-in-picture" 
                                   allowfullscreen></iframe>`;
 
