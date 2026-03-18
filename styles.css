@@ -351,17 +351,31 @@ video {
 
 .splash-text {
     font-family: var(--font-body);
-    font-size: 11px;
+    font-size: 13px;
+    font-weight: 600;
     letter-spacing: 4px;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.5);
     margin-top: 32px;
-    animation: splashTextPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    
+    /* Vibrant sweeping shimmer effect */
+    background: linear-gradient(
+        110deg,
+        rgba(255, 255, 255, 0.4) 0%,
+        rgba(255, 255, 255, 0.4) 40%,
+        rgba(255, 255, 255, 1) 50%,
+        rgba(255, 255, 255, 0.4) 60%,
+        rgba(255, 255, 255, 0.4) 100%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmerLoader 1.5s linear infinite;
 }
 
-@keyframes splashTextPulse {
-    0%, 100% { opacity: 0.2; }
-    50% { opacity: 1; }
+@keyframes shimmerLoader {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
 }
 
 @keyframes splashReveal {
