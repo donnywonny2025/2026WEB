@@ -734,6 +734,8 @@
             if (detailIframe) detailIframe.remove();
             const newIframe = document.createElement('iframe');
             newIframe.id = 'detailIframe';
+            newIframe.width = '1920'; // Force YouTube to load HD stream
+            newIframe.height = '1080';
             newIframe.allow = 'autoplay; fullscreen; picture-in-picture';
             newIframe.allowFullscreen = true;
             newIframe.src = getEmbedUrl(p);
