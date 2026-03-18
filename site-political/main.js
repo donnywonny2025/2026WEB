@@ -299,7 +299,7 @@ const projectData = [
     {
         title: 'Showreel',
         embed: 'vimeo',
-        videoId: '1120665473',
+        videoId: '1174615860',
         description: 'A mix of motion graphics and video projects from the last few years.',
         credits: [
             ['Highlights', 'A series of work from over the years'],
@@ -472,7 +472,7 @@ const reelPlayer = document.getElementById('reelPlayer');
 let reelPlayerInstance = null;
 
 function playReel() {
-    const vimeoId = '641889858'; // Verified working Showreel ID
+    const vimeoId = '1174615860'; // Correct Showreel ID (user-provided)
     const container = document.getElementById('reelPlayer');
     const overlay = document.getElementById('reelUnmuteOverlay');
 
