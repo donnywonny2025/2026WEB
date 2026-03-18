@@ -480,7 +480,7 @@ function playReel() {
     reelModal.classList.add('visible');
 
     // Embed with controls hidden, looping enabled
-    container.innerHTML = `<iframe src="https://player.vimeo.com/video/${vimeoId}?autoplay=1&muted=1&loop=1&controls=0&title=0&byline=0&portrait=0" 
+    container.innerHTML = `<iframe src="https://player.vimeo.com/video/${vimeoId}?autoplay=1&muted=1&loop=1&controls=1&title=0&byline=0&portrait=0" 
                                   allow="autoplay; fullscreen; picture-in-picture" 
                                   allowfullscreen></iframe>`;
 
