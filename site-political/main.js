@@ -412,7 +412,7 @@ let savedScrollY = 0;
 
 function getEmbedUrl(project) {
     if (project.embed === 'youtube') {
-        return `https://www.youtube-nocookie.com/embed/${project.videoId}?autoplay=1&mute=1&loop=1&playlist=${project.videoId}&rel=0&modestbranding=1&playsinline=1&vq=hd1080`;
+        return `https://www.youtube-nocookie.com/embed/${project.videoId}?autoplay=1&mute=1&loop=1&playlist=${project.videoId}&rel=0&modestbranding=1&playsinline=1&vq=hd1080&controls=0&iv_load_policy=3&disablekb=1&fs=0&color=white`;
     }
     return `https://player.vimeo.com/video/${project.videoId}?autoplay=1&muted=1&loop=1&title=0&byline=0&portrait=0&quality=1080p`;
 }
