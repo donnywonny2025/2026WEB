@@ -334,6 +334,7 @@ svg {
     z-index: 9999;
     background: var(--black);
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     transition: opacity 0.6s ease, visibility 0.6s ease;
@@ -360,25 +361,26 @@ svg {
     display: block;
     width: 100%;
     
-    /* Solid white text with a sweeping multi-color neon beam */
+    /* White text with a sharply compressed multi-color neon slicing beam */
     background: linear-gradient(
         90deg,
         rgba(255, 255, 255, 1) 0%,
-        rgba(255, 255, 255, 1) 35%,
-        #ff3c78 40%,
-        #e85533 45%,
-        #f5af19 50%,
-        #4ecdc4 55%,
-        #12c2e9 60%,
-        #c471ed 65%,
-        rgba(255, 255, 255, 1) 70%,
+        rgba(255, 255, 255, 1) 48%,
+        #ff3c78 48.5%,
+        #e85533 49%,
+        #f5af19 49.5%,
+        #4ecdc4 50%,
+        #12c2e9 50.5%,
+        #c471ed 51%,
+        #ff3c78 51.5%,
+        rgba(255, 255, 255, 1) 52%,
         rgba(255, 255, 255, 1) 100%
     );
     background-size: 300% 100%;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: multiColorBeam 2.5s linear infinite;
+    animation: multiColorBeam 2s linear infinite;
     filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.2));
 }
 
