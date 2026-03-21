@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Down the Rabbit Hole — Jeffery Kerr</title>
+    <!-- We can link the main CSS file if we want to use existing components -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { 
+            background-color: #080808; 
+            color: #E7E7E7; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            text-align: center; 
+        }
+        .rabbit-container { 
+            max-width: 800px; 
+            padding: 40px; 
+            animation: fadeIn 2s ease-in-out;
+        }
+        h1 { 
+            font-size: 3rem; 
+            letter-spacing: 3px; 
+            margin-bottom: 20px; 
+            font-weight: 300;
+        }
+        p { 
+            font-size: 1.2rem; 
+            line-height: 1.6; 
+            color: #A0A0A0; 
+        }
+        .rabbit-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="rabbit-container">
+        <div class="rabbit-icon">&#128007;</div>
+        <h1>Down the Rabbit Hole</h1>
+        <p>You found it. Now... what should happen next?</p>
+        <p><em>(Let's build out the contents of this page!)</em></p>
+    </div>
+</body>
+</html>
