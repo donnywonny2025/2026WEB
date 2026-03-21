@@ -356,26 +356,24 @@ svg {
     font-weight: 600;
     letter-spacing: 4px;
     text-transform: uppercase;
-    margin-top: 32px;
+    margin-top: 24px;
+    text-align: center;
     
-    /* Vibrant sweeping shimmer effect */
+    /* Vibrant sweeping multi-color effect */
     background: linear-gradient(
-        110deg,
-        rgba(255, 255, 255, 0.4) 0%,
-        rgba(255, 255, 255, 0.4) 40%,
-        rgba(255, 255, 255, 1) 50%,
-        rgba(255, 255, 255, 0.4) 60%,
-        rgba(255, 255, 255, 0.4) 100%
+        90deg,
+        #ff3c78, #e85533, #f5af19, #4ecdc4, #12c2e9, #667eea, #c471ed, #ff3c78
     );
-    background-size: 200% 100%;
+    background-size: 300% 100%;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: shimmerLoader 1.5s linear infinite;
+    animation: multiColorLoader 2.5s linear infinite;
+    filter: drop-shadow(0 0 8px rgba(255, 60, 120, 0.3));
 }
 
-@keyframes shimmerLoader {
-    0% { background-position: 200% 0; }
+@keyframes multiColorLoader {
+    0% { background-position: 100% 0; }
     100% { background-position: -200% 0; }
 }
 
